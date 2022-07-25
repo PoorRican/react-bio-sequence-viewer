@@ -20,14 +20,17 @@ function ItemSpacer(props) {
 function RearrangeableItem(props) {
 
   return (
-    <Draggable onStart={props.onStart} onStop={props.onStop}>
-      <div className={`box drop-target rearrange-block`}
-           onMouseEnter={props.onMouseEnter} onMouseLeave={props.onMouseLeave}>
-        <div className={`contents`}>
-          {props.children}
+    <div>
+      <Draggable onStart={props.onStart} onStop={props.onStop}>
+        <div className={`box drop-target rearrange-block`}
+             onMouseEnter={props.onMouseEnter} onMouseLeave={props.onMouseLeave}>
+          <div className={`contents`}>
+            {props.children}
+          </div>
         </div>
-      </div>
-    </Draggable>
+      </Draggable>
+      <ItemSpacer onMouseEnter={props.onMouseEnter} onMouseLeave={props.onMouseLeave} />
+    </div>
   )
 
 }
@@ -39,7 +42,7 @@ class RearrangeableList extends React.Component {
     controlledPosition: {
       x: -400, y: 200
     },
-    restricted: false
+    items: [0,1,2,3,4,5,6,7,8]
   };
 
   onStart = () => {
@@ -59,10 +62,6 @@ class RearrangeableList extends React.Component {
   };
 
   onDropAreaMouseEnter = (e) => {
-    if (e.target.classList.contains("spacer")) {
-      console.log('in spacer space');
-    }
-
     if (this.state.activeDrags && !(e.target.classList.contains("react-draggable-dragging"))) {
       e.target.classList.add('hovered');
     }
@@ -78,13 +77,12 @@ class RearrangeableList extends React.Component {
                               onMouseLeave: this.onDropAreaMouseLeave};
     const dropHandlers = {onMouseEnter: this.onDropAreaMouseEnter,
                           onMouseLeave: this.onDropAreaMouseLeave};
-  return (
-<div>
-<RearrangeableItem {...dragDropHandlers}>Test</RearrangeableItem>
+    return (
+      <div className={this.state.activeDrags ? 'active' : ''}>
         <ItemSpacer {...dropHandlers} />
-        <RearrangeableItem {...dragDropHandlers}>2</RearrangeableItem>
-        <ItemSpacer {...dropHandlers} />
-        <RearrangeableItem {...dragDropHandlers}>3</RearrangeableItem>
+        {this.state.items.map((item) =>
+          <RearrangeableItem key={item.toString()} {...dragDropHandlers}>{item}</RearrangeableItem>)
+        }
       </div>
     );
   }

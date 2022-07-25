@@ -72,11 +72,11 @@ body {
     float: left;
 }
 
-.spacer .drop-target {
+.active .spacer .drop-target {
     z-index: 6;
     position: absolute;
-    margin-left: -60px;
-    width: 120px;
+    margin-left: -40px;
+    width: 80px;
     height: 180px;
 }
 
@@ -92,10 +92,10 @@ body {
     display: none;
     border-radius: 3px;
 }
-.spacer .hovered ~ .indicator {
+.active .spacer .drop-target:hover ~ .indicator {
     display: block;
     position: relative;
-    z-index: 6;
+    z-index: 5;
     background: gray;
     height: 180px;
     width: 10px;
@@ -105,6 +105,10 @@ body {
 .rearrange-block {
     position: relative;
     z-index: 5;
+}
+
+.rearrange-block::after {
+    content: element("<div class='spacer'><div class='drop-target'></div><div class='indicator'></div></div>")
 }
 
 .rearrange-block.react-draggable-dragging {

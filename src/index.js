@@ -96,67 +96,6 @@ class App extends React.Component {
 
       <RearrangeableList />
 
-      {/* Linked Box */}
-      <Draggable position={controlledPosition} {...dragHandlers} onDrag={this.onControlledDrag}>
-        <div className="box">
-          My position can be changed programmatically. <br />
-          I have a drag handler to sync state.
-          <div>
-            <a href="#" onClick={this.adjustXPos}>Adjust x ({controlledPosition.x})</a>
-          </div>
-          <div>
-            <a href="#" onClick={this.adjustYPos}>Adjust y ({controlledPosition.y})</a>
-          </div>
-        </div>
-      </Draggable>
-      <Draggable position={controlledPosition} {...dragHandlers} onStop={this.onControlledDragStop}>
-        <div className="box">
-          My position can be changed programmatically. <br />
-          I have a dragStop handler to sync state.
-          <div>
-            <a href="#" onClick={this.adjustXPos}>Adjust x ({controlledPosition.x})</a>
-          </div>
-          <div>
-            <a href="#" onClick={this.adjustYPos}>Adjust y ({controlledPosition.y})</a>
-          </div>
-        </div>
-      </Draggable>
-
-      {/* Locked Box */}
-      <Draggable onStart={() => false}>
-        <div className="box">I don't want to be dragged</div>
-      </Draggable>
-
-      {/* Self-aware Box */}
-      <Draggable onDrag={this.handleDrag} {...dragHandlers}>
-        <div className="box">
-          <div>I track my deltas</div>
-          <div>x: {deltaPosition.x.toFixed(0)}, y: {deltaPosition.y.toFixed(0)}</div>
-        </div>
-      </Draggable>
-
-      <Draggable {...dragHandlers} onStop={this.onDrop}>
-        <div className={`box ${this.state.activeDrags ? "no-pointer-events" : ""}`}>I can be dropped onto another box.</div>
-      </Draggable>
-
-      {/* Box w/ handle */}
-      <Draggable handle="strong" {...dragHandlers}>
-        <div className="box no-cursor">
-          <strong className="cursor"><div>Drag here</div></strong>
-          <div>You must click my handle to drag me</div>
-        </div>
-      </Draggable>
-
-      {/* Restricted to axis */}
-      <Draggable axis="y" {...dragHandlers}>
-        <div className="box cursor-y">I can only be dragged vertically (y axis)</div>
-      </Draggable>
-
-      {/* Highlight drop-in box */}
-      <Draggable {...dragHandlers}>
-        <div className="box drop-target" onMouseEnter={this.onDropAreaMouseEnter} onMouseLeave={this.onDropAreaMouseLeave}>I can detect drops from the next box.</div>
-      </Draggable>
-
     </div>
     );
   }
