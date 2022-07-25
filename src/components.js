@@ -42,7 +42,7 @@ class RearrangeableList extends React.Component {
     controlledPosition: {
       x: -400, y: 200
     },
-    items: [0,1,2,3,4,5,6,7,8]
+    items: [1,2,3,4,5,6,7,8,9]
   };
 
   onStart = () => {
@@ -80,8 +80,8 @@ class RearrangeableList extends React.Component {
     return (
       <div className={this.state.activeDrags ? 'active' : ''}>
         <ItemSpacer {...dropHandlers} />
-        {this.state.items.map((item) =>
-          <RearrangeableItem key={item.toString()} {...dragDropHandlers}>{item}</RearrangeableItem>)
+        {this.state.items.map((item, index) =>
+          <RearrangeableItem key={index.toString()} {...dragDropHandlers}>{item}</RearrangeableItem>)
         }
       </div>
     );
