@@ -3,25 +3,38 @@ import Draggable from 'react-draggable';
 
 import './index.css'
 
-function RearrangeBlock(props) {
+
+function ItemSpacer(props) {
+  return (
+    <div className={`spacer`}>
+      <div className={`drop-target`}
+           onMouseEnter={props.onMouseEnter} onMouseLeave={props.onMouseLeave}>
+      </div>
+      <div className={`indicator`}>
+
+      </div>
+    </div>
+  )
+}
+
+function RearrangeableItem(props) {
 
   return (
     <Draggable onStart={props.onStart} onStop={props.onStop}>
       <div className={`box drop-target rearrange-block`}
            onMouseEnter={props.onMouseEnter} onMouseLeave={props.onMouseLeave}>
-        {props.children}
+        <div className={`contents`}>
+          {props.children}
+        </div>
       </div>
     </Draggable>
   )
 
 }
 
-class Grid extends React.Component {
+class RearrangeableList extends React.Component {
 
   state = {
-    deltaPosition: {
-      x: 0, y: 0
-    },
     activeDrags: 0,
     controlledPosition: {
       x: -400, y: 200
@@ -31,7 +44,6 @@ class Grid extends React.Component {
 
   onStart = () => {
     this.setState({activeDrags: this.state.activeDrags + 1});
-    console.log('started ' + this.state.activeDrags)
   };
 
   onStop = () => {
@@ -47,38 +59,36 @@ class Grid extends React.Component {
   };
 
   onDropAreaMouseEnter = (e) => {
-    console.log(this.state.activeDrags)
+    if (e.target.classList.contains("spacer")) {
+      console.log('in spacer space');
+    }
+
     if (this.state.activeDrags && !(e.target.classList.contains("react-draggable-dragging"))) {
       e.target.classList.add('hovered');
     }
-    console.log(e.target);
   }
   onDropAreaMouseLeave = (e) => {
     e.target.classList.remove('hovered');
   }
 
-  handleDrag = (e, ui) => {
-    const {x, y} = this.state.deltaPosition;
-    this.setState({
-      deltaPosition: {
-        x: x + ui.deltaX,
-        y: y + ui.deltaY,
-      }
-    });
-  };
-
   render() {
-    const dragHandlers = {onStart: this.onStart, onStop: this.onDrop};
-    const dropHandlers = {onMouseEnter: this.onDropAreaMouseEnter, onMouseLeave: this.onDropAreaMouseLeave}
-    return (
-      <div>
-        <RearrangeBlock {...dragHandlers} onMouseEnter={this.onDropAreaMouseEnter} onMouseLeave={this.onDropAreaMouseLeave}>Test</RearrangeBlock>
-        <RearrangeBlock {...dragHandlers} onMouseEnter={this.onDropAreaMouseEnter} onMouseLeave={this.onDropAreaMouseLeave}>2</RearrangeBlock>
-        <RearrangeBlock {...dragHandlers} onMouseEnter={this.onDropAreaMouseEnter} onMouseLeave={this.onDropAreaMouseLeave}>3</RearrangeBlock>
+    const dragDropHandlers = {onStart: this.onStart,
+                              onStop: this.onDrop,
+                              onMouseEnter: this.onDropAreaMouseEnter,
+                              onMouseLeave: this.onDropAreaMouseLeave};
+    const dropHandlers = {onMouseEnter: this.onDropAreaMouseEnter,
+                          onMouseLeave: this.onDropAreaMouseLeave};
+  return (
+<div>
+<RearrangeableItem {...dragDropHandlers}>Test</RearrangeableItem>
+        <ItemSpacer {...dropHandlers} />
+        <RearrangeableItem {...dragDropHandlers}>2</RearrangeableItem>
+        <ItemSpacer {...dropHandlers} />
+        <RearrangeableItem {...dragDropHandlers}>3</RearrangeableItem>
       </div>
     );
   }
 
 }
 
-export default Grid;
+export default RearrangeableList;
