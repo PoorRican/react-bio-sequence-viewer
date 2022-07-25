@@ -37,13 +37,18 @@ function RearrangeableItem(props) {
 
 class RearrangeableList extends React.Component {
 
-  state = {
-    activeDrags: 0,
-    controlledPosition: {
-      x: -400, y: 200
-    },
-    items: [1,2,3,4,5,6,7,8,9]
-  };
+  constructor(props) {
+    super(props);
+
+
+    this.state = {
+      items: props.items,
+      activeDrags: 0,
+      controlledPosition: {
+        x: -400, y: 200
+      },
+    };
+  }
 
   onStart = () => {
     this.setState({activeDrags: this.state.activeDrags + 1});

@@ -86,6 +86,7 @@ class App extends React.Component {
   render() {
     const dragHandlers = {onStart: this.onStart, onStop: this.onStop};
     const {deltaPosition, controlledPosition} = this.state;
+    const items = [1,2,3,4,5,6,7,8,9];
     return (
     <div>
       <h1>React Draggable</h1>
@@ -94,7 +95,7 @@ class App extends React.Component {
         <a href='test'>Demo Source</a>
       </p>
 
-      <RearrangeableList />
+      <RearrangeableList items={items}/>
 
     </div>
     );
