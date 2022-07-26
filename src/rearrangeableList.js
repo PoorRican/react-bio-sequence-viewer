@@ -1,56 +1,9 @@
 import React from 'react';
-import Draggable from 'react-draggable';
 
 import './index.css'
+import {ItemSpacer} from "./itemSpacer";
+import {ListItem} from "./listItem";
 
-
-function ItemSpacer(props) {
-  return (
-    <div className={`spacer`} id={props.id}>
-      <div className={`drop-target`}
-           onMouseEnter={props.onMouseEnter} onMouseLeave={props.onMouseLeave}>
-      </div>
-      <div className={`indicator`}>
-
-      </div>
-    </div>
-  )
-}
-
-function ListItem(props) {
-
-  return (
-    /* TODO: I don't like using an unnecessary element */
-    <div hidden={props.hidden}>
-      <ItemSpacer onMouseEnter={props.onMouseEnter} onMouseLeave={props.onMouseLeave} id={props.id}/>
-      <Draggable onStart={props.onStart} onStop={props.onStop} onDrag={props.onDrag}
-                 position={props.position}
-                 defaultPosition={props.defaultPosition}>
-        <div id={props.id} className={`box drop-target rearrange-block ` + props.className}
-             onMouseEnter={props.onMouseEnter} onMouseLeave={props.onMouseLeave}>
-          <div className={`contents`}>
-            {props.children}
-          </div>
-        </div>
-      </Draggable>
-    </div>
-  )
-
-}
-
-function DroppableItem(props) {
-
-  return (
-    <Draggable onStart={props.onStart} onStop={props.onStop}>
-      <div id={props.id} className={`box rearrange-block`} hidden={props.hidden}
-           onMouseEnter={props.onMouseEnter} onMouseLeave={props.onMouseLeave}>
-        <div className={`contents`}>
-          {props.children}
-        </div>
-      </div>
-    </Draggable>
-  )
-}
 
 class RearrangeableList extends React.Component {
 

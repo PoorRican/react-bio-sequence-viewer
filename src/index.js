@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 
 import ResourcePage from "./resource";
-import RearrangeableList from "./components"
+import RearrangeableList from "./rearrangeableList"
 import './index.css'
 
 function App(props) {
