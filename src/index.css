@@ -107,10 +107,6 @@ body {
     z-index: 5;
 }
 
-.rearrange-block::after {
-    content: element("<div class='spacer'><div class='drop-target'></div><div class='indicator'></div></div>")
-}
-
 .rearrange-block.react-draggable-dragging {
     z-index: -1;
 }
