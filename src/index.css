@@ -107,6 +107,10 @@ body {
     z-index: 5;
 }
 
+.selected {
+    position: absolute;
+}
+
 .rearrange-block.react-draggable-dragging {
     z-index: -1;
 }

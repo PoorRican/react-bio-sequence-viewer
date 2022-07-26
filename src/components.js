@@ -6,7 +6,7 @@ import './index.css'
 
 function ItemSpacer(props) {
   return (
-    <div className={`spacer`}>
+    <div className={`spacer`} id={props.id}>
       <div className={`drop-target`}
            onMouseEnter={props.onMouseEnter} onMouseLeave={props.onMouseLeave}>
       </div>
@@ -21,16 +21,18 @@ function ListItem(props) {
 
   return (
     /* TODO: I don't like using an unnecessary element */
-    <div>
-      <Draggable onStart={props.onStart} onStop={props.onStop}>
-        <div id={props.id} className={`box drop-target rearrange-block`} hidden={props.hidden}
+    <div hidden={props.hidden}>
+      <ItemSpacer onMouseEnter={props.onMouseEnter} onMouseLeave={props.onMouseLeave} id={props.id}/>
+      <Draggable onStart={props.onStart} onStop={props.onStop} onDrag={props.onDrag}
+                 position={props.position}
+                 defaultPosition={props.defaultPosition}>
+        <div id={props.id} className={`box drop-target rearrange-block ` + props.className}
              onMouseEnter={props.onMouseEnter} onMouseLeave={props.onMouseLeave}>
           <div className={`contents`}>
             {props.children}
           </div>
         </div>
       </Draggable>
-      <ItemSpacer onMouseEnter={props.onMouseEnter} onMouseLeave={props.onMouseLeave} />
     </div>
   )
 
@@ -40,10 +42,9 @@ function DroppableItem(props) {
 
   return (
     <Draggable onStart={props.onStart} onStop={props.onStop}>
-      <div id={props.id} className={`box rearrange-block no-cursor`} hidden={props.hidden}
+      <div id={props.id} className={`box rearrange-block`} hidden={props.hidden}
            onMouseEnter={props.onMouseEnter} onMouseLeave={props.onMouseLeave}>
         <div className={`contents`}>
-          <strong className={`cursor`}><div>Drag Here</div></strong>
           {props.children}
         </div>
       </div>
@@ -61,56 +62,50 @@ class RearrangeableList extends React.Component {
       items: props.items,
       activeDrags: 0,
       controlledPosition: {
-        x: -400, y: 200
+        x: null, y: null
       },
       selected: {
         key: null,
         content: null,
-        deltaPosition: {
-          x: null, y: null,
-        },
-        deleted: false,
       },
     };
+  }
+
+  getItem(key) {
+    return this.state.items[key];
   }
 
   // handler functions
   onStart = (e) => {
     this.setState({activeDrags: this.state.activeDrags + 1});
 
+    // select element
     const parent = e.target.parentElement;
-    // parent.classList.add('selected');
-
-    const _key = Number(parent.id);
-    const content = this.state.items[_key]
-    console.log(_key)
-    this.setState({
-      selected: {
-        key: _key,
-        content: content,
-      }
-    });
+    if (!parent.classList.contains('selected')) {
+      const key = Number(parent.id);
+      const content = this.state.items[key]
+      this.setState({
+        selected: {
+          key: key,
+          content: content,
+        }
+      });
+      console.debug('changed selection')
+    }
   };
 
   onDrop = (e) => {
     if (e.target.classList.contains("drop-target") && !(e.target.classList.contains("react-draggable-dragging"))) {
       this.setState({activeDrags: this.state.activeDrags - 1});
-      alert("Dropped!");
+
       e.target.classList.remove('hovered');
-    }
-    else {
-      // reset parent 'style' attr
-      const key = this.state.selected.key;
 
-      const sliced1 = this.state.items.slice(0, key);
-      const sliced2 = this.state.items.slice(key + 1);
+      const selected = this.state.selected;
+      const key = e.target.parentNode.id;
+      const items = this.insert(this.state.items, selected.content, key);
+      this.setState({items: items});
 
-      this.setState({
-        items: sliced1.concat(sliced2),
-        selected: {
-          deleted: true,
-        }
-      });
+      alert("Dropped!");
     }
   };
 
@@ -123,17 +118,11 @@ class RearrangeableList extends React.Component {
     e.target.classList.remove('hovered');
   }
 
-  handleDrag = (e, ui) => {
-    if (this.state.activeDrags && (e.target.classList.contains("react-draggable-dragging"))) {
-      const {x, y} = this.state.selected.deltaPosition;
+  handleDrag = (e, position) => {
+    if (this.state.activeDrags) {
+      const {x, y} = position;
       this.setState({
-        selected: {
-          deltaPosition:
-            {
-              x: x + ui.deltaX,
-              y: y + ui.deltaY,
-            }
-        }
+        controlledPosition: {x, y}
       });
     }
   };
@@ -141,7 +130,7 @@ class RearrangeableList extends React.Component {
   // list manipulation functions
 
   insert(list, item, position) {
-    const s1 = list.slice(0, position).concat({item});
+    const s1 = list.slice(0, position).concat([item]);
     const s2 = list.slice(position);
     return s1.concat(s2)
   }
@@ -166,20 +155,25 @@ class RearrangeableList extends React.Component {
                               onMouseLeave: this.onDropAreaMouseLeave};
     const dropHandlers = {onMouseEnter: this.onDropAreaMouseEnter,
                           onMouseLeave: this.onDropAreaMouseLeave};
-    const _selected = this.state.selected;
-    const selected = <ListItem className={`selected`} hidden={!_selected.deleted}
-                                        id={_selected.key} {...dragDropHandlers}
-                                  position={_selected.deltaPosition}>
-      {_selected.content}
-    </ListItem>
+
     return (
       <div className={this.state.activeDrags ? 'active' : ''}>
-        { selected }
-        <DroppableItem {...dragDropHandlers}>Test</DroppableItem>
-        <ItemSpacer {...dropHandlers} />
+        {/*
+        <div style={{position: `absolute`}}>
+          <ListItem className={`selected`} hidden={this.state.selected.key === null}
+                    id={this.state.selected.key} {...dragDropHandlers}
+                    position={this.state.controlledPosition}
+                    defaultPosition={{x: -300, y: -300}}>
+            {this.state.selected.content}
+          </ListItem>
+        </div>
+        */}
+
         {this.state.items.map((item, index) =>
-          <ListItem key={index.toString()} id={index} {...dragDropHandlers}>{item}</ListItem>)
+          <ListItem key={index.toString()} id={index} position={{x: 0, y: 0}} {...dragDropHandlers}>{item}</ListItem>)
         }
+        <ItemSpacer id={this.state.items.length}{...dropHandlers} />
+
       </div>
     );
   }
