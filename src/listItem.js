@@ -1,6 +1,7 @@
 import {ItemSpacer} from "./itemSpacer";
 import Draggable from "react-draggable";
 import React from "react";
+import { Card, Elevation } from "@blueprintjs/core";
 
 export function ListItem(props) {
 
@@ -11,12 +12,15 @@ export function ListItem(props) {
       <Draggable onStart={props.onStart} onStop={props.onStop} onDrag={props.onDrag}
                  position={props.position}
                  defaultPosition={props.defaultPosition}>
-        <div id={props.id} className={`box drop-target rearrange-block ` + props.className}
-             onMouseEnter={props.onMouseEnter} onMouseLeave={props.onMouseLeave}>
+        <Card interactive={true}
+              id={props.id}
+              className={`box drop-target rearrange-block ` + props.className}
+              onMouseEnter={props.onMouseEnter}
+              onMouseLeave={props.onMouseLeave}>
           <div className={`contents`}>
             {props.children}
           </div>
-        </div>
+        </Card>
       </Draggable>
     </div>
   )

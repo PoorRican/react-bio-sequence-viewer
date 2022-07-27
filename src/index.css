@@ -51,11 +51,6 @@ body {
     float: left;
 }
 
-.box .contents {
-    height: 100%;
-    padding: 10px;
-}
-
 .no-pointer-events {
     pointer-events: none;
 }

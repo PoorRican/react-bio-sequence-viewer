@@ -51,8 +51,6 @@ class RearrangeableList extends React.Component {
     if (e.target.classList.contains("drop-target") && !(e.target.classList.contains("react-draggable-dragging"))) {
       this.setState({activeDrags: this.state.activeDrags - 1});
 
-      e.target.classList.remove('hovered');
-
       const selected = this.state.selected;
       const key = e.target.parentNode.id;
       const items = this.insert(this.state.items, selected.content, key);
@@ -64,11 +62,9 @@ class RearrangeableList extends React.Component {
 
   onDropAreaMouseEnter = (e) => {
     if (this.state.activeDrags && !(e.target.classList.contains("react-draggable-dragging"))) {
-      e.target.classList.add('hovered');
     }
   }
   onDropAreaMouseLeave = (e) => {
-    e.target.classList.remove('hovered');
   }
 
   handleDrag = (e, position) => {
