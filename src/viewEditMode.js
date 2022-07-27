@@ -1,6 +1,31 @@
-import {H1} from "@blueprintjs/core";
+import {
+  Classes,
+  Button,
+  Navbar,
+  NavbarGroup,
+  NavbarHeading,
+} from "@blueprintjs/core";
 import RearrangeableList from "./rearrangeableList";
 import React from "react";
+
+function EditMenu(props) {
+  return (
+    <Navbar>
+      <NavbarGroup>
+        <Button large={true} className={Classes.MINIMAL}
+                icon={`edit`} text={`Edit`}
+                active={props.mode === 'edit'}
+                onClick={props.editAction}
+        />
+        <Button large={true} className={Classes.MINIMAL}
+                icon={`eye-open`} text={`View`}
+                active={props.mode === 'view'}
+                onClick={props.viewAction}
+        />
+      </NavbarGroup>
+    </Navbar>
+  )
+}
 
 export class ViewEditMode extends React.Component {
   constructor(props) {
@@ -11,13 +36,8 @@ export class ViewEditMode extends React.Component {
       items = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     }
 
-    let mode = props.defaultMode;
-    if (mode === undefined) {
-      mode = 'edit'
-    }
-
     this.state = {
-      mode: mode,
+      mode: 'view',
       items: items,
       activeDrags: 0,
       controlledPosition: {
@@ -101,6 +121,15 @@ export class ViewEditMode extends React.Component {
     return s1.concat(s2)
   }
 
+  // Mode functions
+  viewAction = (e) => {
+    this.setState({'mode': 'view'});
+  }
+
+  editAction = (e) => {
+    this.setState({'mode': 'edit'});
+  }
+
   render() {
     // view props
     const disabled = this.state.mode === 'view';
@@ -122,6 +151,11 @@ export class ViewEditMode extends React.Component {
 
     return (
       <div>
+
+        <EditMenu mode={this.state.mode}
+                  viewAction={this.viewAction}
+                  editAction={this.editAction}
+        />
 
         <RearrangeableList items={this.state.items}
                            active={this.state.activeDrags}
