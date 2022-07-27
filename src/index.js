@@ -7,14 +7,14 @@ import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import ResourcePage from "./resource";
 
 import './index.css'
-import {App} from "./app";
+import {ViewEditMode} from "./viewEditMode";
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
     <Routes>
-      <Route path='/' element={<App />}>Home</Route>
+      <Route path='/' element={<ViewEditMode />}>Home</Route>
       <Route path='/resource' element={<ResourcePage/>}>Home</Route>
     </Routes>
   </BrowserRouter>)
