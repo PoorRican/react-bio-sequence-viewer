@@ -1,25 +1,18 @@
-import logo from './logo.svg';
-import './App.css';
+import {H1} from "@blueprintjs/core";
+import RearrangeableList from "./rearrangeableList";
+import React from "react";
 
-function App() {
+export function App(props) {
+  const items = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <H1>React Draggable</H1>
+      <p className={`topline`}>
+        <a href='test'>Demo Source</a>
+      </p>
+
+      <RearrangeableList items={items}/>
+
     </div>
   );
 }
-
-export default App;
