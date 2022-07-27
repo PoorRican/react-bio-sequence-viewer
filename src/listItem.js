@@ -12,7 +12,7 @@ export function ListItem(props) {
       <Draggable onStart={props.onStart} onStop={props.onStop} onDrag={props.onDrag}
                  position={{x: 0, y: 0}}
                  defaultPosition={props.defaultPosition}>
-        <Card interactive={true}
+        <Card interactive={!props.disabled}
               id={props.id}
               className={[
                 `box drop-target rearrange-block`,
