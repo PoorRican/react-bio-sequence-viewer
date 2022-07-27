@@ -48,8 +48,8 @@ class RearrangeableList extends React.Component {
   };
 
   onDrop = (e) => {
+    this.setState({activeDrags: this.state.activeDrags - 1});
     if (e.target.classList.contains("drop-target") && !(e.target.classList.contains("react-draggable-dragging"))) {
-      this.setState({activeDrags: this.state.activeDrags - 1});
 
       const selected = this.state.selected;
       const key = e.target.parentNode.id;
