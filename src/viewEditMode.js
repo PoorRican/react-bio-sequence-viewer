@@ -108,6 +108,7 @@ export class ViewEditMode extends React.Component {
     }
   };
 
+  // updates `this.state.selected` when opening context menu
   onContextMenu = (e, position) => {
     const key = Number(e.target.id);
     const content = this.state.items[key]

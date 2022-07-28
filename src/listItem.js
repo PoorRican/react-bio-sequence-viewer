@@ -18,7 +18,7 @@ export function ListItem(props) {
     <div hidden={props.hidden}>
       <ItemSpacer onMouseEnter={props.onMouseEnter} onMouseLeave={props.onMouseLeave} id={props.id}/>
       <ContextMenu2
-        disabled={props.disabled}
+        //disabled={props.disabled}
         content={props.contextMenu}
         onContextMenu={props.onContextMenu}
       >
@@ -30,7 +30,7 @@ export function ListItem(props) {
                 className={[
                   `box drop-target rearrange-block`,
                   props.className,
-                  props.disabled ? 'no-pointer-events' : '',
+                  //props.disabled ? 'no-pointer-events' : '',
                 ].join(' ')}
                 onMouseEnter={props.onMouseEnter}
                 onMouseLeave={props.onMouseLeave}>
