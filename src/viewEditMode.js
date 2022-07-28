@@ -1,5 +1,4 @@
 import {
-  Classes,
   Button,
   Navbar,
   NavbarGroup,
@@ -9,21 +8,21 @@ import RearrangeableList from "./rearrangeableList";
 import React from "react";
 import {MenuItem2} from "@blueprintjs/popover2";
 
-function EditMenu(props) {
+function ModeMenu(props) {
   return (
     <Navbar>
       <NavbarGroup>
-        <Button large={true} className={Classes.MINIMAL}
+        <Button large={true} minimal={true} fill={true}
                 icon={`insert`} text={`Insert`}
                 active={props.mode === 'insert'}
                 onClick={props.insertAction}
         />
-        <Button large={true} className={Classes.MINIMAL}
+        <Button large={true} minimal={true} fill={true}
                 icon={`eye-open`} text={`View`}
                 active={props.mode === 'view'}
                 onClick={props.viewAction}
         />
-        <Button large={true} className={Classes.MINIMAL}
+        <Button large={true} minimal={true} fill={true}
                 icon={`move`} text={`Move`}
                 active={props.mode === 'move'}
                 onClick={props.moveAction}
@@ -222,7 +221,7 @@ export class ViewEditMode extends React.Component {
     return (
       <div>
 
-        <EditMenu mode={this.state.mode}
+        <ModeMenu mode={this.state.mode}
                   viewAction={this.viewAction}
                   insertAction={this.insertAction}
                   moveAction={this.moveAction}
