@@ -3,10 +3,11 @@ import {
   Button,
   Navbar,
   NavbarGroup,
-  NavbarHeading,
+  NavbarHeading, Menu,
 } from "@blueprintjs/core";
 import RearrangeableList from "./rearrangeableList";
 import React from "react";
+import {MenuItem2} from "@blueprintjs/popover2";
 
 function EditMenu(props) {
   return (
@@ -69,7 +70,6 @@ export class ViewEditMode extends React.Component {
           content: content,
         }
       });
-      console.debug('changed selection to ' + key)
     }
   };
 
@@ -108,6 +108,29 @@ export class ViewEditMode extends React.Component {
       });
     }
   };
+
+  onContextMenu = (e, position) => {
+    const key = Number(e.target.id);
+    const content = this.state.items[key]
+    this.setState({
+      selected: {
+        key: key,
+        content: content,
+      }
+    });
+  }
+
+  contextMenu = () => {
+    return (
+      <Menu>
+        <MenuItem2 text={`Delete`}
+                   icon={`trash`}
+                   onClick={this.doDelete}
+                   intent={`danger`}
+        />
+      </Menu>
+    )
+  }
 
   // list manipulation functions
   getItem(key) {
@@ -166,12 +189,19 @@ export class ViewEditMode extends React.Component {
     this.setState({'mode': 'move'})
   }
 
+  // Context menu functions
+  doDelete = (e) => {
+    this.setState({
+        items: this.delete(this.state.items, this.state.selected.key)
+    })
+  }
+
   render() {
     // view props
     let disabled = this.state.mode === 'view';
 
     // handlers
-    let itemHandlers, itemProps = null
+    let itemHandlers = null
     let spacerHandlers          = null;
     if (
       this.state.mode === 'move' ||
@@ -203,6 +233,8 @@ export class ViewEditMode extends React.Component {
                            disabled={disabled}
                            itemHandlers={itemHandlers}
                            spacerHandlers={spacerHandlers}
+                           contextMenu={this.contextMenu}
+                           onContextMenu={this.onContextMenu}
         />
 
       </div>

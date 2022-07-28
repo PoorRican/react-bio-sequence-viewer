@@ -14,6 +14,8 @@ class RearrangeableList extends React.Component {
           (item, index) =>
             <ListItem key={index.toString()} id={index}
                       disabled={this.props.disabled}
+                      contextMenu={this.props.contextMenu}
+                      onContextMenu={this.props.onContextMenu}
                       {...this.props.itemHandlers}>
               {item}
             </ListItem>
