@@ -1,6 +1,6 @@
 import React from 'react';
 
-import './index.css'
+import './viewEditMode.css'
 import {ItemSpacer} from "./itemSpacer";
 import {ListItem} from "./listItem";
 
@@ -8,7 +8,7 @@ import {ListItem} from "./listItem";
 class RearrangeableList extends React.Component {
   render() {
     return (
-      <div className={this.props.active ? 'active' : ''}>
+      <div id={this.props.id} className={this.props.active ? 'active' : ''}>
 
         {this.props.items.map(
           (item, index) =>

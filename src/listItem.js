@@ -3,11 +3,9 @@ import Draggable from "react-draggable";
 import React from "react";
 import {
   Card,
-  Menu,
 } from "@blueprintjs/core";
 import {
   ContextMenu2,
-  MenuItem2
 } from "@blueprintjs/popover2";
 
 

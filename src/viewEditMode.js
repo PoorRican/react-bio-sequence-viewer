@@ -1,12 +1,15 @@
+import React from "react";
 import {
   Button,
-  Navbar,
-  NavbarGroup,
-  NavbarHeading, Menu,
+  Navbar, NavbarGroup,
+  Menu,
+  H1,
 } from "@blueprintjs/core";
-import RearrangeableList from "./rearrangeableList";
-import React from "react";
 import {MenuItem2} from "@blueprintjs/popover2";
+
+import RearrangeableList from "./rearrangeableList";
+
+import './viewEditMode.css'
 
 function ModeMenu(props) {
   return (
@@ -41,9 +44,15 @@ export class ViewEditMode extends React.Component {
       items = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     }
 
+    let availableItems = props.availableItems;
+    if (availableItems === undefined) {
+      availableItems = [10,11,12,13,14,15,16,17,18,19];
+    }
+
     this.state = {
       mode: 'view',
       items: items,
+      availableItems: availableItems,
       activeDrags: 0,
       controlledPosition: {
         x: null, y: null
@@ -55,6 +64,18 @@ export class ViewEditMode extends React.Component {
     };
   }
 
+  // container functions
+  getContainer(target) {
+    const id = target.id
+    if (id === `mainItems`) {
+      return this.state.items;
+    } else if (id === `availableItems`) {
+      return this.state.availableItems;
+    } else {
+      return this.getContainer(target.parentNode);
+    }
+  }
+
   // handler functions
   onStart = (e) => {
     this.setState({activeDrags: this.state.activeDrags + 1});
@@ -62,7 +83,8 @@ export class ViewEditMode extends React.Component {
     // select element
     if (!e.target.classList.contains('selected')) {
       const key = Number(e.target.id);
-      const content = this.state.items[key]
+      const container = this.getContainer(e.target);
+      const content = container[key]
       this.setState({
         selected: {
           key: key,
@@ -228,14 +250,28 @@ export class ViewEditMode extends React.Component {
                   moveAction={this.moveAction}
         />
 
-        <RearrangeableList items={this.state.items}
-                           active={this.state.activeDrags}
-                           disabled={disabled}
-                           itemHandlers={itemHandlers}
-                           spacerHandlers={spacerHandlers}
-                           contextMenu={this.contextMenu}
-                           onContextMenu={this.onContextMenu}
-        />
+        <div className={`feature-container`}>
+          <div className={`main`}>
+            <H1>Main Items:</H1>
+            <RearrangeableList id={`mainItems`}
+                               items={this.state.items}
+                               active={this.state.activeDrags}
+                               disabled={disabled}
+                               itemHandlers={itemHandlers}
+                               spacerHandlers={spacerHandlers}
+                               contextMenu={this.contextMenu}
+                               onContextMenu={this.onContextMenu}
+            />
+          </div>
+          <div className={`selection`}>
+            <H1>Available Items:</H1>
+            <RearrangeableList id={`availableItems`}
+                               items={this.state.availableItems}
+                               itemHandlers={itemHandlers}
+                               spacerHandlers={spacerHandlers}
+            />
+          </div>
+        </div>
 
       </div>
     );
