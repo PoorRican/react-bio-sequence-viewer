@@ -10,17 +10,25 @@ class RearrangeableList extends React.Component {
     return (
       <div id={this.props.id} className={this.props.active ? 'active' : ''}>
 
-        {this.props.items.map(
+        {this.props.children.map(
           (item, index) =>
-            <FeatureItem key={index.toString()} id={index}
-                         disabled={this.props.disabled}
-                         contextMenu={this.props.contextMenu}
-                         onContextMenu={this.props.onContextMenu}
-                         {...this.props.itemHandlers}>
-              {item}
-            </FeatureItem>
+            <div id={index}
+                 key={index.toString()}
+                 className={`feature-group`}
+            >
+              {this.props.spacerHandlers ?
+                <ItemSpacer {...this.props.spacerHandlers} /> :
+                ''
+              }
+              <FeatureItem disabled={this.props.disabled}
+                           contextMenu={this.props.contextMenu}
+                           onContextMenu={this.props.onContextMenu}
+                           {...this.props.itemHandlers} >
+                {item}
+              </FeatureItem>
+            </div>
         )}
-        <ItemSpacer id={this.props.items.length}{...this.props.spacerHandlers} />
+        <ItemSpacer id={this.props.children.length} {...this.props.spacerHandlers} style={{gridRow: 1}}/>
 
       </div>
     );

@@ -6,6 +6,7 @@ import {
   H1,
 } from "@blueprintjs/core";
 import {MenuItem2} from "@blueprintjs/popover2";
+import Xarrow from "react-xarrows";
 
 import RearrangeableList from "./rearrangeableList";
 
@@ -13,7 +14,10 @@ import './viewEditMode.css'
 
 function ModeMenu(props) {
   return (
-    <Navbar>
+    <Navbar style={{
+      position: 'fixed',
+      zIndex: 11
+    }}>
       <NavbarGroup>
         <Button large={true} minimal={true} fill={true}
                 icon={`insert`} text={`Insert`}
@@ -76,13 +80,20 @@ export class ViewEditMode extends React.Component {
     }
   }
 
+  getItemId(target) {
+    if (target.id === '') {
+      return this.getItemId(target.parentNode);
+    }
+    return target.id;
+  }
+
   // handler functions
   onStart = (e) => {
     this.setState({activeDrags: this.state.activeDrags + 1});
 
     // select element
     if (!e.target.classList.contains('selected')) {
-      const key = Number(e.target.id);
+      const key = Number(this.getItemId(e.target));
       const container = this.getContainer(e.target);
       const content = container[key]
       this.setState({
@@ -99,7 +110,7 @@ export class ViewEditMode extends React.Component {
     if (e.target.classList.contains("drop-target") && !(e.target.classList.contains("react-draggable-dragging"))) {
 
       const selected = this.state.selected;
-      const key = Number(e.target.parentNode.id);
+      const key = Number(this.getItemId(e.target));
 
       let items;
       if (this.state.mode === `insert`) {
@@ -132,7 +143,7 @@ export class ViewEditMode extends React.Component {
 
   // updates `this.state.selected` when opening context menu
   onContextMenu = (e, position) => {
-    const key = Number(e.target.id);
+    const key = Number(this.getItemId(e.target));
     const content = this.state.items[key]
     this.setState({
       selected: {
@@ -242,7 +253,6 @@ export class ViewEditMode extends React.Component {
     }
 
 
-// make selection area scrollable
     return (
       <div>
 
@@ -252,29 +262,40 @@ export class ViewEditMode extends React.Component {
                   moveAction={this.moveAction}
         />
 
-        <div className={`feature-container`}>
+        <div className={`feature-space`}>
+
           <div className={`main`}>
             <H1>Main Items:</H1>
             <RearrangeableList id={`mainItems`}
-                               items={this.state.items}
                                active={this.state.activeDrags}
                                disabled={disabled}
                                itemHandlers={itemHandlers}
                                spacerHandlers={spacerHandlers}
                                contextMenu={this.contextMenu}
                                onContextMenu={this.onContextMenu}
-                               line={true}
+            >
+              {this.state.items}
+            </RearrangeableList>
+
+            <Xarrow start='0' end={this.state.items.length.toString()}
+                    color={'purple'}
+                    showHead={false}
+                    startAnchor='left'
+                    endAnchor='right'
             />
-          </div>
-          <div className={`selection`}>
+          </div>{/* /.main */}
+
+          <div className={`selection bp4-elevation-2`}>
             <H1>Available Items:</H1>
             <RearrangeableList id={`availableItems`}
-                               items={this.state.availableItems}
                                itemHandlers={itemHandlers}
                                spacerHandlers={spacerHandlers}
-            />
-          </div>
-        </div>
+            >
+              {this.state.availableItems}
+            </RearrangeableList>
+          </div>{/* /.section */}
+
+        </div>{/* /.feature-space */}
 
       </div>
     );
