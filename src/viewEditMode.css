@@ -16,24 +16,21 @@ body {
     cursor: move;
 }
 
-.react-draggable strong {
-    background: #ddd;
-    border: 1px solid #999;
-    border-radius: 3px;
-    display: block;
-    margin-bottom: 10px;
-    padding: 3px 5px;
-    text-align: center;
-}
-
-.box {
+/* Feature */
+.feature {
     background: #fff;
     border: 1px solid #999;
     border-radius: 3px;
-    width: 180px;
-    height: 180px;
+    min-width: 180px;
+    min-height: 60px;
     margin: 10px;
     float: left;
+    position: relative;
+    z-index: 5;
+}
+
+.feature.react-draggable-dragging {
+    z-index: -1;
 }
 
 .no-pointer-events {
@@ -47,7 +44,6 @@ body {
 /* Spacer */
 .spacer {
     display: inline;
-    height: 180px;
     margin: 10px 0;
     float: left;
 }
@@ -56,8 +52,8 @@ body {
     z-index: 6;
     position: absolute;
     margin-left: -40px;
-    width: 80px;
-    height: 180px;
+    height: 100%;
+    min-width: 60px;
     background-color: transparent;
 }
 
@@ -74,22 +70,14 @@ body {
     position: relative;
     z-index: 5;
     background: gray;
-    height: 180px;
+    min-height: 60px;
     width: 10px;
 }
 
-/* Rearrange Block */
-.rearrange-block {
-    position: relative;
-    z-index: 5;
-}
-
-.selected {
-    position: absolute;
-}
-
-.rearrange-block.react-draggable-dragging {
-    z-index: -1;
+.feature-group {
+    grid-row: 1;
+    min-height: 80px;
+    min-width: 198px;
 }
 
 /* Container Classes */
@@ -99,7 +87,11 @@ body {
     flex-direction: row;
 }
 
-/* primary feature container */
+#mainItems {
+    display: inline-grid;
+    min-height: 80px;
+}
+
 .feature-container .main {
     flex-basis: 75%;
     flex-direction: row;

@@ -2,7 +2,7 @@ import React from 'react';
 
 import './viewEditMode.css'
 import {ItemSpacer} from "./itemSpacer";
-import {ListItem} from "./listItem";
+import {FeatureItem} from "./featureItem";
 
 
 class RearrangeableList extends React.Component {
@@ -12,13 +12,13 @@ class RearrangeableList extends React.Component {
 
         {this.props.items.map(
           (item, index) =>
-            <ListItem key={index.toString()} id={index}
-                      disabled={this.props.disabled}
-                      contextMenu={this.props.contextMenu}
-                      onContextMenu={this.props.onContextMenu}
-                      {...this.props.itemHandlers}>
+            <FeatureItem key={index.toString()} id={index}
+                         disabled={this.props.disabled}
+                         contextMenu={this.props.contextMenu}
+                         onContextMenu={this.props.onContextMenu}
+                         {...this.props.itemHandlers}>
               {item}
-            </ListItem>
+            </FeatureItem>
         )}
         <ItemSpacer id={this.props.items.length}{...this.props.spacerHandlers} />
 

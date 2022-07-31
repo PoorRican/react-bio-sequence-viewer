@@ -241,6 +241,8 @@ export class ViewEditMode extends React.Component {
       disabled = this.state.activeDrags;
     }
 
+
+// make selection area scrollable
     return (
       <div>
 
@@ -261,6 +263,7 @@ export class ViewEditMode extends React.Component {
                                spacerHandlers={spacerHandlers}
                                contextMenu={this.contextMenu}
                                onContextMenu={this.onContextMenu}
+                               line={true}
             />
           </div>
           <div className={`selection`}>
