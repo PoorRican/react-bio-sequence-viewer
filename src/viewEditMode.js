@@ -265,7 +265,7 @@ export class ViewEditMode extends React.Component {
         <div className={`feature-space`}>
 
           <div className={`main`}>
-            <H1>Main Items:</H1>
+            <H1 style={{position: 'fixed'}}>Main Items:</H1>
             <RearrangeableList id={`mainItems`}
                                active={this.state.activeDrags}
                                disabled={disabled}
