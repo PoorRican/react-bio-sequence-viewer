@@ -13,19 +13,26 @@ body {
 }
 
 /* default cursor */
-.main:not(.view) .feature, .cursor {
-    cursor: grab;
+.main.view .feature, .cursor {
+    cursor: zoom-in;
 }
 
-.main.view .feature.disabled:not(.react-draggable-dragging), .cursor {
-    cursor: context-menu;
+.main.select .feature, .cursor {
+    cursor: ew-resize;
 }
 
 .main.move .feature, .cursor {
     cursor: move;
 }
 
-.main .feature.react-draggable-dragging, .cursor {
+.main.insert .feature, .cursor {
+    cursor: not-allowed;
+}
+.selection.insert .feature, .cursor {
+    cursor: grab;
+}
+
+.feature-space .feature.react-draggable-dragging, .cursor {
     cursor: grabbing;
 }
 
@@ -40,7 +47,7 @@ body {
     border-radius: 3px;
     min-width: 180px;
     min-height: 60px;
-    margin: 10px;
+    margin: 13px 10px;
     float: left;
     position: relative;
     z-index: 4;
@@ -60,16 +67,14 @@ body {
     position: relative;
     margin: 10px 0;
     float: left;
-}
-.spacer .drop-target {
-    z-index: 6;
+    min-height: 86px;
 }
 
-.active .feature-group .spacer .drop-target {
+.active .spacer .drop-target {
+    height: 100%;
     z-index: 10;
     position: absolute;
     margin-left: -30px;
-    min-height: 60px;
     min-width: 60px;
     background-color: transparent;
 }
@@ -80,21 +85,28 @@ body {
 
 .spacer .indicator {
     border-radius: 3px;
-    min-height: 60px;
 }
 
 .active .spacer:hover .indicator {
+    height: 86px;
     display: block;
     position: relative;
     z-index: 9;
     background: gray;
     width: 10px;
-    content: ""
+    content: "";
+    opacity: 50%;
+}
+
+.main .feature-group {
+    grid-row: 1;
+}
+.selection .feature-group {
+    grid-column: 1;
 }
 
 .feature-group {
-    grid-row: 1;
-    height: 80px;
+    height: 86px;
     min-width: 200px;
 }
 
@@ -121,7 +133,7 @@ body {
 #mainItems {
     display: grid;
     width: 100%;
-    padding-top: 20%;
+    padding-top: 300px;
 }
 
 /* Selection space */
@@ -133,7 +145,6 @@ body {
     top: 50px;
     right: 0;
     flex-direction: column;
-    overflow-y: scroll;
     padding: 25px 25px 75px 25px;
-    z-index: 9;
+    z-index: 8;
 }

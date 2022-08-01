@@ -34,21 +34,13 @@ function ModeMenu(props) {
 
         <Navbar.Divider />
 
-        <Button large={true} minimal={true} fill={true}
-                icon={`eye-open`} text={`View`}
-                active={props.mode === 'view'}
-                onClick={props.viewAction}
-        />
-        <Button large={true} minimal={true} fill={true}
-                icon={`insert`} text={`Insert`}
-                active={props.mode === 'insert'}
-                onClick={props.insertAction}
-        />
-        <Button large={true} minimal={true} fill={true}
-                icon={`move`} text={`Move`}
-                active={props.mode === 'move'}
-                onClick={props.moveAction}
-        />
+        {props.buttons.map((i) =>
+          <Button large={true} minimal={true} fill={true}
+                  icon={i.icon} text={i.text}
+                  active={props.mode === i.mode}
+                  onClick={i.action}
+          />
+        )}
 
       </Navbar.Group>
     </Navbar>
@@ -57,7 +49,7 @@ function ModeMenu(props) {
 
 export class ViewEditMode extends React.Component {
   static isStaticMode(mode) {
-    const modes = ['view',];
+    const modes = ['view', 'select'];
     return Boolean(modes.indexOf(mode) + 1);
   }
 
@@ -241,19 +233,6 @@ export class ViewEditMode extends React.Component {
     return s1.concat(s2)
   }
 
-  // Mode functions
-  viewAction = (e) => {
-    this.setState({mode: 'view'});
-  }
-
-  insertAction = (e) => {
-    this.setState({mode: 'insert'});
-  }
-
-  moveAction = (e) => {
-    this.setState({mode: 'move'})
-  }
-
   // Context menu functions
   doDelete = (e) => {
     this.setState({
@@ -262,7 +241,34 @@ export class ViewEditMode extends React.Component {
   }
 
   render() {
-    // view props
+    const menu_buttons = [
+      {
+        mode: 'view',
+        icon: 'eye-open',
+        text: 'View',
+        action: () => this.setState({mode: 'view'})
+      },
+      {
+        mode: 'select',
+        icon: 'select',
+        text: 'Select',
+        action: () => this.setState({mode: 'select'})
+      },
+      {
+        mode: 'insert',
+        icon: 'insert',
+        text: 'Insert',
+        action: () => this.setState({mode: 'insert'})
+      },
+      {
+        mode: 'move',
+        icon: 'move',
+        text: 'Move',
+        action: () => this.setState({mode: 'move'})
+      },
+    ]
+
+    // determine view props
     let disabled = ViewEditMode.isStaticMode(this.state.mode)
     let expanded = false;
 
@@ -270,27 +276,24 @@ export class ViewEditMode extends React.Component {
     let itemHandlers    = undefined;
     let spacerHandlers  = undefined;
 
-    if (!disabled) {
+    // set props based mode
+    if (!ViewEditMode.isStaticMode(this.state.mode)) {
       itemHandlers = {
         onStart: this.onStart,
         onStop: this.onDrop,
         onDrag: this.handleDrag,};
       spacerHandlers = {};
-      disabled = Boolean(this.state.activeDrags);
     }
-
     if (this.state.mode === 'insert') {
+      disabled = true;
       expanded = true;
     }
-
 
     return (
       <div>
 
         <ModeMenu mode={this.state.mode}
-                  viewAction={this.viewAction}
-                  insertAction={this.insertAction}
-                  moveAction={this.moveAction}
+                  buttons={menu_buttons}
                   heading={`Main Items`}
         />
 
@@ -318,12 +321,14 @@ export class ViewEditMode extends React.Component {
                       showHead={false}
                       startAnchor='left'
                       endAnchor='right'
+                      curveness={0}
+                      path={'straight'}
               />
 
             </ContextMenu2>
           </div>{/* /.main */}
 
-          <div className={`selection bp4-elevation-2`}
+          <div className={`selection bp4-elevation-2 ` + this.state.mode}
                hidden={this.state.mode !== 'insert'}>
             <H1>Available Items:</H1>
             <RearrangeableList id={`availableItems`}
