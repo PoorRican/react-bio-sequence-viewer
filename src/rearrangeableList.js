@@ -1,3 +1,7 @@
+import {
+  OL,
+  Classes,
+} from '@blueprintjs/core'
 import React from 'react';
 
 import './viewEditMode.css'
@@ -8,11 +12,16 @@ import {FeatureItem} from "./featureItem";
 class RearrangeableList extends React.Component {
   render() {
     return (
-      <div id={this.props.id} className={this.props.active ? 'active' : ''}>
+      <OL id={this.props.id}
+          className={[
+            this.props.active ? 'active' : '',
+            Classes.LIST_UNSTYLED,
+          ].join(' ')}
+      >
 
         {this.props.children.map(
           (item, index) =>
-            <div id={index}
+            <li id={index}
                  key={index.toString()}
                  className={`feature-group ` + (this.props.selected_id === index ? 'selected' : '')}
             >
@@ -24,12 +33,12 @@ class RearrangeableList extends React.Component {
                            {...this.props.itemHandlers} >
                 {item}
               </FeatureItem>
-            </div>
+            </li>
         )}
 
         <ItemSpacer id={this.props.children.length} {...this.props.spacerHandlers} style={{gridRow: 1}}/>
 
-      </div>
+      </OL>
     );
   }
 
