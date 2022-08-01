@@ -12,16 +12,21 @@ body {
     margin: 0;
 }
 
-.feature.react-draggable, .cursor {
-    cursor: crosshair;
+/* default cursor */
+.main:not(.view) .feature, .cursor {
+    cursor: grab;
 }
 
-.feature.react-draggable.disabled:not(.react-draggable-dragging), .cursor {
+.main.view .feature.disabled:not(.react-draggable-dragging), .cursor {
     cursor: context-menu;
 }
 
-.feature.react-draggable-dragging, .cursor {
-    cursor: ew-resize;
+.main.move .feature, .cursor {
+    cursor: move;
+}
+
+.main .feature.react-draggable-dragging, .cursor {
+    cursor: grabbing;
 }
 
 .active .drop-target:not(.react-draggable-dragging), .cursor {

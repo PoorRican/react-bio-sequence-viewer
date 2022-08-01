@@ -56,6 +56,11 @@ function ModeMenu(props) {
 }
 
 export class ViewEditMode extends React.Component {
+  static isStaticMode(mode) {
+    const modes = ['view',];
+    return Boolean(modes.indexOf(mode) + 1);
+  }
+
   constructor(props) {
     super(props);
 
@@ -117,18 +122,15 @@ export class ViewEditMode extends React.Component {
   onStart = (e) => {
     this.setState({activeDrags: this.state.activeDrags + 1});
 
-    // select element
-    if (!e.target.classList.contains('selected')) {
-      const key = Number(this.getItemId(e.target));
-      const container = this.getContainer(e.target);
-      const content = container[key]
-      this.setState({
+    const key = Number(this.getItemId(e.target));
+    const container = this.getContainer(e.target);
+    const content = container[key]
+    this.setState({
         selected: {
           key: key,
           content: content,
         }
       });
-    }
   };
 
   onDrop = (e) => {
@@ -140,23 +142,16 @@ export class ViewEditMode extends React.Component {
 
       let items;
       if (this.state.mode === `insert`) {
-        items = this.insert(this.state.items, selected.content, key);
+        items = ViewEditMode.insert(this.state.items, selected.content, key);
       }
       else if (this.state.mode === 'move') {
-        items = this.move(this.state.items, selected.content, [selected.key, key])
+        items = ViewEditMode.move(this.state.items, selected.content, [selected.key, key])
       } else {
-        items = this.state.items;
+        return;
       }
       this.setState({items: items});
     }
   };
-
-  onDropAreaMouseEnter = (e) => {
-    if (this.state.activeDrags && !(e.target.classList.contains("react-draggable-dragging"))) {
-    }
-  }
-  onDropAreaMouseLeave = (e) => {
-  }
 
   handleDrag = (e, position) => {
     if (this.state.activeDrags) {
@@ -168,10 +163,8 @@ export class ViewEditMode extends React.Component {
   };
 
   // updates `this.state.selected` when opening context menu
-  onContextMenu = (e, position) => {
+  onContextMenu = (e) => {
     const inFeature = this.isFeature(e.target);
-    console.log(inFeature);
-
     if (inFeature) {
       const key = Number(this.getItemId(e.target));
       const content = this.getItem(key);
@@ -210,15 +203,14 @@ export class ViewEditMode extends React.Component {
     return this.state.items[key];
   }
 
-  insert(list, item, position) {
+  static insert(list, item, position) {
     const s1 = list.slice(0, position).concat([item]);
     const s2 = list.slice(position);
     return s1.concat(s2)
   }
 
-  move(list, item, positions) {
+  static move(list, item, positions) {
     if (positions[0] === positions[1]) {
-      console.debug('same same')
       return list;
     }
 
@@ -237,13 +229,13 @@ export class ViewEditMode extends React.Component {
     return s1.concat(s2).concat(s3)
   }
 
-  delete(list, position) {
+  static delete(list, position) {
     const s1 = list.slice(0, position);
     const s2 = list.slice(position + 1);
     return s1.concat(s2)
   }
 
-  swap(list, item, position) {
+  static swap(list, item, position) {
     const s1 = list.slice(0, position).concat({item});
     const s2 = list.slice(position + 1);
     return s1.concat(s2)
@@ -265,31 +257,25 @@ export class ViewEditMode extends React.Component {
   // Context menu functions
   doDelete = (e) => {
     this.setState({
-        items: this.delete(this.state.items, this.state.selected.key)
+        items: ViewEditMode.delete(this.state.items, this.state.selected.key)
     })
   }
 
   render() {
     // view props
-    let disabled = this.state.mode === 'view';
+    let disabled = ViewEditMode.isStaticMode(this.state.mode)
     let expanded = false;
 
     // handlers
-    let itemHandlers = undefined;
-    let spacerHandlers          = undefined;
-    if (
-      this.state.mode === 'move' ||
-      this.state.mode === 'insert'
-    ) {
+    let itemHandlers    = undefined;
+    let spacerHandlers  = undefined;
+
+    if (!disabled) {
       itemHandlers = {
         onStart: this.onStart,
         onStop: this.onDrop,
-        onDrag: this.handleDrag,
-        onMouseEnter: this.onDropAreaMouseEnter,
-        onMouseLeave: this.onDropAreaMouseLeave};
-      spacerHandlers = {
-        onMouseEnter: this.onDropAreaMouseEnter,
-        onMouseLeave: this.onDropAreaMouseLeave};
+        onDrag: this.handleDrag,};
+      spacerHandlers = {};
       disabled = Boolean(this.state.activeDrags);
     }
 
@@ -310,12 +296,13 @@ export class ViewEditMode extends React.Component {
 
         <div className={`feature-space`}>
 
-          <div className={`main ` + (expanded ? 'expanded' : '')}>
+          <div className={[`main`, (expanded ? 'expanded' : ''), this.state.mode].join(' ')}>
+
             <ContextMenu2
               //disabled={props.disabled}
               content={this.contextMenu}
-              onContextMenu={this.onContextMenu}
-            >
+              onContextMenu={this.onContextMenu}>
+
               <RearrangeableList id={`mainItems`}
                                  active={this.state.activeDrags}
                                  selected_id={this.state.selected.key}
@@ -332,10 +319,12 @@ export class ViewEditMode extends React.Component {
                       startAnchor='left'
                       endAnchor='right'
               />
+
             </ContextMenu2>
           </div>{/* /.main */}
 
-          <div className={`selection bp4-elevation-2`} hidden={this.state.mode !== 'insert'}>
+          <div className={`selection bp4-elevation-2`}
+               hidden={this.state.mode !== 'insert'}>
             <H1>Available Items:</H1>
             <RearrangeableList id={`availableItems`}
                                itemHandlers={itemHandlers}
