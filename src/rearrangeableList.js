@@ -14,7 +14,7 @@ class RearrangeableList extends React.Component {
           (item, index) =>
             <div id={index}
                  key={index.toString()}
-                 className={`feature-group`}
+                 className={`feature-group ` + (this.props.selected_id === index ? 'selected' : '')}
             >
               {this.props.spacerHandlers ?
                 <ItemSpacer {...this.props.spacerHandlers} /> :

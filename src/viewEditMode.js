@@ -222,15 +222,15 @@ export class ViewEditMode extends React.Component {
 
   // Mode functions
   viewAction = (e) => {
-    this.setState({'mode': 'view'});
+    this.setState({mode: 'view'});
   }
 
   insertAction = (e) => {
-    this.setState({'mode': 'insert'});
+    this.setState({mode: 'insert'});
   }
 
   moveAction = (e) => {
-    this.setState({'mode': 'move'})
+    this.setState({mode: 'move'})
   }
 
   // Context menu functions
@@ -243,6 +243,7 @@ export class ViewEditMode extends React.Component {
   render() {
     // view props
     let disabled = this.state.mode === 'view';
+    let expanded = false;
 
     // handlers
     let itemHandlers = undefined;
@@ -260,7 +261,11 @@ export class ViewEditMode extends React.Component {
       spacerHandlers = {
         onMouseEnter: this.onDropAreaMouseEnter,
         onMouseLeave: this.onDropAreaMouseLeave};
-      disabled = this.state.activeDrags;
+      disabled = Boolean(this.state.activeDrags);
+    }
+
+    if (this.state.mode === 'insert') {
+      expanded = true;
     }
 
 
@@ -276,9 +281,10 @@ export class ViewEditMode extends React.Component {
 
         <div className={`feature-space`}>
 
-          <div className={`main`}>
+          <div className={`main ` + (expanded ? 'expanded' : '')}>
             <RearrangeableList id={`mainItems`}
                                active={this.state.activeDrags}
+                               selected_id={this.state.selected.key}
                                disabled={disabled}
                                itemHandlers={itemHandlers}
                                spacerHandlers={spacerHandlers}
@@ -296,7 +302,7 @@ export class ViewEditMode extends React.Component {
             />
           </div>{/* /.main */}
 
-          <div className={`selection bp4-elevation-2`}>
+          <div className={`selection bp4-elevation-2`} hidden={this.state.mode !== 'insert'}>
             <H1>Available Items:</H1>
             <RearrangeableList id={`availableItems`}
                                itemHandlers={itemHandlers}
