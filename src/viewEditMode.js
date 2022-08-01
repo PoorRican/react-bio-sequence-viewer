@@ -1,7 +1,7 @@
 import React from "react";
 import {
   Button,
-  Navbar, NavbarGroup,
+  Navbar,
   Menu,
   H1,
 } from "@blueprintjs/core";
@@ -18,7 +18,17 @@ function ModeMenu(props) {
       position: 'fixed',
       zIndex: 11
     }}>
-      <NavbarGroup>
+      <Navbar.Group>
+
+        <Navbar.Heading style={{
+                          minWidth: '75px',
+                          display: 'block',
+                        }}>
+          {props.heading}
+        </Navbar.Heading>
+
+        <Navbar.Divider />
+
         <Button large={true} minimal={true} fill={true}
                 icon={`insert`} text={`Insert`}
                 active={props.mode === 'insert'}
@@ -34,7 +44,8 @@ function ModeMenu(props) {
                 active={props.mode === 'move'}
                 onClick={props.moveAction}
         />
-      </NavbarGroup>
+
+      </Navbar.Group>
     </Navbar>
   )
 }
@@ -234,8 +245,8 @@ export class ViewEditMode extends React.Component {
     let disabled = this.state.mode === 'view';
 
     // handlers
-    let itemHandlers = null
-    let spacerHandlers          = null;
+    let itemHandlers = undefined;
+    let spacerHandlers          = undefined;
     if (
       this.state.mode === 'move' ||
       this.state.mode === 'insert'
@@ -260,12 +271,12 @@ export class ViewEditMode extends React.Component {
                   viewAction={this.viewAction}
                   insertAction={this.insertAction}
                   moveAction={this.moveAction}
+                  heading={`Main Items`}
         />
 
         <div className={`feature-space`}>
 
           <div className={`main`}>
-            <H1 style={{position: 'fixed'}}>Main Items:</H1>
             <RearrangeableList id={`mainItems`}
                                active={this.state.activeDrags}
                                disabled={disabled}

@@ -108,7 +108,7 @@ body {
 #mainItems {
     display: grid;
     width: 100%;
-    padding-top: 46px;
+    padding-top: 18%;
 }
 
 /* Selection space */
