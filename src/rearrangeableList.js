@@ -21,13 +21,12 @@ class RearrangeableList extends React.Component {
                 ''
               }
               <FeatureItem disabled={this.props.disabled}
-                           contextMenu={this.props.contextMenu}
-                           onContextMenu={this.props.onContextMenu}
                            {...this.props.itemHandlers} >
                 {item}
               </FeatureItem>
             </div>
         )}
+
         <ItemSpacer id={this.props.children.length} {...this.props.spacerHandlers} style={{gridRow: 1}}/>
 
       </div>

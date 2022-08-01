@@ -5,7 +5,12 @@ import {
   Menu,
   H1,
 } from "@blueprintjs/core";
-import {MenuItem2} from "@blueprintjs/popover2";
+import {
+  MenuItem2,
+  ContextMenu2
+} from "@blueprintjs/popover2";
+import {
+} from "@blueprintjs/popover2";
 import Xarrow from "react-xarrows";
 
 import RearrangeableList from "./rearrangeableList";
@@ -30,14 +35,14 @@ function ModeMenu(props) {
         <Navbar.Divider />
 
         <Button large={true} minimal={true} fill={true}
-                icon={`insert`} text={`Insert`}
-                active={props.mode === 'insert'}
-                onClick={props.insertAction}
-        />
-        <Button large={true} minimal={true} fill={true}
                 icon={`eye-open`} text={`View`}
                 active={props.mode === 'view'}
                 onClick={props.viewAction}
+        />
+        <Button large={true} minimal={true} fill={true}
+                icon={`insert`} text={`Insert`}
+                active={props.mode === 'insert'}
+                onClick={props.insertAction}
         />
         <Button large={true} minimal={true} fill={true}
                 icon={`move`} text={`Move`}
@@ -80,6 +85,16 @@ export class ViewEditMode extends React.Component {
   }
 
   // container functions
+  isFeature(target) {
+    if (target) {
+      if (target.classList && target.classList.contains('feature')) {
+        return true;
+      } else {
+        return this.isFeature(target.parentNode)
+      }
+    }
+  }
+
   getContainer(target) {
     const id = target.id
     if (id === `mainItems`) {
@@ -154,23 +169,37 @@ export class ViewEditMode extends React.Component {
 
   // updates `this.state.selected` when opening context menu
   onContextMenu = (e, position) => {
-    const key = Number(this.getItemId(e.target));
-    const content = this.state.items[key]
-    this.setState({
-      selected: {
-        key: key,
-        content: content,
-      }
-    });
+    const inFeature = this.isFeature(e.target);
+    console.log(inFeature);
+
+    if (inFeature) {
+      const key = Number(this.getItemId(e.target));
+      const content = this.getItem(key);
+      this.setState({
+        selected: {
+          key: key,
+          content: content,
+        }
+      });
+    } else {
+      this.setState({
+        selected: {
+          key: null,
+          content: null,
+        }
+      })
+    }
   }
 
   contextMenu = () => {
+
     return (
       <Menu>
         <MenuItem2 text={`Delete`}
                    icon={`trash`}
                    onClick={this.doDelete}
                    intent={`danger`}
+                   disabled={(this.state.selected.key === null)}
         />
       </Menu>
     )
@@ -282,24 +311,28 @@ export class ViewEditMode extends React.Component {
         <div className={`feature-space`}>
 
           <div className={`main ` + (expanded ? 'expanded' : '')}>
-            <RearrangeableList id={`mainItems`}
-                               active={this.state.activeDrags}
-                               selected_id={this.state.selected.key}
-                               disabled={disabled}
-                               itemHandlers={itemHandlers}
-                               spacerHandlers={spacerHandlers}
-                               contextMenu={this.contextMenu}
-                               onContextMenu={this.onContextMenu}
+            <ContextMenu2
+              //disabled={props.disabled}
+              content={this.contextMenu}
+              onContextMenu={this.onContextMenu}
             >
-              {this.state.items}
-            </RearrangeableList>
+              <RearrangeableList id={`mainItems`}
+                                 active={this.state.activeDrags}
+                                 selected_id={this.state.selected.key}
+                                 disabled={disabled}
+                                 itemHandlers={itemHandlers}
+                                 spacerHandlers={spacerHandlers}
+              >
+                {this.state.items}
+              </RearrangeableList>
 
-            <Xarrow start='0' end={this.state.items.length.toString()}
-                    color={'purple'}
-                    showHead={false}
-                    startAnchor='left'
-                    endAnchor='right'
-            />
+              <Xarrow start='0' end={this.state.items.length.toString()}
+                      color={'purple'}
+                      showHead={false}
+                      startAnchor='left'
+                      endAnchor='right'
+              />
+            </ContextMenu2>
           </div>{/* /.main */}
 
           <div className={`selection bp4-elevation-2`} hidden={this.state.mode !== 'insert'}>
