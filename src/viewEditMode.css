@@ -13,7 +13,15 @@ body {
 }
 
 .react-draggable, .cursor {
-    cursor: move;
+    cursor: crosshair;
+}
+
+.react-draggable.disabled:not(.react-draggable-dragging), .cursor {
+    cursor: context-menu;
+}
+
+.react-draggable-dragging, .cursor {
+    cursor: s-resize;
 }
 
 /* Feature */

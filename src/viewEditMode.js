@@ -289,7 +289,6 @@ export class ViewEditMode extends React.Component {
             <H1>Available Items:</H1>
             <RearrangeableList id={`availableItems`}
                                itemHandlers={itemHandlers}
-                               spacerHandlers={spacerHandlers}
             >
               {this.state.availableItems}
             </RearrangeableList>

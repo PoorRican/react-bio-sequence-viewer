@@ -21,13 +21,15 @@ export function FeatureItem(props) {
                  onStop={props.onStop}
                  onDrag={props.onDrag}
                  position={{x: 0, y: 0}}
-                 defaultPosition={props.defaultPosition}>
-        <Card interactive={!props.disabled}
+                 defaultPosition={props.defaultPosition}
+                 disabled={props.disabled}
+      >
+        <Card
               id={props.id}
               className={[
                 `feature drop-target`,
                 props.className,
-                //props.disabled ? 'no-pointer-events' : '',
+                props.disabled ? 'disabled' : '',
               ].join(' ')}
               onMouseEnter={props.onMouseEnter}
               onMouseLeave={props.onMouseLeave}>
