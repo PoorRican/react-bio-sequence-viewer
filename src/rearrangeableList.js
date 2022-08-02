@@ -10,25 +10,6 @@ import {FeatureItem} from "./featureItem";
 
 
 class RearrangeableList extends React.Component {
-  isSelected(index) {
-
-    if (this.props.selected === null ||
-        this.props.selected === undefined) {
-      return false
-    }
-
-    else if (typeof(this.props.selected) === "number") {
-      return this.props.selected === index
-    }
-
-    else if ((index <= this.props.selected[0] && index >= this.props.selected[1]) ||
-             (index >= this.props.selected[0] && index <= this.props.selected[1])) {
-      return true;
-    }
-
-    return false;
-  }
-
   render() {
     return (
       <OL id={this.props.id}
@@ -51,7 +32,7 @@ class RearrangeableList extends React.Component {
                 ''
               }
               <FeatureItem disabled={this.props.disabled}
-                           selected={this.isSelected(index)}
+                           selected={(this.props.selected) ? this.props.selected[index] : false}
                            {...this.props.itemHandlers}
               >
                 {item}

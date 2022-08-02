@@ -56,9 +56,9 @@ export class ViewEditMode extends React.Component {
   constructor(props) {
     super(props);
 
-    let items = props.items;
-    if (items === undefined) {
-      items = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    let mainItems = props.items;
+    if (mainItems === undefined) {
+      mainItems = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     }
 
     let availableItems = props.availableItems;
@@ -68,8 +68,10 @@ export class ViewEditMode extends React.Component {
 
     this.state = {
       mode: 'view',
-      items: items,
-      availableItems: availableItems,
+      items: {
+        mainItems: mainItems,
+        availableItems: availableItems
+      },
       activeDrags: 0,
       controlledPosition: {
         x: null, y: null
@@ -82,7 +84,18 @@ export class ViewEditMode extends React.Component {
     };
   }
 
-  // container functions
+  // helper functions
+  clearSelected() {
+    this.setState({
+      selected: {
+        key: null,
+        container: null,
+        content: null,
+      }
+    })
+  }
+
+  // feature functions
   isFeature(target) {
     if (target) {
       if (target.classList && target.classList.contains('feature')) {
@@ -93,12 +106,32 @@ export class ViewEditMode extends React.Component {
     }
   }
 
+  isSelected(index, container='') {
+    const key = this.state.selected.key;
+
+    if (key === null || key === undefined) {
+      return false
+    }
+
+    if (container && !(container === this.state.selected.container)) {
+      return false;
+    }
+
+    else if (typeof(key) === "number") {
+      return key === index
+    }
+
+    else if (index >= key[0] && index <= key[1]) {
+      return true;
+    }
+
+    return false;
+  }
+
   getContainer(target) {
     const id = target.id
-    if (id === `mainItems`) {
-      return this.state.items;
-    } else if (id === `availableItems`) {
-      return this.state.availableItems;
+    if (id === `mainItems` || id === `availableItems`) {
+      return id;
     } else {
       return this.getContainer(target.parentNode);
     }
@@ -114,37 +147,28 @@ export class ViewEditMode extends React.Component {
   // handler functions
   onClick = (e) => {
     if (this.state.mode === 'select') {
+      const key = Number(this.getItemId(e.target));
+      const container = this.getContainer(e.target)
+
       if (this.state.selecting) {
         const prev_sel_key = this.state.selected.key
-        const key = Number(this.getItemId(e.target));
+        const sorted = [prev_sel_key, key].sort()
 
-        let keys = [];
-        let contents = [];
+        this.setState({
+          selected: {
+            key:        sorted,
+            container:  container,
+            content:    this.state.items.mainItems.slice(sorted[0], sorted[1]),
+          }
+        })
 
-        if (key > prev_sel_key) {
-          this.setState({
-            selected: {
-              key:      [prev_sel_key, key],
-              content:  this.state.items.slice(prev_sel_key, key),
-            }
-          })
-        } else {
-          this.setState({
-            selected: {
-              key:      [key, prev_sel_key],
-              content:  this.state.items.slice(key, prev_sel_key),
-            }
-          })
-        }
+      } else {                        // this runs first
 
-      } else {
-        // this runs first
-        const key = Number(this.getItemId(e.target));
-        const content = this.state.items[key]
         this.setState({
           selected: {
             key: key,
-            content: content,
+            container: container,
+            content: this.state.items[container][key],
           }
         });
       }
@@ -157,10 +181,11 @@ export class ViewEditMode extends React.Component {
 
     const key = Number(this.getItemId(e.target));
     const container = this.getContainer(e.target);
-    const content = container[key]
+    const content = this.getItem(container, key)
     this.setState({
         selected: {
           key: key,
+          container,
           content: content,
         }
       });
@@ -172,16 +197,18 @@ export class ViewEditMode extends React.Component {
 
       const selected = this.state.selected;
       const key = Number(this.getItemId(e.target));
+      const container = this.getContainer(e.target);
 
-      let items;
+      let items = this.state.items;
       if (this.state.mode === `insert`) {
-        items = ViewEditMode.insert(this.state.items, selected.content, key);
+        items[container] = ViewEditMode.insert(items[container], selected.content, key);
       }
       else if (this.state.mode === 'move') {
-        items = ViewEditMode.move(this.state.items, selected.content, [selected.key, key])
+        items[container] = ViewEditMode.move(items[container], selected.content, [selected.key, key])
       } else {
         return;
       }
+
       this.setState({items: items});
     }
   };
@@ -200,10 +227,16 @@ export class ViewEditMode extends React.Component {
     const inFeature = this.isFeature(e.target);
     if (inFeature) {
       const key = Number(this.getItemId(e.target));
-      const content = this.getItem(key);
+      const container = this.getContainer(e.target)
+      const content = this.getItem(container, key);
+
+      if (this.isSelected(key, container)) {
+        return;
+      }
       this.setState({
         selected: {
           key: key,
+          container: container,
           content: content,
         }
       });
@@ -211,6 +244,7 @@ export class ViewEditMode extends React.Component {
       this.setState({
         selected: {
           key: null,
+          container: null,
           content: null,
         }
       })
@@ -232,8 +266,8 @@ export class ViewEditMode extends React.Component {
   }
 
   // list manipulation functions
-  getItem(key) {
-    return this.state.items[key];
+  getItem(container, key) {
+    return this.state.items[container][key];
   }
 
   static insert(list, item, position) {
@@ -263,9 +297,15 @@ export class ViewEditMode extends React.Component {
   }
 
   static delete(list, position) {
-    const s1 = list.slice(0, position);
-    const s2 = list.slice(position + 1);
-    return s1.concat(s2)
+    if (typeof(position) === 'number') {
+      const s1 = list.slice(0, position);
+      const s2 = list.slice(position + 1);
+      return s1.concat(s2)
+    } else {
+      const s1 = list.slice(0, position[0]);
+      const s2 = list.slice(position[1] + 1);
+      return s1.concat(s2)
+    }
   }
 
   static swap(list, item, position) {
@@ -276,9 +316,15 @@ export class ViewEditMode extends React.Component {
 
   // Context menu functions
   doDelete = (e) => {
+    let items = this.state.items;
+    const container = this.state.selected.container;
+
+    items[container] = ViewEditMode.delete(this.state.items[container], this.state.selected.key)
+
     this.setState({
-        items: ViewEditMode.delete(this.state.items, this.state.selected.key)
-    })
+      items: items
+    });
+    this.clearSelected();
   }
 
   render() {
@@ -345,30 +391,28 @@ export class ViewEditMode extends React.Component {
 
         <div className={`feature-space`}>
 
-          <div className={[
-            `main`,
+          <div className={'main ' + [
             (expanded ? 'expanded' : ''),
             this.state.mode,
             (this.state.selecting ? 'selecting' : ''),
           ].join(' ')}>
 
             <ContextMenu2
-              //disabled={props.disabled}
               content={this.contextMenu}
               onContextMenu={this.onContextMenu}>
 
               <RearrangeableList id={`mainItems`}
                                  active={this.state.activeDrags}
-                                 selected_id={this.state.selected.key}
                                  disabled={disabled}
                                  itemHandlers={itemHandlers}
                                  spacerHandlers={spacerHandlers}
-                                 selected={this.state.selected.key}
+                                 selected={(this.state.selected.container === 'mainItems') ?
+                                   this.state.items.mainItems.map((item, index) => {return this.isSelected(index)}) : []}
               >
-                {this.state.items}
+                {this.state.items.mainItems}
               </RearrangeableList>
 
-              <Xarrow start='0' end={this.state.items.length.toString()}
+              <Xarrow start='0' end={this.state.items.mainItems.length.toString()}
                       color={'purple'}
                       showHead={false}
                       startAnchor='left'
@@ -386,7 +430,7 @@ export class ViewEditMode extends React.Component {
             <RearrangeableList id={`availableItems`}
                                itemHandlers={itemHandlers}
             >
-              {this.state.availableItems}
+              {this.state.items.availableItems}
             </RearrangeableList>
           </div>{/* /.section */}
 
