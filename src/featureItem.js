@@ -1,4 +1,3 @@
-import {ItemSpacer} from "./itemSpacer";
 import Draggable from "react-draggable";
 import React from "react";
 import {
@@ -22,7 +21,9 @@ export function FeatureItem(props) {
               `feature drop-target`,
               props.className,
               props.disabled ? 'disabled' : '',
+              props.selected ? 'selected' : '',
             ].join(' ')}
+            onClick={props.onClick}
             onMouseEnter={props.onMouseEnter}
             onMouseLeave={props.onMouseLeave}>
         <div className={`contents`}>

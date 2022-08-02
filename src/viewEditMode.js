@@ -35,7 +35,7 @@ function ModeMenu(props) {
         <Navbar.Divider />
 
         {props.buttons.map((i) =>
-          <Button large={true} minimal={true} fill={true}
+          <Button key={i.mode} large={true} minimal={true} fill={true}
                   icon={i.icon} text={i.text}
                   active={props.mode === i.mode}
                   onClick={i.action}
@@ -78,6 +78,7 @@ export class ViewEditMode extends React.Component {
         key: null,
         content: null,
       },
+      selecting: false,
     };
   }
 
@@ -111,6 +112,46 @@ export class ViewEditMode extends React.Component {
   }
 
   // handler functions
+  onClick = (e) => {
+    if (this.state.mode === 'select') {
+      if (this.state.selecting) {
+        const prev_sel_key = this.state.selected.key
+        const key = Number(this.getItemId(e.target));
+
+        let keys = [];
+        let contents = [];
+
+        if (key > prev_sel_key) {
+          this.setState({
+            selected: {
+              key:      [prev_sel_key, key],
+              content:  this.state.items.slice(prev_sel_key, key),
+            }
+          })
+        } else {
+          this.setState({
+            selected: {
+              key:      [key, prev_sel_key],
+              content:  this.state.items.slice(key, prev_sel_key),
+            }
+          })
+        }
+
+      } else {
+        // this runs first
+        const key = Number(this.getItemId(e.target));
+        const content = this.state.items[key]
+        this.setState({
+          selected: {
+            key: key,
+            content: content,
+          }
+        });
+      }
+
+      this.setState({selecting: !this.state.selecting})
+    }
+  }
   onStart = (e) => {
     this.setState({activeDrags: this.state.activeDrags + 1});
 
@@ -288,6 +329,11 @@ export class ViewEditMode extends React.Component {
       disabled = true;
       expanded = true;
     }
+    if (this.state.mode === 'select') {
+      itemHandlers ={
+        onClick: this.onClick,
+      }
+    }
 
     return (
       <div>
@@ -299,7 +345,12 @@ export class ViewEditMode extends React.Component {
 
         <div className={`feature-space`}>
 
-          <div className={[`main`, (expanded ? 'expanded' : ''), this.state.mode].join(' ')}>
+          <div className={[
+            `main`,
+            (expanded ? 'expanded' : ''),
+            this.state.mode,
+            (this.state.selecting ? 'selecting' : ''),
+          ].join(' ')}>
 
             <ContextMenu2
               //disabled={props.disabled}
@@ -312,6 +363,7 @@ export class ViewEditMode extends React.Component {
                                  disabled={disabled}
                                  itemHandlers={itemHandlers}
                                  spacerHandlers={spacerHandlers}
+                                 selected={this.state.selected.key}
               >
                 {this.state.items}
               </RearrangeableList>
