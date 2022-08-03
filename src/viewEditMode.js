@@ -9,10 +9,10 @@ import {
   MenuItem2,
   ContextMenu2
 } from "@blueprintjs/popover2";
-import {
-} from "@blueprintjs/popover2";
 import Xarrow from "react-xarrows";
 
+import {generateFeatures} from "./feature"
+import {FeatureDialog} from "./featureDialog"
 import RearrangeableList from "./rearrangeableList";
 
 import './viewEditMode.css'
@@ -56,18 +56,21 @@ export class ViewEditMode extends React.Component {
   constructor(props) {
     super(props);
 
+    const features = generateFeatures(30);
+
     let mainItems = props.items;
     if (mainItems === undefined) {
-      mainItems = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+      mainItems = features.slice(0,15);
     }
 
     let availableItems = props.availableItems;
     if (availableItems === undefined) {
-      availableItems = [10,11,12,13,14,15,16,17,18,19];
+      availableItems = features.slice(15, 30);
     }
 
     this.state = {
       mode: 'view',
+      featureDialogOpen: false,
       items: {
         mainItems: mainItems,
         availableItems: availableItems
@@ -146,36 +149,14 @@ export class ViewEditMode extends React.Component {
 
   // handler functions
   onClick = (e) => {
-    if (this.state.mode === 'select') {
-      const key = Number(this.getItemId(e.target));
-      const container = this.getContainer(e.target)
-
-      if (this.state.selecting) {
-        const prev_sel_key = this.state.selected.key
-        const sorted = [prev_sel_key, key].sort()
-
-        this.setState({
-          selected: {
-            key:        sorted,
-            container:  container,
-            content:    this.state.items.mainItems.slice(sorted[0], sorted[1]),
-          }
-        })
-
-      } else {                        // this runs first
-
-        this.setState({
-          selected: {
-            key: key,
-            container: container,
-            content: this.state.items[container][key],
-          }
-        });
-      }
-
-      this.setState({selecting: !this.state.selecting})
+    if (this.state.mode === 'view') {
+      this.select(e.target);
+      this.setState({featureDialogOpen: true})
+    } else if (this.state.mode === 'select') {
+      this.select(e.target);
     }
   }
+
   onStart = (e) => {
     this.setState({activeDrags: this.state.activeDrags + 1});
 
@@ -265,6 +246,11 @@ export class ViewEditMode extends React.Component {
     )
   }
 
+  onDialogClose(o) {
+    o.setState({featureDialogOpen: false});
+    this.clearSelected();
+  }
+
   // list manipulation functions
   getItem(container, key) {
     return this.state.items[container][key];
@@ -285,7 +271,7 @@ export class ViewEditMode extends React.Component {
     const end = Math.max(Number(positions[0]), Number(positions[1]))
 
     const s1 = list.slice(0, start)
-    let s2, s3 = null;
+    let s2, s3;
     if (positions[0] > start) {
       s2 = [item].concat(list.slice(start, end))
       s3 = list.slice(end+1)
@@ -308,6 +294,36 @@ export class ViewEditMode extends React.Component {
     }
   }
 
+  select(target) {
+    const key = Number(this.getItemId(target));
+    const container = this.getContainer(target)
+
+    if (this.state.selecting && this.state.mode === 'select') {
+      const prev_sel_key = this.state.selected.key
+      const sorted = [prev_sel_key, key].sort()
+
+      this.setState({
+        selected: {
+          key:        sorted,
+          container:  container,
+          content:    this.state.items.mainItems.slice(sorted[0], sorted[1]),
+        }
+      })
+
+    } else {                        // this runs first
+
+      this.setState({
+        selected: {
+          key: key,
+          container: container,
+          content: this.state.items[container][key],
+        }
+      });
+    }
+
+    this.setState({selecting: !this.state.selecting})
+  }
+
   static swap(list, item, position) {
     const s1 = list.slice(0, position).concat({item});
     const s2 = list.slice(position + 1);
@@ -315,7 +331,7 @@ export class ViewEditMode extends React.Component {
   }
 
   // Context menu functions
-  doDelete = (e) => {
+  doDelete = () => {
     let items = this.state.items;
     const container = this.state.selected.container;
 
@@ -371,6 +387,12 @@ export class ViewEditMode extends React.Component {
         onDrag: this.handleDrag,};
       spacerHandlers = {};
     }
+    if (this.state.mode === 'view') {
+      itemHandlers = {
+        onClick: this.onClick,
+      }
+      spacerHandlers = {};
+    }
     if (this.state.mode === 'insert') {
       disabled = true;
       expanded = true;
@@ -404,15 +426,14 @@ export class ViewEditMode extends React.Component {
               <RearrangeableList id={`mainItems`}
                                  active={this.state.activeDrags}
                                  disabled={disabled}
+                                 data={this.state.items.mainItems}
                                  itemHandlers={itemHandlers}
                                  spacerHandlers={spacerHandlers}
                                  selected={(this.state.selected.container === 'mainItems') ?
-                                   this.state.items.mainItems.map((item, index) => {return this.isSelected(index)}) : []}
-              >
-                {this.state.items.mainItems}
-              </RearrangeableList>
+                                   this.state.items.mainItems.map((item, index) => {return this.isSelected(index)}) : false}
+              />
 
-              <Xarrow start='0' end={this.state.items.mainItems.length.toString()}
+              <Xarrow start="0" end={this.state.items.mainItems.length.toString()}
                       color={'purple'}
                       showHead={false}
                       startAnchor='left'
@@ -428,11 +449,16 @@ export class ViewEditMode extends React.Component {
                hidden={this.state.mode !== 'insert'}>
             <H1>Available Items:</H1>
             <RearrangeableList id={`availableItems`}
+                               data={this.state.items.availableItems}
                                itemHandlers={itemHandlers}
-            >
-              {this.state.items.availableItems}
-            </RearrangeableList>
+            />
           </div>{/* /.section */}
+
+          <FeatureDialog
+            isOpen={this.state.featureDialogOpen}
+            data={this.state.selected.content}
+            onClose={() => {this.onDialogClose(this)}}
+          />
 
         </div>{/* /.feature-space */}
 

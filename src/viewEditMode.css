@@ -48,9 +48,15 @@ body {
     min-width: 180px;
     min-height: 60px;
     margin: 13px 10px;
+    padding: 10px;
     float: left;
     position: relative;
     z-index: 4;
+}
+
+.feature .feature-content p {
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 .feature.react-draggable-dragging {

@@ -19,10 +19,10 @@ class RearrangeableList extends React.Component {
           ].join(' ')}
       >
 
-        {this.props.children.map(
-          (item, index) =>
-            <li id={index}
-                key={index.toString()}
+        {this.props.data.map(
+          (data, index) =>
+            <li id={index.toString()}
+                key={index}
                 className={[
                   `feature-group`,
                 ].join(' ')}
@@ -33,14 +33,16 @@ class RearrangeableList extends React.Component {
               }
               <FeatureItem disabled={this.props.disabled}
                            selected={(this.props.selected) ? this.props.selected[index] : false}
+                           data={data}
                            {...this.props.itemHandlers}
               >
-                {item}
               </FeatureItem>
             </li>
         )}
 
-        <ItemSpacer id={this.props.children.length} {...this.props.spacerHandlers} style={{gridRow: 1}}/>
+        <li id={(this.props.data.length).toString()} key={this.props.data.length} className={`feature-group`}>
+          <ItemSpacer{...this.props.spacerHandlers} style={{gridRow: 1}}/>
+        </li>
 
       </OL>
     );

@@ -4,6 +4,8 @@ import {
   Card,
 } from "@blueprintjs/core";
 
+import {FeatureCard} from "./featureCard";
+
 
 export function FeatureItem(props) {
 
@@ -26,9 +28,7 @@ export function FeatureItem(props) {
             onClick={props.onClick}
             onMouseEnter={props.onMouseEnter}
             onMouseLeave={props.onMouseLeave}>
-        <div className={`contents`}>
-          {props.children}
-        </div>
+        <FeatureCard data={props.data} />
       </Card>
     </Draggable>
   )
