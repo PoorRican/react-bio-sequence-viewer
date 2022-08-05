@@ -73,12 +73,14 @@ export class ViewEditMode extends React.Component {
       featureDialogOpen: false,
       items: {
         mainItems: mainItems,
+
         availableItems: availableItems
       },
       activeDrags: 0,
       controlledPosition: {
         x: null, y: null
       },
+      linked: [],
       selected: {
         key: null,
         content: null,
@@ -128,6 +130,16 @@ export class ViewEditMode extends React.Component {
       return true;
     }
 
+    return false;
+  }
+
+  isLinked(index) {
+    for (let i = 0; i < this.state.linked.length; i++) {
+      const obj = this.state.linked[i]
+      if (index >= obj[0] && index <= obj[1] ) {
+        return true;
+      }
+    }
     return false;
   }
 
@@ -242,12 +254,17 @@ export class ViewEditMode extends React.Component {
                    intent={`danger`}
                    disabled={(this.state.selected.key === null)}
         />
+        <MenuItem2 text={`Link`}
+                   icon={`link`}
+                   onClick={this.doLink}
+                   disabled={(this.state.selected.key === null)}
+        />
       </Menu>
     )
   }
 
-  onDialogClose(o) {
-    o.setState({featureDialogOpen: false});
+  onDialogClose = () => {
+    this.setState({featureDialogOpen: false});
     this.clearSelected();
   }
 
@@ -324,15 +341,37 @@ export class ViewEditMode extends React.Component {
     this.setState({selecting: !this.state.selecting})
   }
 
-  doItemContextMenuAction(func, args) {
+  link = (list, positions) => {
+    // in this case, `list` is `state.linked`
+    for (let i = 0; i < positions.length; i++) {
+      if (this.isLinked(positions[i])) {
+        // leave linked items intact
+        // TODO: show an error as toast
+        console.info('already linked')
+        return this.state.linked;
+      }
+    }
+
+    console.info('linked ' + positions)
+    return this.state.linked.concat([positions])
+  }
+
+  doItemContextMenuAction(func, args, container) {
     let items = this.state.items;
-    const container = this.state.selected.container;
 
-    items[container] = func(this.state.items[container], ...args);
+    if (container) {
+      items = func(this.state[container], ...args);
+      let state = {};
+      state[container] = items;
+      this.setState(state);
+    } else {
+      container = this.state.selected.container;
+      items[container] = func(this.state.items[container], ...args);
+      this.setState({
+        items: items
+      });
+    }
 
-    this.setState({
-      items: items
-    });
     // set state
     this.clearSelected();
   }
@@ -348,6 +387,10 @@ export class ViewEditMode extends React.Component {
 
   doDelete = () => {
     this.doItemContextMenuAction(ViewEditMode.delete, [this.state.selected.key])
+  }
+
+  doLink = () => {
+    this.doItemContextMenuAction(this.link, [this.state.selected.key], 'linked')
   }
 
   render() {
@@ -410,8 +453,6 @@ export class ViewEditMode extends React.Component {
       }
     }
 
-    console.log(this.state.items)
-
     return (
       <div>
 
@@ -466,7 +507,7 @@ export class ViewEditMode extends React.Component {
           <FeatureDialog
             isOpen={this.state.featureDialogOpen}
             data={this.state.selected.content}
-            onClose={() => {this.onDialogClose(this)}}
+            onClose={this.onDialogClose}
           />
 
         </div>{/* /.feature-space */}

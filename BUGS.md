@@ -1,3 +1,4 @@
 # Bugs
-- `.spacer .indicator` does not show up on last sequence
 - `.selection` doesn't handle `overflow-y: scroll` correctly
+- Remove width on last feature spacer in `#mainItems`
+- 
