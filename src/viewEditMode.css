@@ -98,7 +98,7 @@ body {
 }
 
 .active .spacer:hover .indicator {
-    height: 86px;
+    height: 65px;
     display: block;
     position: relative;
     z-index: 9;
@@ -121,7 +121,35 @@ body {
 }
 
 .active .feature-group:hover {
-    min-width: 220px;
+    min-width: 211px;
+}
+
+.feature-group.linked {
+    background-color: #D69FD6;
+    border-top: solid #BD6BBD 1px;
+    border-bottom: solid #BD6BBD 1px;
+}
+
+.feature-group.linked.linked-start {
+    margin-left: 10px;
+    border-bottom-left-radius: 3px;
+    border-top-left-radius: 3px;
+    border-left: solid #BD6BBD 1px;
+}
+
+.feature-group.linked.linked-end {
+    margin-right: 10px;
+    border-bottom-right-radius: 3px;
+    border-top-right-radius: 3px;
+    border-right: solid #BD6BBD 1px;
+}
+
+.active .feature-group.linked.linked-start:hover {
+    margin-left: 20px;
+    float: left;
+}
+.feature-group.linked.linked-start .spacer:hover {
+    left: -20px;
 }
 
 /* Container Classes */

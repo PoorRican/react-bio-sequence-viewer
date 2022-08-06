@@ -1,7 +1,8 @@
 # Features to Implement
 ## Feature View
 - Linking feature elements
-    - Show linked groups groups
+    - Select all when clicking linked feature
+    - Shift linked indices when indserting or deleting
 - Stylize feature dialog
 - Show/hilight features based on regions and complexes
     - Ability to edit/modify regions
@@ -12,6 +13,7 @@
 ### Improvements
 - Remove undo linked features during deletion
 - Move linked features when
+- Scroll vertically to scroll horizontally
 
 ## Sequence View
 - Display sequence

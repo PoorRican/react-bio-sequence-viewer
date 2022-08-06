@@ -263,6 +263,17 @@ export class ViewEditMode extends React.Component {
     )
   }
 
+  linkedAnchors() {
+    let starts = Array(this.state.items.mainItems.length).fill(false);
+    let ends = Array(this.state.items.mainItems.length).fill(false);
+    for (let i = 0; i < this.state.linked.length; i++) {
+      const pos = this.state.linked[i];
+      starts[pos[0]] = true;
+      ends[pos[1]] = true;
+    }
+    return [starts, ends]
+  }
+
   onDialogClose = () => {
     this.setState({featureDialogOpen: false});
     this.clearSelected();
@@ -453,6 +464,9 @@ export class ViewEditMode extends React.Component {
       }
     }
 
+    // linked functionality
+    const [linked_starts, linked_ends] = this.linkedAnchors();
+
     return (
       <div>
 
@@ -474,13 +488,23 @@ export class ViewEditMode extends React.Component {
               onContextMenu={this.onContextMenu}>
 
               <RearrangeableList id={`mainItems`}
+                                 // state
                                  active={this.state.activeDrags}
                                  disabled={disabled}
+                                 // data + handlers
                                  data={this.state.items.mainItems}
                                  itemHandlers={itemHandlers}
                                  spacerHandlers={spacerHandlers}
+                                 // interaction states
                                  selected={(this.state.selected.container === 'mainItems') ?
                                    this.state.items.mainItems.map((item, index) => {return this.isSelected(index)}) : false}
+                                 linked={{
+                                   linked: this.state.items.mainItems.map((item, index) => {
+                                     return this.isLinked(index)
+                                   }),
+                                   starts: linked_starts,
+                                   ends: linked_ends,
+                                 }}
               />
 
               <Xarrow start="0" end={this.state.items.mainItems.length.toString()}

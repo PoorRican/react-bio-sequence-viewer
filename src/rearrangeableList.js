@@ -25,9 +25,14 @@ class RearrangeableList extends React.Component {
                 key={index}
                 className={[
                   `feature-group`,
+                  (this.props.linked) ? (this.props.linked.linked[index] ? 'linked' : '') : false,
+                  (this.props.linked) ? (this.props.linked.starts[index] ? 'linked-start' : '') : false,
+                  (this.props.linked) ? (this.props.linked.ends[index] ? 'linked-end' : '') : false,
                 ].join(' ')}
             >
-              {this.props.spacerHandlers ?
+              {(this.props.spacerHandlers &&
+                this.props.linked &&
+                (!this.props.linked.linked[index] || this.props.linked.starts[index])) ?
                 <ItemSpacer {...this.props.spacerHandlers} /> :
                 ''
               }
