@@ -2,7 +2,7 @@
 ## Feature View
 - Linking feature elements
     - Select all when clicking linked feature
-    - Shift linked indices when indserting or deleting
+    - Show `unlink` option in context dialog
 - Stylize feature dialog
 - Show/hilight features based on regions and complexes
     - Ability to edit/modify regions

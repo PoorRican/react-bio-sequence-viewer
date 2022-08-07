@@ -166,6 +166,7 @@ export class ViewEditMode extends React.Component {
       }
 
       this.setState({items: items});
+      this.shiftLinked(key, 1)
     }
   };
 
@@ -330,6 +331,36 @@ export class ViewEditMode extends React.Component {
     return this.state.linked.concat([positions])
   }
 
+  shiftLinked(index, magnitude) {
+    let linked = this.state.linked;
+    for (let i = 0; i < linked.length; i++) {
+      if (linked[i][0] >= index) {
+        linked[i][0] += magnitude;
+        linked[i][1] += magnitude;
+      }
+    }
+    this.setState({linked: linked})
+  }
+
+  cleanLinked(range) {
+    let linked = this.state.linked;
+    for (let i = 0; i < this.state.linked.length; i++) {
+      if (range[0] === this.state.linked[i][0] &&
+          range[1] === this.state.linked[i][1]) {
+        linked.splice(i, 1);
+      }
+    }
+    this.setState({linked: linked})
+  }
+
+  static swap(list, item, position) {
+    const s1 = list.slice(0, position).concat({item});
+    const s2 = list.slice(position + 1);
+    return s1.concat(s2)
+  }
+
+  // Context menu functions
+
   doItemContextMenuAction(func, args, container) {
     let items = this.state.items;
 
@@ -350,17 +381,11 @@ export class ViewEditMode extends React.Component {
     this.clearSelected();
   }
 
-  static swap(list, item, position) {
-    const s1 = list.slice(0, position).concat({item});
-    const s2 = list.slice(position + 1);
-    return s1.concat(s2)
-  }
-
-  // Context menu functions
-
-
   doDelete = () => {
-    this.doItemContextMenuAction(ViewEditMode.delete, [this.state.selected.key])
+    this.doItemContextMenuAction(ViewEditMode.delete, [this.state.selected.key]);
+    if (!(typeof(this.state.selected.key) === 'number')) {
+      this.cleanLinked(this.state.selected.key);
+    }
   }
 
   doLink = () => {
