@@ -9,7 +9,7 @@ import {ItemSpacer} from "./itemSpacer";
 import {FeatureItem} from "./featureItem";
 
 
-class RearrangeableList extends React.Component {
+export class RearrangeableList extends React.Component {
   render() {
     return (
       <OL id={this.props.id}
@@ -54,5 +54,3 @@ class RearrangeableList extends React.Component {
   }
 
 }
-
-export default RearrangeableList;

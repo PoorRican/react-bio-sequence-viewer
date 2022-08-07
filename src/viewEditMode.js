@@ -1,51 +1,14 @@
 import React from "react";
-import {
-  Button,
-  Navbar,
-  Menu,
-  H1,
-} from "@blueprintjs/core";
-import {
-  MenuItem2,
-  ContextMenu2
-} from "@blueprintjs/popover2";
+import {H1, Menu,} from "@blueprintjs/core";
+import {ContextMenu2, MenuItem2} from "@blueprintjs/popover2";
 import Xarrow from "react-xarrows";
 
 import {generateFeatures} from "./feature"
 import {FeatureDialog} from "./featureDialog"
-import RearrangeableList from "./rearrangeableList";
+import {ModeMenu} from "./modeMenu";
+import {RearrangeableList} from "./rearrangeableList";
 
 import './viewEditMode.css'
-
-function ModeMenu(props) {
-  return (
-    <Navbar style={{
-      position: 'fixed',
-      zIndex: 11
-    }}>
-      <Navbar.Group>
-
-        <Navbar.Heading style={{
-                          minWidth: '75px',
-                          display: 'block',
-                        }}>
-          {props.heading}
-        </Navbar.Heading>
-
-        <Navbar.Divider />
-
-        {props.buttons.map((i) =>
-          <Button key={i.mode} large={true} minimal={true} fill={true}
-                  icon={i.icon} text={i.text}
-                  active={props.mode === i.mode}
-                  onClick={i.action}
-          />
-        )}
-
-      </Navbar.Group>
-    </Navbar>
-  )
-}
 
 export class ViewEditMode extends React.Component {
   static isStaticMode(mode) {
