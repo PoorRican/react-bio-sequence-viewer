@@ -1,7 +1,6 @@
 # Features to Implement
 ## Feature View
 - Linking feature elements
-    - Select all when clicking linked feature
     - Show `unlink` option in context dialog
 - Stylize feature dialog
 - Show/hilight features based on regions and complexes

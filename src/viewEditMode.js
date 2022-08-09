@@ -100,7 +100,7 @@ export class ViewEditMode extends React.Component {
     for (let i = 0; i < this.state.linked.length; i++) {
       const obj = this.state.linked[i]
       if (index >= obj[0] && index <= obj[1] ) {
-        return true;
+        return i+1;
       }
     }
     return false;
@@ -289,10 +289,29 @@ export class ViewEditMode extends React.Component {
   select(target) {
     const key = Number(this.getItemId(target));
     const container = this.getContainer(target)
+    const linked = this.isLinked(key)     // index + 1 if linked
 
-    if (this.state.selecting && this.state.mode === 'select') {
+    if (this.state.selecting) {
       const prev_sel_key = this.state.selected.key
-      const sorted = [prev_sel_key, key].sort()
+      let sorted;
+
+      // occurs when a linked item is selected
+      if (container === 'mainItems' && (linked || typeof(prev_sel_key) !== 'number')) {
+        if (linked) {
+          // linked item is selected last
+          const keys = this.state.linked[linked-1];
+          sorted = [prev_sel_key, keys[0], keys[1]].sort();
+        } else {
+          // linked item is selected first
+          sorted = [prev_sel_key[0], prev_sel_key[1], key].sort()
+        }
+        sorted.splice(1,1)
+
+      } else {
+
+        sorted = [prev_sel_key, key].sort()
+
+      }
 
       this.setState({
         selected: {
@@ -304,15 +323,29 @@ export class ViewEditMode extends React.Component {
 
     } else {                        // this runs first
 
-      this.setState({
-        selected: {
-          key: key,
-          container: container,
-          content: this.state.items[container][key],
-        }
-      });
-    }
+      if (container === 'mainItems' && linked) {
 
+        const keys = this.state.linked[linked-1];
+
+        this.setState({
+          selected: {
+            key: keys,
+            container: container,
+            content: this.state.items.mainItems.slice(keys[0], keys[1]+1)
+          }
+        })
+
+      } else {
+
+        this.setState({
+          selected: {
+            key: key,
+            container: container,
+            content: this.state.items[container][key],
+          }
+        });
+      }
+    }
     this.setState({selecting: !this.state.selecting})
   }
 
