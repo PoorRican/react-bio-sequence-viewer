@@ -59,7 +59,8 @@ export class ViewEditMode extends React.Component {
         key: null,
         container: null,
         content: null,
-      }
+      },
+      selecting: false,
     })
   }
 
@@ -97,13 +98,20 @@ export class ViewEditMode extends React.Component {
   }
 
   isLinked(index) {
-    for (let i = 0; i < this.state.linked.length; i++) {
-      const obj = this.state.linked[i]
-      if (index >= obj[0] && index <= obj[1] ) {
-        return i+1;
+    if (index === null) {
+      return false;
+    } else if (typeof(index) === 'number') {
+      for (let i = 0; i < this.state.linked.length; i++) {
+        const obj = this.state.linked[i]
+        if (index >= obj[0] && index <= obj[1] ) {
+          return i+1;
+        }
       }
+      return false;
+    } else {
+      const linked = index.map((val) => {return this.isLinked(val)})
+      return linked.reduce((a, b) => {return a && b && true})
     }
-    return false;
   }
 
   getContainer(target) {
@@ -185,43 +193,32 @@ export class ViewEditMode extends React.Component {
     if (inFeature) {
       const key = Number(this.getItemId(e.target));
       const container = this.getContainer(e.target)
-      const content = this.getItem(container, key);
 
-      if (this.isSelected(key, container)) {
-        return;
+      if (!this.isSelected(key, container)) {
+        // cancel previous selections
+        this.setState({selecting: false});
+        this.select(e.target, false);
       }
-      this.setState({
-        selected: {
-          key: key,
-          container: container,
-          content: content,
-        }
-      });
     } else {
-      this.setState({
-        selected: {
-          key: null,
-          container: null,
-          content: null,
-        }
-      })
+      this.clearSelected();
     }
   }
 
   contextMenu = () => {
-
+    const selected = this.state.selected.key === null
+    const linked = this.isLinked(this.state.selected.key)
     return (
       <Menu>
         <MenuItem2 text={`Delete`}
                    icon={`trash`}
                    onClick={this.doDelete}
                    intent={`danger`}
-                   disabled={(this.state.selected.key === null)}
+                   disabled={selected}
         />
-        <MenuItem2 text={`Link`}
-                   icon={`link`}
-                   onClick={this.doLink}
-                   disabled={(this.state.selected.key === null)}
+        <MenuItem2 text={linked ? `Unlink` : `Link`}
+                   icon={linked ? `graph-remove` : `new-object`}
+                   onClick={linked ? this.doUnlink : this.doLink}
+                   disabled={selected}
         />
       </Menu>
     )
@@ -286,7 +283,7 @@ export class ViewEditMode extends React.Component {
     }
   }
 
-  select(target) {
+  select(target, toggle=true) {
     const key = Number(this.getItemId(target));
     const container = this.getContainer(target)
     const linked = this.isLinked(key)     // index + 1 if linked
@@ -346,7 +343,10 @@ export class ViewEditMode extends React.Component {
         });
       }
     }
-    this.setState({selecting: !this.state.selecting})
+
+    if (toggle) {
+      this.setState({selecting: !this.state.selecting});
+    }
   }
 
   link = (list, positions) => {
@@ -364,23 +364,23 @@ export class ViewEditMode extends React.Component {
     return this.state.linked.concat([positions])
   }
 
+  unlink = (list, positions) => {
+    // `list` is `state.linked`
+    for (let i = 0; i < this.state.linked.length; i++) {
+      if (positions[0] === this.state.linked[i][0] &&
+        positions[1] === this.state.linked[i][1]) {
+        list.splice(i, 1);
+        return list
+      }
+    }
+  }
+
   shiftLinked(index, magnitude) {
     let linked = this.state.linked;
     for (let i = 0; i < linked.length; i++) {
       if (linked[i][0] >= index) {
         linked[i][0] += magnitude;
         linked[i][1] += magnitude;
-      }
-    }
-    this.setState({linked: linked})
-  }
-
-  cleanLinked(range) {
-    let linked = this.state.linked;
-    for (let i = 0; i < this.state.linked.length; i++) {
-      if (range[0] === this.state.linked[i][0] &&
-          range[1] === this.state.linked[i][1]) {
-        linked.splice(i, 1);
       }
     }
     this.setState({linked: linked})
@@ -417,12 +417,18 @@ export class ViewEditMode extends React.Component {
   doDelete = () => {
     this.doItemContextMenuAction(ViewEditMode.delete, [this.state.selected.key]);
     if (!(typeof(this.state.selected.key) === 'number')) {
-      this.cleanLinked(this.state.selected.key);
+      this.setState({
+        linked: this.unlink(this.state.linked, this.state.selected.key)
+      });
     }
   }
 
   doLink = () => {
     this.doItemContextMenuAction(this.link, [this.state.selected.key], 'linked')
+  }
+
+  doUnlink = () => {
+    this.doItemContextMenuAction(this.unlink, [this.state.selected.key], 'linked')
   }
 
   render() {
