@@ -7,13 +7,13 @@ import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import "@blueprintjs/popover2/lib/css/blueprint-popover2.css";
 
 
-import {ViewEditMode} from "./viewEditMode";
+import {FeatureView} from "./feature/featureView";
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
     <Routes>
-      <Route path='/' element={<ViewEditMode />}>Home</Route>
+      <Route path='/' element={<FeatureView />}>Home</Route>
     </Routes>
   </BrowserRouter>)

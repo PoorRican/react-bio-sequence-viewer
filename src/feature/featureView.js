@@ -8,9 +8,9 @@ import {FeatureDialog} from "./featureDialog"
 import {ModeMenu} from "./modeMenu";
 import {RearrangeableList} from "./rearrangeableList";
 
-import './viewEditMode.css'
+import './featureView.css'
 
-export class ViewEditMode extends React.Component {
+export class FeatureView extends React.Component {
   static isStaticMode(mode) {
     const modes = ['view', 'select'];
     return Boolean(modes.indexOf(mode) + 1);
@@ -153,11 +153,11 @@ export class ViewEditMode extends React.Component {
 
       let items = this.state.items;
       if (this.state.mode === `insert`) {
-        items[container] = ViewEditMode.insert(items[container], selected.content, key);
+        items[container] = FeatureView.insert(items[container], selected.content, key);
         this.shiftLinked(key, 1)
       }
       else if (this.state.mode === 'move') {
-        items[container] = ViewEditMode.move(items[container], selected.content, [selected.key, key])
+        items[container] = FeatureView.move(items[container], selected.content, [selected.key, key])
 
         // calculate shift
         const single = typeof(selected.key) === 'number'
@@ -456,7 +456,7 @@ export class ViewEditMode extends React.Component {
   }
 
   doDelete = () => {
-    this.doItemContextMenuAction(ViewEditMode.delete, [this.state.selected.key]);
+    this.doItemContextMenuAction(FeatureView.delete, [this.state.selected.key]);
     if (!(typeof(this.state.selected.key) === 'number')) {
       this.setState({
         linked: this.unlink(this.state.linked, this.state.selected.key)
@@ -501,7 +501,7 @@ export class ViewEditMode extends React.Component {
     ]
 
     // determine view props
-    let disabled = ViewEditMode.isStaticMode(this.state.mode)   // determines draggable or not
+    let disabled = FeatureView.isStaticMode(this.state.mode)   // determines draggable or not
     let expanded = false;                                       // controls side menu visibility
 
     // handlers
@@ -509,7 +509,7 @@ export class ViewEditMode extends React.Component {
     let spacerHandlers  = undefined;
 
     // set props based mode
-    if (!ViewEditMode.isStaticMode(this.state.mode)) {
+    if (!FeatureView.isStaticMode(this.state.mode)) {
       // default props for view/select
       itemHandlers = {
         onStart: this.onStart,
