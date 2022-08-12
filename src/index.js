@@ -10,6 +10,7 @@ import "@blueprintjs/popover2/lib/css/blueprint-popover2.css";
 import Provider from "./feature/data"
 import Container from './feature/container'
 import ViewMode from "./feature/viewMode";
+import InsertMode from "./feature/insertMode";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -19,6 +20,7 @@ root.render(
         <Provider>
           <Container>
             <ViewMode />
+            <InsertMode />
           </Container>
         </Provider>
       }>Home</Route>

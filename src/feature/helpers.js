@@ -73,3 +73,41 @@ export function linkedAnchors(items, linked) {
   }
   return [starts, ends]
 }
+
+/**
+ * Shifts linked coordinates to account for linked list manipulation.
+ * This function is called when inserting, deleting, or moving elements.
+ *
+ * If `lower` is provided, all elements between `index` and `lower` and shifted.
+ * Otherwise, all elements higher than `index` are shifted.
+ *
+ * @param linked {[]} - List of linked objects
+ * @param index {number} - Upper bound of list shift
+ * @param magnitude {number} - Magnitude of shift
+ * @param lower {number} {optional} - Lower bound of list shift
+ *
+ * @returns {[]} - Manipulated copy of `linked`
+ */
+export function shiftLinked(linked, index, magnitude, lower=-1) {
+  if (lower) {
+
+    for (let i = 0; i < linked.length; i++) {
+      if (linked[i][0] >= index) {
+        linked[i][0] += magnitude;
+        linked[i][1] += magnitude;
+      }
+    }
+
+  } else {
+
+    for (let i = 0; i < linked.length; i++) {
+      if (linked[i][0] <= index && linked[i][0] >= lower) {
+        linked[i][0] += magnitude;
+        linked[i][1] += magnitude;
+      }
+    }
+
+  }
+
+  return linked
+}
