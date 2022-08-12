@@ -37,6 +37,11 @@ export default class ViewMode extends React.Component {
     this.setState({featureDialogOpen: true})
   }
 
+  onDialogClose = () => {
+    this.setState({featureDialogOpen: false});
+    this.context.setSelected({key: null, container: null, content: null});
+  }
+
   render() {
     const itemHandlers = {
       onClick: this.onClick
