@@ -3,28 +3,24 @@ import {H1, Menu,} from "@blueprintjs/core";
 import {ContextMenu2, MenuItem2} from "@blueprintjs/popover2";
 import Xarrow from "react-xarrows";
 
-import {generateFeatures} from "./feature"
+import {DataContext, features} from "./data"
 import {FeatureDialog} from "./featureDialog"
 import {ModeMenu} from "./modeMenu";
 import {RearrangeableList} from "./rearrangeableList";
 
 import './featureView.css'
 
-export class FeatureView extends React.Component {
+
+export default class FeatureView extends React.Component {
+  static contextType = DataContext;
+
   static isStaticMode(mode) {
     const modes = ['view', 'select'];
     return Boolean(modes.indexOf(mode) + 1);
   }
 
-  constructor(props) {
-    super(props);
-
-    const features = generateFeatures(30);
-
-    let mainItems = props.items;
-    if (mainItems === undefined) {
-      mainItems = features.slice(0,15);
-    }
+  constructor(props, context) {
+    super(props, context);
 
     let availableItems = props.availableItems;
     if (availableItems === undefined) {
@@ -35,28 +31,24 @@ export class FeatureView extends React.Component {
       mode: 'view',
       featureDialogOpen: false,
       items: {
-        mainItems: mainItems,
-
+        mainItems: this.context.items.mainItems,
         availableItems: availableItems
       },
       activeDrags: 0,
-      linked: [],
-      selected: {
-        key: null,
-        content: null,
-      },
+      linked: this.context.linked,
+      selected: this.context.selected,
       selecting: false,
     };
   }
 
   // helper functions
   clearSelected() {
+    this.context.setSelected({
+      key: null,
+      container: null,
+      content: null,
+    })
     this.setState({
-      selected: {
-        key: null,
-        container: null,
-        content: null,
-      },
       selecting: false,
     })
   }
@@ -167,18 +159,14 @@ export class FeatureView extends React.Component {
         this.shiftLinked(key, -magnitude, single ? selected.key : selected.key[0])
         if (!single) {
           // update `linked`
-          this.setState({
-            linked: this.unlink(this.state.linked, selected.key)
-          });
-          this.setState({
-            linked: this.link(this.state.linked, [selected.key[0] + magnitude, selected.key[1] + magnitude])
-          })
+          this.context.setLinked(this.unlink(this.state.linked, selected.key));
+          this.context.setLinked(this.link(this.state.linked, [selected.key[0] + magnitude, selected.key[1] + magnitude]))
         }
       } else {
         return;
       }
 
-      this.setState({items: items})
+      this.context.setItems(items.mainItems)
 
     }
     this.clearSelected()
@@ -327,12 +315,10 @@ export class FeatureView extends React.Component {
 
       }
 
-      this.setState({
-        selected: {
-          key:        sorted,
-          container:  container,
-          content:    this.state.items.mainItems.slice(sorted[0], sorted[1]),
-        }
+      this.context.setSelected({
+        key:        sorted,
+        container:  container,
+        content:    this.state.items.mainItems.slice(sorted[0], sorted[1]),
       })
 
     } else {                        // this runs first
@@ -341,22 +327,18 @@ export class FeatureView extends React.Component {
 
         const keys = this.state.linked[linked-1];
 
-        this.setState({
-          selected: {
-            key: keys,
-            container: container,
-            content: this.state.items.mainItems.slice(keys[0], keys[1]+1)
-          }
+        this.context.setSelected({
+          key: keys,
+          container: container,
+          content: this.state.items.mainItems.slice(keys[0], keys[1]+1)
         })
 
       } else {
 
-        this.setState({
-          selected: {
-            key: key,
-            container: container,
-            content: this.state.items[container][key],
-          }
+        this.context.setSelected({
+          key: key,
+          container: container,
+          content: this.state.items[container][key],
         });
       }
     }
@@ -424,7 +406,7 @@ export class FeatureView extends React.Component {
       }
 
     }
-    this.setState({linked: linked})
+    this.context.setLinked(linked)
   }
 
   static swap(list, item, position) {
@@ -438,17 +420,13 @@ export class FeatureView extends React.Component {
   doItemContextMenuAction(func, args, container) {
     let items = this.state.items;
 
-    if (container) {
+    if (container === 'linked') {
       items = func(this.state[container], ...args);
-      let state = {};
-      state[container] = items;
-      this.setState(state);
+      this.context.setLinked(items);
     } else {
       container = this.state.selected.container;
       items[container] = func(this.state.items[container], ...args);
-      this.setState({
-        items: items
-      });
+      this.context.setItems(items);
     }
 
     // set state
@@ -457,10 +435,9 @@ export class FeatureView extends React.Component {
 
   doDelete = () => {
     this.doItemContextMenuAction(FeatureView.delete, [this.state.selected.key]);
+
     if (!(typeof(this.state.selected.key) === 'number')) {
-      this.setState({
-        linked: this.unlink(this.state.linked, this.state.selected.key)
-      });
+      this.context.setState(this.unlink(this.state.linked, this.state.selected.key));
     }
   }
 
@@ -501,7 +478,7 @@ export class FeatureView extends React.Component {
     ]
 
     // determine view props
-    let disabled = FeatureView.isStaticMode(this.state.mode)   // determines draggable or not
+    let disabled = FeatureView.isStaticMode(this.state.mode)    // determines draggable or not
     let expanded = false;                                       // controls side menu visibility
 
     // handlers
