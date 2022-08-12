@@ -1,8 +1,16 @@
 import React, {createContext} from 'react'
 import {generateFeatures} from "./feature";
 
+export const MODES = {
+  view: 'view',
+  select: 'select',
+  insert: 'insert',
+  move: 'move'
+}
+
 export const features = generateFeatures(30);
 export const DataContext = createContext({
+    mode: '',
     items: {
       mainItems: {},
     },
@@ -19,6 +27,7 @@ export const DataContext = createContext({
 );
 
 const defaultData = {
+  mode: MODES.view,
   items: {
     mainItems: features.slice(0, 15),
   },
@@ -29,10 +38,15 @@ const defaultData = {
   },
 }
 
-export class Provider extends React.Component {
+export default class Provider extends React.Component {
   constructor(props) {
     super(props);
 
+    this.setMode = (mode) => {
+      this.setState({
+        mode: mode
+      })
+    }
     this.setItems = (items) => {
       this.setState({
         items: {
@@ -53,6 +67,7 @@ export class Provider extends React.Component {
 
     this.state = {
       // data
+      mode: defaultData.mode,
       items: {
         mainItems: defaultData.items.mainItems,
       },
@@ -60,6 +75,7 @@ export class Provider extends React.Component {
       selected: defaultData.selected,
 
       // setters
+      setMode: this.setMode,
       setItems: this.setItems,
       setLinked: this.setLinked,
       setSelected: this.setSelected,

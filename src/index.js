@@ -7,10 +7,9 @@ import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import "@blueprintjs/popover2/lib/css/blueprint-popover2.css";
 
 
-import {Provider} from "./feature/data"
-import FeatureView from "./feature/featureView";
-
-
+import Provider from "./feature/data"
+import Container from './feature/container'
+import ViewMode from "./feature/viewMode";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -18,7 +17,9 @@ root.render(
     <Routes>
       <Route path='/' element={
         <Provider>
-          <FeatureView />
+          <Container>
+            <ViewMode />
+          </Container>
         </Provider>
       }>Home</Route>
     </Routes>

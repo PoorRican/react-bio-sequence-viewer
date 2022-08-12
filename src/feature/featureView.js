@@ -226,10 +226,6 @@ export default class FeatureView extends React.Component {
   }
 
   // list manipulation functions
-  getItem(container, key) {
-    return this.state.items[container][key];
-  }
-
   static insert(list, item, position) {
     const s1 = list.slice(0, position).concat([item]);
     const s2 = list.slice(position);
@@ -516,8 +512,7 @@ export default class FeatureView extends React.Component {
 
         <ModeMenu mode={this.state.mode}
                   buttons={menu_buttons}
-                  heading={`Main Items`}
-        />
+                  heading={`Main Items`} />
 
         <div className={`feature-space`}>
 
