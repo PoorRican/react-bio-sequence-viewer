@@ -7,6 +7,9 @@
 - Ability to zoom-in and navigate regions and complexes
     - Show breadcrumbs
 - Show scrollbar that displays features and regions
+- Partition/functionalize `ViewEditMode`
+- Implement replace functionality via context menu and side menu
+- Improve navbar styling
 
 ### Improvements
 - Remove undo linked features during deletion

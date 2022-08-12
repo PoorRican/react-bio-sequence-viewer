@@ -10,6 +10,37 @@ import {FeatureItem} from "./featureItem";
 
 
 export class RearrangeableList extends React.Component {
+  constructor(props) {
+    super(props);
+
+    if (props.linked) {
+      this.state = {
+        controlledPosition: {
+          x: null, y: null
+        },
+      }
+    }
+  }
+
+  handleDrag = (e, position) => {
+    const {x, y} = position;
+    this.setState({
+      controlledPosition: {
+        x: x,
+        y: y
+      }
+    });
+  };
+
+  resetPosition = () => {
+    this.setState({
+      controlledPosition: {
+        x: null,
+        y: null
+      }
+    })
+  }
+
   render() {
     return (
       <OL id={this.props.id}
@@ -30,15 +61,24 @@ export class RearrangeableList extends React.Component {
                   (this.props.linked) ? (this.props.linked.ends[index] ? 'linked-end' : '') : false,
                 ].join(' ')}
             >
-              {(this.props.spacerHandlers &&
-                this.props.linked &&
-                (!this.props.linked.linked[index] || this.props.linked.starts[index])) ?
+
+              {(this.props.spacerHandlers &&              // `{} === true`
+                this.props.linked &&                      // checks property exists for next logical statement
+
+                (!this.props.linked.linked[index] ||      // do not show spacers between linked features
+                  this.props.linked.starts[index])) ?
                 <ItemSpacer {...this.props.spacerHandlers} /> :
                 ''
               }
+
               <FeatureItem disabled={this.props.disabled}
                            selected={(this.props.selected) ? this.props.selected[index] : false}
                            data={data}
+
+                           // linked handler + position
+                           onDrag={(this.props.linked && this.props.linked.linked[index] && this.props.selected) ? this.handleDrag : undefined}
+                           position={(this.props.linked && this.props.linked.linked[index] && this.props.selected) ? this.state.controlledPosition : undefined}
+                           onMouseLeave={this.resetPosition}
                            {...this.props.itemHandlers}
               >
               </FeatureItem>

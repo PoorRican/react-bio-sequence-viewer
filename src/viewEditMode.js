@@ -40,9 +40,6 @@ export class ViewEditMode extends React.Component {
         availableItems: availableItems
       },
       activeDrags: 0,
-      controlledPosition: {
-        x: null, y: null
-      },
       linked: [],
       selected: {
         key: null,
@@ -143,16 +140,7 @@ export class ViewEditMode extends React.Component {
   onStart = (e) => {
     this.setState({activeDrags: this.state.activeDrags + 1});
 
-    const key = Number(this.getItemId(e.target));
-    const container = this.getContainer(e.target);
-    const content = this.getItem(container, key)
-    this.setState({
-        selected: {
-          key: key,
-          container,
-          content: content,
-        }
-      });
+    this.select(e.target);
   };
 
   onDrop = (e) => {
@@ -166,25 +154,34 @@ export class ViewEditMode extends React.Component {
       let items = this.state.items;
       if (this.state.mode === `insert`) {
         items[container] = ViewEditMode.insert(items[container], selected.content, key);
+        this.shiftLinked(key, 1)
       }
       else if (this.state.mode === 'move') {
         items[container] = ViewEditMode.move(items[container], selected.content, [selected.key, key])
+
+        // calculate shift
+        const single = typeof(selected.key) === 'number'
+        const magnitude = single ? 1 : key - selected.key[1] - 1
+
+
+        this.shiftLinked(key, -magnitude, single ? selected.key : selected.key[0])
+        if (!single) {
+          // update `linked`
+          this.setState({
+            linked: this.unlink(this.state.linked, selected.key)
+          });
+          this.setState({
+            linked: this.link(this.state.linked, [selected.key[0] + magnitude, selected.key[1] + magnitude])
+          })
+        }
       } else {
         return;
       }
 
-      this.setState({items: items});
-      this.shiftLinked(key, 1)
-    }
-  };
+      this.setState({items: items})
 
-  handleDrag = (e, position) => {
-    if (this.state.activeDrags) {
-      const {x, y} = position;
-      this.setState({
-        controlledPosition: {x, y}
-      });
     }
+    this.clearSelected()
   };
 
   // updates `this.state.selected` when opening context menu
@@ -251,22 +248,42 @@ export class ViewEditMode extends React.Component {
     return s1.concat(s2)
   }
 
+  /**
+   * @description Moves items within a given list
+   *
+   * @param {[]} list - list to manipulate.
+   * @param {*|[]} item - item to insert. Could be an array or single object.
+   * @param {[number, number]|[[], number]} positions - always arranged [from position, to position].
+   * Function is capable of moving items from lower or higher indices.
+   *
+   * @returns manipulated copy of `list`
+   */
   static move(list, item, positions) {
+    /** If both items in `position` are the same, the list is not manipulated, but just returned. */
     if (positions[0] === positions[1]) {
       return list;
     }
 
-    const start = Math.min(Number(positions[0]), Number(positions[1]))
-    const end = Math.max(Number(positions[0]), Number(positions[1]))
+    item = item.length ? item : [item]                  // encapsulate item if it is a single object
 
-    const s1 = list.slice(0, start)
+    const single = typeof(positions[0]) === 'number'                              // determines if only a single item will be moved
+    const size = single ? 1 : positions[0][1] - positions[0][0] + 1               // size of gap to create
+    const reverse = (single ? positions[0] : positions[0][0]) > positions[1]      // moving from or to higher index
+                                                                                  // `true` if moving to lower index
+
+    const lo = (!reverse) ? (single ? positions[0] : positions[0][0]) : positions[1]
+    const hi = reverse ? (single ? positions[0] : positions[0][0]) : positions[1]
+
+    const s1 = list.slice(0, lo)
     let s2, s3;
-    if (positions[0] > start) {
-      s2 = [item].concat(list.slice(start, end))
-      s3 = list.slice(end+1)
+    if (reverse) {
+      // moving to lower index
+      s2 = item.concat(list.slice(lo, hi))
+      s3 = list.slice(hi+size)
     } else {
-      s2 = list.slice(start+1, end).concat([item])
-      s3 = list.slice(end)
+      // moving to higher index
+      s2 = list.slice(lo+size, hi).concat(item)
+      s3 = list.slice(hi)
     }
     return s1.concat(s2).concat(s3)
   }
@@ -375,13 +392,37 @@ export class ViewEditMode extends React.Component {
     }
   }
 
-  shiftLinked(index, magnitude) {
+  /**
+   * Shifts linked coordinates to account for linked list manipulation.
+   * This function is called when inserting, deleting, or moving elements.
+   *
+   * If `lower` is provided, all elements between `index` and `lower` and shifted.
+   * Otherwise, all elements higher than `index` are shifted.
+   *
+   * @param index {number} - Upper bound of list shift
+   * @param magnitude {number} - Magnitude of shift
+   * @param lower {number} {optional} - Lower bound of list shift
+   */
+  shiftLinked(index, magnitude, lower=-1) {
     let linked = this.state.linked;
-    for (let i = 0; i < linked.length; i++) {
-      if (linked[i][0] >= index) {
-        linked[i][0] += magnitude;
-        linked[i][1] += magnitude;
+    if (lower) {
+
+      for (let i = 0; i < linked.length; i++) {
+        if (linked[i][0] >= index) {
+          linked[i][0] += magnitude;
+          linked[i][1] += magnitude;
+        }
       }
+
+    } else {
+
+      for (let i = 0; i < linked.length; i++) {
+        if (linked[i][0] <= index && linked[i][0] >= lower) {
+          linked[i][0] += magnitude;
+          linked[i][1] += magnitude;
+        }
+      }
+
     }
     this.setState({linked: linked})
   }
@@ -460,8 +501,8 @@ export class ViewEditMode extends React.Component {
     ]
 
     // determine view props
-    let disabled = ViewEditMode.isStaticMode(this.state.mode)
-    let expanded = false;
+    let disabled = ViewEditMode.isStaticMode(this.state.mode)   // determines draggable or not
+    let expanded = false;                                       // controls side menu visibility
 
     // handlers
     let itemHandlers    = undefined;
@@ -469,23 +510,22 @@ export class ViewEditMode extends React.Component {
 
     // set props based mode
     if (!ViewEditMode.isStaticMode(this.state.mode)) {
+      // default props for view/select
       itemHandlers = {
         onStart: this.onStart,
         onStop: this.onDrop,
-        onDrag: this.handleDrag,};
+      };
       spacerHandlers = {};
     }
+
     if (this.state.mode === 'view') {
       itemHandlers = {
         onClick: this.onClick,
       }
-      spacerHandlers = {};
-    }
-    if (this.state.mode === 'insert') {
+    } else if (this.state.mode === 'insert') {
       disabled = true;
       expanded = true;
-    }
-    if (this.state.mode === 'select') {
+    } else if (this.state.mode === 'select') {
       itemHandlers ={
         onClick: this.onClick,
       }

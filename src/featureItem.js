@@ -13,7 +13,7 @@ export function FeatureItem(props) {
     <Draggable onStart={props.onStart}
                onStop={props.onStop}
                onDrag={props.onDrag}
-               position={{x: 0, y: 0}}
+               position={props.position ? props.position : {x: 0, y: 0}}
                defaultPosition={props.defaultPosition}
                disabled={props.disabled}
     >
