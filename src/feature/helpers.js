@@ -8,6 +8,18 @@ export function isFeature(target) {
   }
 }
 
+/**
+ * Checks if target of `MouseEvent` is a valid target for draggable events.
+ * This is done by checking class attributes.
+ *
+ * @param target {object} - DOM target from `MouseEvent`
+ *
+ * @returns {boolean} - `true` if `target` is valid drop target.
+ */
+export function isTarget(target) {
+  return target.classList.contains("drop-target") && !(target.classList.contains("react-draggable-dragging"))
+}
+
 export function isSelected(list, index, container='') {
   const key = list.key;
 

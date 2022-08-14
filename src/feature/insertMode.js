@@ -3,9 +3,10 @@ import Xarrow from "react-xarrows";
 
 import {
   isLinked,
+  isTarget,
+  isSelected,
   getItemId,
   getContainer,
-  isSelected,
   linkedAnchors,
   shiftLinked,
 } from './helpers'
@@ -56,7 +57,7 @@ export default class InsertMode extends React.Component {
 
   onDrop = (e) => {
     this.setState({activeDrags: this.state.activeDrags - 1});
-    if (e.target.classList.contains("drop-target") && !(e.target.classList.contains("react-draggable-dragging"))) {
+    if (isTarget(e.target)) {
 
       const selected = this.context.selected;
       const key = Number(getItemId(e.target));
