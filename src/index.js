@@ -11,6 +11,7 @@ import Provider from "./feature/data"
 import Container from './feature/container'
 import ViewMode from "./feature/viewMode";
 import InsertMode from "./feature/insertMode";
+import SelectMode from "./feature/selectMode";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -21,6 +22,7 @@ root.render(
           <Container>
             <ViewMode />
             <InsertMode />
+            <SelectMode />
           </Container>
         </Provider>
       }>Home</Route>

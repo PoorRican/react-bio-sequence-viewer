@@ -1,4 +1,8 @@
 import React, {createContext} from 'react'
+
+import {
+  isLinked
+} from "./helpers";
 import {generateFeatures} from "./feature";
 
 export const MODES = {
@@ -71,7 +75,6 @@ export function move(list, item, positions) {
   return s1.concat(s2).concat(s3)
 }
 
-
 export function _delete(list, position) {
   if (typeof(position) === 'number') {
     const s1 = list.slice(0, position);
@@ -84,6 +87,29 @@ export function _delete(list, position) {
   }
 }
 
+export function link(list, positions) {
+  for (let i = 0; i < positions.length; i++) {
+    if (isLinked(list, positions[i])) {
+      // leave linked items intact
+      // TODO: show an error as toast
+      console.info('already linked')
+      return list;
+    }
+  }
+
+  console.info('linked ' + positions)
+  return list.concat([positions])
+}
+
+export function unlink(list, positions) {
+  for (let i = 0; i < list.length; i++) {
+    if (positions[0] === list[i][0] &&
+      positions[1] === list[i][1]) {
+      list.splice(i, 1);
+      return list
+    }
+  }
+}
 
 const defaultData = {
   mode: MODES.view,
