@@ -9,6 +9,24 @@ import {ItemSpacer} from "./itemSpacer";
 import {FeatureItem} from "./featureItem";
 
 
+/**
+ * Renders a sequence of `FeatureItem` and `SpacerItem` components and renders components.
+ *
+ * `FeatureItem` components will return to their original position on `MouseUp` events.
+ *
+ * When the `linked` prop is given, linked `FeatureItem` component groups are all dragged in unison.
+ *
+ * Rendering of `SpacerItem` components is controlled by the `spacer` prop.
+ * For linked features, only the first `SpacerItem` is rendered.
+ *
+ * @param props.data {[]} - List of `Feature` objects
+ * @param props.selected {[boolean]} - Controls `FeatureItem` styling and also is used when dragging linked groups.
+ * @param props.linked {[boolean]} - Controls `FeatureItem` styling and draggable functionality.
+ * @param props.spacer {boolean} - Renders of `SpacerItem` components when `true`
+ * @param props.disabled {boolean} - Disables draggable functionality of `FeatureItem` components when `true`
+ *
+ * @returns {JSX.Element}
+ */
 export default class RearrangeableList extends React.Component {
   constructor(props) {
     super(props);
