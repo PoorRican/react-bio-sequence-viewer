@@ -6,8 +6,8 @@ import {ContextMenu2, MenuItem2} from "@blueprintjs/popover2";
 import {DataContext, _delete} from "./data";
 import {ModeMenu, MODES} from "./modeMenu";
 import {
-  getContainer, getItemId,
   isFeature, isLinked, isSelected,
+  getItem,
 } from "./helpers";
 import {
   link, unlink,
@@ -38,8 +38,7 @@ export default class Container extends React.Component {
   }
 
   select(target) {
-    const key = Number(getItemId(target));
-    const container = getContainer(target);
+    const [key, container] = getItem(target)
     const linked = isLinked(this.context.linked, key);    // index + 1 if linked
 
     if (container === 'mainItems' && linked) {
@@ -69,8 +68,7 @@ export default class Container extends React.Component {
     const inFeature = isFeature(e.target);
     if (inFeature) {
 
-      const key = Number(getItemId(e.target));
-      const container = getContainer(e.target)
+      const [key, container] = getItem(e.target);
 
       if (!isSelected(this.context.selected, key, container)) {
         // cancel previous selections

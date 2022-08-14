@@ -2,13 +2,9 @@ import React from 'react'
 import Xarrow from "react-xarrows";
 
 import {
-  isLinked,
-  isTarget,
-  isSelected,
-  getItemId,
-  getContainer,
-  linkedAnchors,
-  shiftLinked,
+  isLinked, isTarget, isSelected,
+  getItem,
+  linkedAnchors, shiftLinked,
 } from './helpers'
 import {insert} from './data'
 import {DataContext, features} from './data'
@@ -36,8 +32,7 @@ export default class InsertMode extends React.Component {
 
 
   select(target) {
-    const key = Number(getItemId(target));
-    const container = getContainer(target)
+    const [key, container] = getItem(target);
 
     if (container === availableContainerId) {
       this.context.setSelected({
@@ -60,8 +55,7 @@ export default class InsertMode extends React.Component {
     if (isTarget(e.target)) {
 
       const selected = this.context.selected;
-      const key = Number(getItemId(e.target));
-      const container = getContainer(e.target);
+      const [key, container] = getItem(e.target);
 
       let items = this.context.items;
       items[container] = insert(items[container], selected.content, key);

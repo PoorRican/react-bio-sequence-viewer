@@ -75,6 +75,10 @@ export function getItemId(target) {
   return target.id;
 }
 
+export function getItem(target) {
+  return [Number(getItemId(target)), getContainer(target)]
+}
+
 export function linkedAnchors(items, linked) {
   let starts = Array(items.length).fill(false);
   let ends = Array(items.length).fill(false);

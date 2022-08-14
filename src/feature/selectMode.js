@@ -2,10 +2,8 @@ import React from 'react'
 import Xarrow from "react-xarrows";
 
 import {
-  isLinked,
-  getItemId,
-  getContainer,
-  isSelected,
+  isLinked, isSelected,
+  getItem,
   linkedAnchors,
 } from './helpers'
 import {DataContext} from './data'
@@ -28,8 +26,7 @@ export default class SelectMode extends React.Component {
   }
 
   select(target, toggle=true) {
-    const key = Number(getItemId(target));
-    const container = getContainer(target)
+    const [key, container] = getItem(target);
     const linked = isLinked(this.context.linked, key)     // index + 1 if linked
 
     if (this.state.selecting) {

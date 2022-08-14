@@ -2,10 +2,8 @@ import React from 'react'
 import Xarrow from "react-xarrows";
 
 import {
-  isLinked,
-  getItemId,
-  getContainer,
-  isSelected,
+  isLinked, isSelected,
+  getItem,
   linkedAnchors,
 } from './helpers'
 import {FeatureDialog} from "./featureDialog";
@@ -25,8 +23,7 @@ export default class ViewMode extends React.Component {
 
   // handler functions
   onClick = (e) => {
-    const key = Number(getItemId(e.target));
-    const container = getContainer(e.target)
+    const [key, container] = getItem(e.target);
 
     this.context.setSelected({
       key: key,
