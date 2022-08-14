@@ -9,7 +9,7 @@ import {ItemSpacer} from "./itemSpacer";
 import {FeatureItem} from "./featureItem";
 
 
-export class RearrangeableList extends React.Component {
+export default class RearrangeableList extends React.Component {
   constructor(props) {
     super(props);
 

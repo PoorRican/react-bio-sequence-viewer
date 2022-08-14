@@ -6,12 +6,14 @@
     - shifting of `linked` is not correct
     - If there are multiple linked lists, all linked features are dragged
     - Drag background (`feature-group`) along with features
-    - 
+
+
 # Program Features
-## Feature View
+
+## Feature Overview
 ### Improvements
 - Stylize feature dialog
-- Show/hilight features based on regions and complexes
+- Show/highlight features based on regions and complexes
     - Ability to edit/modify regions
 - Ability to zoom-in and navigate regions and complexes
     - Show breadcrumbs
@@ -22,16 +24,25 @@
     - Show different content for content menu in selection panel during `insert` mode
 - Improve navbar styling
 - Scroll vertically to scroll horizontally
+- Calculate selected and linked elements by using context instead of using props passed to `RearrangeableList`
+- Dynamically render features based on window position
+
 
 ## Sequence View
+
 ### Purpose / Functionality
 - Display sequence
-    - Highlight selected feature/subfeature/region
+    - Highlight selected feature/sub-feature/region
       by graying-out unseleceted sequence
-    - Option to hilight:
+    - Option to highlight:
         - codons and coding regions
         - activator/inhibitor sites
         - restriction enzyme sites
         - introns/exons
         - nucleotide modifications (eg: methylation, etc)
-- Show/hilight features based on regions and complexes
+- Show/highlight features based on regions and complexes
+
+
+# Meta
+- Rename `feature` directory to `overview`
+- Move `ModeMenu` components to a top-level directory `components`

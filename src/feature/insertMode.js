@@ -1,15 +1,19 @@
 import React from 'react'
-import Xarrow from "react-xarrows";
+
+import {H1} from "@blueprintjs/core";
 
 import {
-  isLinked, isTarget, isSelected,
+  isTarget,
   getItem,
-  linkedAnchors, shiftLinked,
+  shiftLinked,
 } from './helpers'
-import {insert} from './data'
-import {DataContext, features} from './data'
-import {RearrangeableList} from "./rearrangeableList";
-import {H1} from "@blueprintjs/core";
+import {
+  insert, features,
+  DataContext,
+} from './data'
+import RearrangeableList from "./rearrangeableList";
+import MainItems from "./mainItems";
+
 
 const availableContainerId = "availableItems"
 
@@ -73,49 +77,13 @@ export default class InsertMode extends React.Component {
       onStart: this.onStart,
       onStop: this.onDrop,
     };
-    const spacerHandlers = {};
-
-    const [linked_starts, linked_ends] = linkedAnchors(this.context.items.mainItems, this.context.linked);
 
     return(
       <div className={`feature-space`}>
 
-        <div className={'main ' + [
-          'expanded',
-          this.context.mode,
-        ].join(' ')}>
-
-          <RearrangeableList id={`mainItems`}
-            // state
-                             active={this.state.activeDrags}
-                             disabled={true}
-            // data + handlers
-                             data={this.context.items.mainItems}
-                             itemHandlers={itemHandlers}
-                             spacerHandlers={spacerHandlers}
-            // interaction states
-                             selected={(this.context.selected.container === 'mainItems') ?
-                               this.context.items.mainItems.map((item, index) => {
-                                 return isSelected(this.context.selected, index)}) : false}
-                             linked={{
-                               linked: this.context.items.mainItems.map((item, index) => {
-                                 return isLinked(this.context.linked, index)
-                               }),
-                               starts: linked_starts,
-                               ends: linked_ends,
-                             }}
-          />
-
-          <Xarrow start="0" end={this.context.items.mainItems.length.toString()}
-                  color={'purple'}
-                  showHead={false}
-                  startAnchor='left'
-                  endAnchor='right'
-                  curveness={0}
-                  path={'straight'}
-          />
-
-        </div>{/* /.main */}
+        <MainItems active={this.state.activeDrags} disable={true}
+                   context={this.context}
+                   itemHandlers={itemHandlers} spacers={true} />
 
         <div className={`selection bp4-elevation-2 ` + this.context.mode}>
           <H1>Available Items:</H1>

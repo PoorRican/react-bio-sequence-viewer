@@ -1,14 +1,11 @@
 import React from 'react'
-import Xarrow from "react-xarrows";
 
 import {
-  isLinked, isSelected,
   getItem,
-  linkedAnchors,
 } from './helpers'
 import {FeatureDialog} from "./featureDialog";
 import {DataContext} from './data'
-import {RearrangeableList} from "./rearrangeableList";
+import MainItems from "./mainItems";
 
 
 export default class ViewMode extends React.Component {
@@ -44,46 +41,12 @@ export default class ViewMode extends React.Component {
       onClick: this.onClick
     }
 
-    const [linked_starts, linked_ends] = linkedAnchors(this.context.items, this.context.linked);
-
     return(
       <div className={`feature-space`}>
 
-        <div className={'main ' + [
-          this.context.mode,
-        ].join(' ')}>
-
-          <RearrangeableList id={`mainItems`}
-            // state
-                             active={false}
-                             disabled={true}
-            // data + handlers
-                             data={this.context.items.mainItems}
-                             itemHandlers={itemHandlers}
-            // interaction states
-                             selected={(this.context.selected.container === 'mainItems') ?
-                               this.context.items.mainItems.map((item, index) => {
-                                 return isSelected(this.context.selected, index)
-                               }) : false}
-                             linked={{
-                               linked: this.context.items.mainItems.map((item, index) => {
-                                 return isLinked(this.context.linked, index)
-                               }),
-                               starts: linked_starts,
-                               ends: linked_ends,
-                             }}
-          />
-
-          <Xarrow start="0" end={this.context.items.mainItems.length.toString()}
-                  color={'purple'}
-                  showHead={false}
-                  startAnchor='left'
-                  endAnchor='right'
-                  curveness={0}
-                  path={'straight'}
-          />
-
-        </div>{/* /.main */}
+        <MainItems active={false} disabled={true}
+                   context={this.context}
+                   itemHandlers={itemHandlers} />
 
         <FeatureDialog
           isOpen={this.state.featureDialogOpen}
