@@ -1,7 +1,10 @@
 import React from 'react'
 
+import {Menu} from "@blueprintjs/core";
+import {ContextMenu2, MenuItem2} from "@blueprintjs/popover2";
+
 import {DataContext, _delete} from "./data";
-import {ModeMenu} from "./modeMenu";
+import {ModeMenu, MODES} from "./modeMenu";
 import {
   getContainer, getItemId,
   isFeature, isLinked, isSelected,
@@ -10,8 +13,10 @@ import {
   link, unlink,
 } from "./data";
 
-import {Menu} from "@blueprintjs/core";
-import {ContextMenu2, MenuItem2} from "@blueprintjs/popover2";
+// modes
+import ViewMode from "./viewMode";
+import InsertMode from "./insertMode";
+import SelectMode from "./selectMode";
 
 
 export default class Container extends React.Component {
@@ -173,7 +178,12 @@ export default class Container extends React.Component {
           content={this.contextMenu}
           onContextMenu={this.onContextMenu}>
 
-          {this.props.children}
+          {(this.context.mode === MODES.view) ?
+            <ViewMode /> : null}
+          {(this.context.mode === MODES.select) ?
+            <SelectMode /> : null}
+          {(this.context.mode === MODES.insert) ?
+            <InsertMode /> : null}
         </ContextMenu2>
 
       </div>

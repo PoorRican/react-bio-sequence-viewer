@@ -1,6 +1,5 @@
 # Features to Implement
 ## Feature View
-- Move linked features
 - Stylize feature dialog
 - Show/hilight features based on regions and complexes
     - Ability to edit/modify regions
@@ -8,12 +7,10 @@
     - Show breadcrumbs
 - Show scrollbar that displays features and regions
 - Implement composition for `FeatureView` modes
-- Implement replace functionality via context menu and side menu
+- Context Menu
+  - Implement replace functionality via context menu and side menu
+  - Show different content for content menu in selection panel during `insert` mode
 - Improve navbar styling
-
-### Improvements
-- Remove undo linked features during deletion
-- Move linked features when
 - Scroll vertically to scroll horizontally
 
 ## Sequence View

@@ -1,6 +1,14 @@
 import {Button, Navbar} from "@blueprintjs/core";
 import React from "react";
 
+
+export const MODES = {
+  view: 'view',
+  select: 'select',
+  insert: 'insert',
+  move: 'move'
+}
+
 export function ModeMenu(props) {
   return (
     <Navbar style={{
@@ -30,4 +38,3 @@ export function ModeMenu(props) {
     </Navbar>
   )
 }
-

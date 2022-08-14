@@ -1,16 +1,8 @@
 import React, {createContext} from 'react'
 
-import {
-  isLinked
-} from "./helpers";
+import {isLinked} from "./helpers";
 import {generateFeatures} from "./feature";
-
-export const MODES = {
-  view: 'view',
-  select: 'select',
-  insert: 'insert',
-  move: 'move'
-}
+import {MODES} from "./modeMenu";
 
 export const features = generateFeatures(30);
 export const DataContext = createContext({

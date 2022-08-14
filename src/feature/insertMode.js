@@ -10,7 +10,7 @@ import {
   shiftLinked,
 } from './helpers'
 import {insert} from './data'
-import {DataContext, features, MODES} from './data'
+import {DataContext, features} from './data'
 import {RearrangeableList} from "./rearrangeableList";
 import {H1} from "@blueprintjs/core";
 
@@ -83,54 +83,52 @@ export default class InsertMode extends React.Component {
     const [linked_starts, linked_ends] = linkedAnchors(this.context.items.mainItems, this.context.linked);
 
     return(
-      <div  hidden={this.context.mode !== MODES.insert}>
-        <div className={`feature-space`}>
+      <div className={`feature-space`}>
 
-          <div className={'main ' + [
-            'expanded',
-            this.context.mode,
-          ].join(' ')}>
+        <div className={'main ' + [
+          'expanded',
+          this.context.mode,
+        ].join(' ')}>
 
-            <RearrangeableList id={`mainItems`}
-              // state
-                               active={this.state.activeDrags}
-                               disabled={true}
-              // data + handlers
-                               data={this.context.items.mainItems}
-                               itemHandlers={itemHandlers}
-                               spacerHandlers={spacerHandlers}
-              // interaction states
-                               selected={(this.context.selected.container === 'mainItems') ?
-                                 this.context.items.mainItems.map((item, index) => {
-                                   return isSelected(this.context.selected, index)}) : false}
-                               linked={{
-                                 linked: this.context.items.mainItems.map((item, index) => {
-                                   return isLinked(this.context.linked, index)
-                                 }),
-                                 starts: linked_starts,
-                                 ends: linked_ends,
-                               }}
-            />
+          <RearrangeableList id={`mainItems`}
+            // state
+                             active={this.state.activeDrags}
+                             disabled={true}
+            // data + handlers
+                             data={this.context.items.mainItems}
+                             itemHandlers={itemHandlers}
+                             spacerHandlers={spacerHandlers}
+            // interaction states
+                             selected={(this.context.selected.container === 'mainItems') ?
+                               this.context.items.mainItems.map((item, index) => {
+                                 return isSelected(this.context.selected, index)}) : false}
+                             linked={{
+                               linked: this.context.items.mainItems.map((item, index) => {
+                                 return isLinked(this.context.linked, index)
+                               }),
+                               starts: linked_starts,
+                               ends: linked_ends,
+                             }}
+          />
 
-            <Xarrow start="0" end={this.context.items.mainItems.length.toString()}
-                    color={'purple'}
-                    showHead={false}
-                    startAnchor='left'
-                    endAnchor='right'
-                    curveness={0}
-                    path={'straight'}
-            />
+          <Xarrow start="0" end={this.context.items.mainItems.length.toString()}
+                  color={'purple'}
+                  showHead={false}
+                  startAnchor='left'
+                  endAnchor='right'
+                  curveness={0}
+                  path={'straight'}
+          />
 
-          </div>{/* /.main */}
+        </div>{/* /.main */}
 
-          <div className={`selection bp4-elevation-2 ` + this.context.mode}>
-            <H1>Available Items:</H1>
-            <RearrangeableList id={availableContainerId}
-                               data={this.state.availableItems}
-                               itemHandlers={itemHandlers}
-            />
-          </div>{/* /.section */}
-        </div>
+        <div className={`selection bp4-elevation-2 ` + this.context.mode}>
+          <H1>Available Items:</H1>
+          <RearrangeableList id={availableContainerId}
+                             data={this.state.availableItems}
+                             itemHandlers={itemHandlers}
+          />
+        </div>{/* /.section */}
       </div>
     )
   }
