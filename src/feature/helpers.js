@@ -8,14 +8,14 @@ export function isFeature(target) {
   }
 }
 
-export function isSelected(selected, index, container='') {
-  const key = selected.key;
+export function isSelected(list, index, container='') {
+  const key = list.key;
 
   if (key === null || key === undefined) {
     return false
   }
 
-  if (container && !(container === selected.container)) {
+  if (container && !(container === list.container)) {
     return false;
   }
 
@@ -30,20 +30,20 @@ export function isSelected(selected, index, container='') {
   return false;
 }
 
-export function isLinked(linked, index) {
-  if (index === null) {
+export function isLinked(list, index) {
+  if (index === null || list === []) {
     return false;
   } else if (typeof(index) === 'number') {
-    for (let i = 0; i < linked.length; i++) {
-      const obj = linked[i]
+    for (let i = 0; i < list.length; i++) {
+      const obj = list[i]
       if (index >= obj[0] && index <= obj[1] ) {
         return i+1;
       }
     }
     return false;
   } else {
-    const linked = index.map((val) => {return isLinked(val)})
-    return linked.reduce((a, b) => {return a && b && true})
+    const _linked = index.map(val => {return isLinked(list, val)})
+    return _linked.reduce((a, b) => {return a && b && true})
   }
 }
 
