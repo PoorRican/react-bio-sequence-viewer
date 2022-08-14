@@ -54,8 +54,7 @@ export default function MainItems(props) {
       <RearrangeableList id={`mainItems`}
                          active={props.active} disabled={props.disabled}
                          data={props.context.items.mainItems} itemHandlers={props.itemHandlers}
-                         spacerHandlers={props.spacers}
-        // interaction states
+                         spacers={props.spacers}
                          selected={selected}
                          linked={linked}
       />

@@ -80,12 +80,11 @@ export default class RearrangeableList extends React.Component {
                 ].join(' ')}
             >
 
-              {(this.props.spacerHandlers &&              // `{} === true`
-                this.props.linked &&                      // checks property exists for next logical statement
-
+              {(this.props.spacers &&
+                this.props.linked &&
                 (!this.props.linked.linked[index] ||      // do not show spacers between linked features
-                  this.props.linked.starts[index])) ?
-                <ItemSpacer {...this.props.spacerHandlers} /> :
+                  this.props.linked.starts[index])) ?     // only show first spacer for linked features
+                <ItemSpacer /> :
                 ''
               }
 
@@ -94,8 +93,8 @@ export default class RearrangeableList extends React.Component {
                            data={data}
 
                            // linked handler + position
-                           onDrag={(this.props.linked && this.props.linked.linked[index] && this.props.selected) ? this.handleDrag : undefined}
-                           position={(this.props.linked && this.props.linked.linked[index] && this.props.selected) ? this.state.controlledPosition : undefined}
+                           onDrag={(this.props.linked && this.props.linked.linked[index] && this.props.selected[index]) ? this.handleDrag : undefined}
+                           position={(this.props.linked && this.props.linked.linked[index] && this.props.selected[index]) ? this.state.controlledPosition : undefined}
                            onMouseLeave={this.resetPosition}
                            {...this.props.itemHandlers}
               >
