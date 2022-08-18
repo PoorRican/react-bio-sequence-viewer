@@ -29,38 +29,6 @@ export default class Container extends React.Component {
     }
   }
 
-  clearSelected() {
-    this.context.setSelected({
-      key: null,
-      container: null,
-      content: null,
-    })
-  }
-
-  select(target) {
-    const [key, container] = getItem(target)
-    const linked = isLinked(this.context.linked, key);    // index + 1 if linked
-
-    if (container === 'mainItems' && linked) {
-      const keys = this.context.linked[linked-1];
-
-      this.context.setSelected({
-        key: keys,
-        container: container,
-        content: this.context.items.mainItems.slice(keys[0], keys[1]+1)
-      })
-
-    } else {
-
-      this.context.setSelected({
-        key: key,
-        container: container,
-        content: this.context.items[container][key],
-      });
-
-    }
-  }
-
   /**
    * Updates selection to event target when opening context menu
    */
@@ -71,19 +39,18 @@ export default class Container extends React.Component {
       const [key, container] = getItem(e.target);
 
       if (!isSelected(this.context.selected, key, container)) {
-        // cancel previous selections
-        this.select(e.target);
+        this.context.select(e.target);      // cancel previous selections
       }
 
     } else {
       // clear selection if not clicked on a feature
-      this.clearSelected();
+      this.context.unselect();
     }
   }
 
   contextMenu = () => {
-    const invalidSel = this.context.selected.key === null || !(this.context.selected.container === 'mainItems')
-    const linked = isLinked(this.context.linked, this.context.selected.key)
+    const invalidSel = this.context.selected.index === null || !(this.context.selected.container === 'mainItems')
+    const linked = isLinked(this.context.linked, this.context.selected.index)
     return (
       <Menu>
         <MenuItem2 text={`Delete`}
@@ -115,23 +82,23 @@ export default class Container extends React.Component {
     }
 
     // set state
-    this.clearSelected();
+    this.context.unselect();
   }
 
   doDelete = () => {
-    this.doItemContextMenuAction(_delete, [this.context.selected.key]);
+    this.doItemContextMenuAction(_delete, [this.context.selected.index]);
 
-    if (!(typeof(this.context.selected.key) === 'number')) {
-      this.context.setLinked(unlink(this.context.linked, this.context.selected.key));
+    if (!(typeof(this.context.selected.index) === 'number')) {
+      this.context.setLinked(unlink(this.context.linked, this.context.selected.index));
     }
   }
 
   doLink = () => {
-    this.doItemContextMenuAction(link, [this.context.selected.key], 'linked')
+    this.doItemContextMenuAction(link, [this.context.selected.index], 'linked')
   }
 
   doUnlink = () => {
-    this.doItemContextMenuAction(unlink, [this.context.selected.key], 'linked')
+    this.doItemContextMenuAction(unlink, [this.context.selected.index], 'linked')
   }
 
 

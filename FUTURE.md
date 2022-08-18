@@ -6,6 +6,8 @@
     - shifting of `linked` is not correct
     - If there are multiple linked lists, all linked features are dragged
     - Drag background (`feature-group`) along with features
+- Cursor class is not being set
+- Moving linked group breaks `mainItems`
 
 
 # Program Features
@@ -29,6 +31,12 @@ _Top-level program features and planned functionality_
 - Scroll vertically to scroll horizontally
 - Calculate selected and linked elements by using context instead of using props passed to `RearrangeableList`
 - Dynamically render features based on window position
+
+#### `SelectMode`
+- Indicate that `selecting` has begun:
+  - Change cursor icon
+  - Stylize `FeatureItem` components based on mouse position
+  - Text/icon indication
 
 
 ## Sequence View

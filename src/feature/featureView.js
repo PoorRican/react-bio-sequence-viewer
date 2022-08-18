@@ -44,7 +44,7 @@ export default class FeatureView extends React.Component {
   // helper functions
   clearSelected() {
     this.context.setSelected({
-      key: null,
+      index: null,
       container: null,
       content: null,
     })
@@ -65,7 +65,7 @@ export default class FeatureView extends React.Component {
   }
 
   isSelected(index, container='') {
-    const key = this.state.selected.key;
+    const key = this.state.selected.index;
 
     if (key === null || key === undefined) {
       return false
@@ -149,18 +149,18 @@ export default class FeatureView extends React.Component {
         this.shiftLinked(key, 1)
       }
       else if (this.state.mode === 'move') {
-        items[container] = FeatureView.move(items[container], selected.content, [selected.key, key])
+        items[container] = FeatureView.move(items[container], selected.content, [selected.index, key])
 
         // calculate shift
-        const single = typeof(selected.key) === 'number'
-        const magnitude = single ? 1 : key - selected.key[1] - 1
+        const single = typeof(selected.index) === 'number'
+        const magnitude = single ? 1 : key - selected.index[1] - 1
 
 
-        this.shiftLinked(key, -magnitude, single ? selected.key : selected.key[0])
+        this.shiftLinked(key, -magnitude, single ? selected.index : selected.index[0])
         if (!single) {
           // update `linked`
-          this.context.setLinked(this.unlink(this.state.linked, selected.key));
-          this.context.setLinked(this.link(this.state.linked, [selected.key[0] + magnitude, selected.key[1] + magnitude]))
+          this.context.setLinked(this.unlink(this.state.linked, selected.index));
+          this.context.setLinked(this.link(this.state.linked, [selected.index[0] + magnitude, selected.index[1] + magnitude]))
         }
       } else {
         return;
@@ -190,8 +190,8 @@ export default class FeatureView extends React.Component {
   }
 
   contextMenu = () => {
-    const selected = this.state.selected.key === null
-    const linked = this.isLinked(this.state.selected.key)
+    const selected = this.state.selected.index === null
+    const linked = this.isLinked(this.state.selected.index)
     return (
       <Menu>
         <MenuItem2 text={`Delete`}
@@ -290,7 +290,7 @@ export default class FeatureView extends React.Component {
     const linked = this.isLinked(key)     // index + 1 if linked
 
     if (this.state.selecting) {
-      const prev_sel_key = this.state.selected.key
+      const prev_sel_key = this.state.selected.index
       let sorted;
 
       // occurs when a linked item is selected
@@ -312,7 +312,7 @@ export default class FeatureView extends React.Component {
       }
 
       this.context.setSelected({
-        key:        sorted,
+        index:        sorted,
         container:  container,
         content:    this.state.items.mainItems.slice(sorted[0], sorted[1]),
       })
@@ -324,7 +324,7 @@ export default class FeatureView extends React.Component {
         const keys = this.state.linked[linked-1];
 
         this.context.setSelected({
-          key: keys,
+          index: keys,
           container: container,
           content: this.state.items.mainItems.slice(keys[0], keys[1]+1)
         })
@@ -332,7 +332,7 @@ export default class FeatureView extends React.Component {
       } else {
 
         this.context.setSelected({
-          key: key,
+          index: key,
           container: container,
           content: this.state.items[container][key],
         });
@@ -430,19 +430,19 @@ export default class FeatureView extends React.Component {
   }
 
   doDelete = () => {
-    this.doItemContextMenuAction(FeatureView.delete, [this.state.selected.key]);
+    this.doItemContextMenuAction(FeatureView.delete, [this.state.selected.index]);
 
-    if (!(typeof(this.state.selected.key) === 'number')) {
-      this.context.setState(this.unlink(this.state.linked, this.state.selected.key));
+    if (!(typeof(this.state.selected.index) === 'number')) {
+      this.context.setState(this.unlink(this.state.linked, this.state.selected.index));
     }
   }
 
   doLink = () => {
-    this.doItemContextMenuAction(this.link, [this.state.selected.key], 'linked')
+    this.doItemContextMenuAction(this.link, [this.state.selected.index], 'linked')
   }
 
   doUnlink = () => {
-    this.doItemContextMenuAction(this.unlink, [this.state.selected.key], 'linked')
+    this.doItemContextMenuAction(this.unlink, [this.state.selected.index], 'linked')
   }
 
   render() {

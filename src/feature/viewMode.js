@@ -1,8 +1,5 @@
 import React from 'react'
 
-import {
-  getItem,
-} from './helpers'
 import {FeatureDialog} from "./featureDialog";
 import {DataContext} from './data'
 import MainItems from "./mainItems";
@@ -20,20 +17,14 @@ export default class ViewMode extends React.Component {
 
   // handler functions
   onClick = (e) => {
-    const [key, container] = getItem(e.target);
+    this.context.select(e.target);
 
-    this.context.setSelected({
-      key: key,
-      container: container,
-      content: this.context.items[container][key],
-    });
-
-    this.setState({featureDialogOpen: true})
+    this.setState({featureDialogOpen: true});
   }
 
   onDialogClose = () => {
     this.setState({featureDialogOpen: false});
-    this.context.setSelected({key: null, container: null, content: null});
+    this.context.unselect();
   }
 
   render() {

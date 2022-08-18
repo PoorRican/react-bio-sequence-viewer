@@ -34,24 +34,10 @@ export default class InsertMode extends React.Component {
     }
   }
 
-
-  select(target) {
-    const [key, container] = getItem(target);
-
-    if (container === availableContainerId) {
-      this.context.setSelected({
-        key:        key,
-        container:  container,
-        content:    this.state[container][key],
-      })
-    }
-  }
-
-
   onStart = (e) => {
     this.setState({activeDrags: this.state.activeDrags + 1});
 
-    this.select(e.target);
+    this.context.select(e.target);
   };
 
   onDrop = (e) => {
@@ -59,17 +45,17 @@ export default class InsertMode extends React.Component {
     if (isTarget(e.target)) {
 
       const selected = this.context.selected;
-      const [key, container] = getItem(e.target);
+      const [index, container] = getItem(e.target);
 
       let items = this.context.items;
-      items[container] = insert(items[container], selected.content, key);
+      items[container] = insert(items[container], selected.content, index);
 
-      this.context.setLinked(shiftLinked(this.context.linked, key, 1));
+      this.context.setLinked(shiftLinked(this.context.linked, index, 1));
       this.context.setItems(items.mainItems);
 
     }
     // clear selected
-    this.context.setSelected({key: null, container: null, content: null});
+    this.context.unselect();
   };
 
   render() {

@@ -20,22 +20,22 @@ export function isTarget(target) {
   return target.classList.contains("drop-target") && !(target.classList.contains("react-draggable-dragging"))
 }
 
-export function isSelected(list, index, container='') {
-  const key = list.key;
+export function isSelected(selected, index, container='') {
+  const selected_idx = selected.index;
 
-  if (key === null || key === undefined) {
+  if (selected_idx === null || selected_idx === undefined) {
     return false
   }
 
-  if (container && !(container === list.container)) {
+  if (container && !(container === selected.container)) {
     return false;
   }
 
-  else if (typeof(key) === "number") {
-    return key === index
+  else if (typeof(selected_idx) === "number") {
+    return selected_idx === index
   }
 
-  else if (index >= key[0] && index <= key[1]) {
+  else if (index >= selected_idx[0] && index <= selected_idx[1]) {
     return true;
   }
 
@@ -68,15 +68,15 @@ export function getContainer(target) {
   }
 }
 
-export function getItemId(target) {
+export function getItemIndex(target) {
   if (target.id === '') {
-    return getItemId(target.parentNode);
+    return getItemIndex(target.parentNode);
   }
   return target.id;
 }
 
 export function getItem(target) {
-  return [Number(getItemId(target)), getContainer(target)]
+  return [Number(getItemIndex(target)), getContainer(target)]
 }
 
 export function linkedAnchors(items, linked) {

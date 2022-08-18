@@ -1,6 +1,6 @@
 import React, {createContext} from 'react'
 
-import {isLinked} from "./helpers";
+import {getItem, isLinked} from "./helpers";
 import {generateFeatures} from "./feature";
 import {MODES} from "./modeMenu";
 
@@ -12,12 +12,14 @@ export const DataContext = createContext({
     },
     linked: [],
     selected: {
-      key: null,
+      index: null,
+      container: null,
       content: null,
     },
     setItems: () => {},
     setLinked: () => {},
-    setSelected: () => {},
+    select: () => {},
+    unselect: () => {},
   }
 );
 
@@ -110,7 +112,8 @@ const defaultData = {
   },
   linked: [],
   selected: {
-    key: null,
+    index: null,
+    container: null,
     content: null,
   },
 }
@@ -136,9 +139,84 @@ export default class Provider extends React.Component {
         linked: linked,
       })
     }
-    this.setSelected = (selected) => {
+
+    /**
+     * Used by `MouseEvent` callbacks to select `FeatureItem` components in _all_ modes.
+     *
+     * Upon `MouseClickDown`, the targeted `FeatureItem` component, and it's index is stored in `this.state.selected`.
+     * When a group of linked `FeatureItem` components (or when selecting during `SelectMode`) has been selected,
+     * the selected
+     *
+     * @param target {HTMLElement} - `FeatureItem` (as `HTMLElement`) which is the target of `MouseEvent`
+     * @param [selecting=false] {boolean} - Used by `SelectMode` to indicate that a selection of multiple features has begun
+     */
+    this.select = (target, selecting=false) => {
+      const [index, container] = getItem(target);
+      const linked = isLinked(this.state.linked, index)     // index + 1 if linked
+
+      if (selecting) {
+        const prev_sel_index = this.state.selected.index
+        let sorted;
+
+        // occurs when a linked item is selected
+        if (container === 'mainItems' && (linked || typeof(prev_sel_index ) !== 'number')) {
+          if (linked) {
+            // linked item is selected last
+            const indices = this.state.linked[linked-1];
+            sorted = [prev_sel_index , indices[0], indices[1]].sort();
+          } else {
+            // linked item is selected first
+            sorted = [prev_sel_index[0], prev_sel_index[1], index].sort()
+          }
+          sorted.splice(1,1)
+
+        } else {
+
+          sorted = [prev_sel_index, index].sort()
+
+        }
+
+        this.setState({
+          selected: {
+            index:      sorted,
+            container:  container,
+            content:    this.state.items.mainItems.slice(sorted[0], sorted[1]+1),
+          }
+        })
+
+      } else {                        // this runs first
+
+        if (container === 'mainItems' && linked) {
+
+          const indices = this.state.linked[linked-1];
+
+          this.setState({
+            selected: {
+              index:      indices,
+              container:  container,
+              content:    this.state.items.mainItems.slice(indices[0], indices[1]+1)
+            }
+          })
+
+        } else {
+
+          this.setState({
+            selected: {
+              index:      index,
+              container:  container,
+              content:    this.state.items[container][index],
+            }
+          });
+        }
+      }
+    }
+    this.unselect = () => {
       this.setState({
-        selected: selected
+        selected: {
+          index: null,
+          container: null,
+          content: null
+        }
       })
     }
 
@@ -155,7 +233,8 @@ export default class Provider extends React.Component {
       setMode: this.setMode,
       setItems: this.setItems,
       setLinked: this.setLinked,
-      setSelected: this.setSelected,
+      select: this.select,
+      unselect: this.unselect,
     }
   }
   render() {
