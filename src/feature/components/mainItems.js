@@ -6,7 +6,7 @@ import RearrangeableList from "./rearrangeableList";
 import {
   isLinked, isSelected,
   linkedAnchors
-} from "./helpers";
+} from "../helpers";
 
 
 /**

@@ -1,8 +1,8 @@
 import React from 'react'
 
-import {FeatureDialog} from "./featureDialog";
-import {DataContext} from './data'
-import MainItems from "./mainItems";
+import {FeatureDialog} from "../components/featureDialog";
+import {DataContext} from '../data'
+import MainItems from "../components/mainItems";
 
 
 export default class ViewMode extends React.Component {

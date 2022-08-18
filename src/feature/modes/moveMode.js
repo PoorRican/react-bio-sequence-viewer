@@ -4,14 +4,14 @@ import {
   isTarget,
   getItem,
   shiftLinked,
-} from './helpers'
+} from '../helpers'
 import {
   DataContext,
   move,
   link,
   unlink
-} from './data'
-import MainItems from "./mainItems";
+} from '../data'
+import MainItems from "../components/mainItems";
 
 
 /**

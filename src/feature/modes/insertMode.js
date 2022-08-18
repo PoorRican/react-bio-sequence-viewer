@@ -6,13 +6,13 @@ import {
   isTarget,
   getItem,
   shiftLinked,
-} from './helpers'
+} from '../helpers'
 import {
   insert, features,
   DataContext,
-} from './data'
-import RearrangeableList from "./rearrangeableList";
-import MainItems from "./mainItems";
+} from '../data'
+import RearrangeableList from "../components/rearrangeableList";
+import MainItems from "../components/mainItems";
 
 
 const availableContainerId = "availableItems"

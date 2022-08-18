@@ -4,7 +4,7 @@ import {Menu} from "@blueprintjs/core";
 import {ContextMenu2, MenuItem2} from "@blueprintjs/popover2";
 
 import {DataContext, _delete} from "./data";
-import {ModeMenu, MODES} from "./modeMenu";
+import {ModeMenu, MODES} from "./components/modeMenu";
 import {
   isFeature, isLinked, isSelected,
   getItem,
@@ -14,12 +14,16 @@ import {
 } from "./data";
 
 // modes
-import ViewMode from "./viewMode";
-import InsertMode from "./insertMode";
-import SelectMode from "./selectMode";
-import MoveMode from "./moveMode";
+import ViewMode from "./modes/viewMode";
+import InsertMode from "./modes/insertMode";
+import SelectMode from "./modes/selectMode";
+import MoveMode from "./modes/moveMode";
 
 
+/**
+ * This class is the top-level container for rendering `ModeMenu`, modes of `MainItems`, and context menu.
+ * Data is distributed between different modes by using `this.context`.
+ */
 export default class Container extends React.Component {
   static contextType = DataContext
 

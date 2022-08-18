@@ -41,6 +41,15 @@ function FeatureContent(props) {
   )
 }
 
+/**
+ * Displays an onscreen dialog for viewing data of a `Feature`.
+ *
+ * @param props.isOpen {boolean} - Controls display of dialog
+ * @param props.data {Feature} - `Feature` to display
+ *
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export function FeatureDialog(props) {
   return (
     <Dialog isOpen={props.isOpen}

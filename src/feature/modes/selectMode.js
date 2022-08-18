@@ -1,7 +1,7 @@
 import React from 'react'
 
-import {DataContext} from './data'
-import MainItems from "./mainItems";
+import {DataContext} from '../data'
+import MainItems from "../components/mainItems";
 
 
 export default class SelectMode extends React.Component {

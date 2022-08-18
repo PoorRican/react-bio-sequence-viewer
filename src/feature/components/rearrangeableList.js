@@ -4,7 +4,7 @@ import {
 } from '@blueprintjs/core'
 import React from 'react';
 
-import './featureView.css'
+import '../featureView.css'
 import {ItemSpacer} from "./itemSpacer";
 import {FeatureItem} from "./featureItem";
 

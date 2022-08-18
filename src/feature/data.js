@@ -1,10 +1,23 @@
+/**
+ * This file is responsible for data manipulation and control functions.
+ */
 import React, {createContext} from 'react'
 
 import {getItem, isLinked} from "./helpers";
 import {generateFeatures} from "./feature";
-import {MODES} from "./modeMenu";
+import {MODES} from "./components/modeMenu";
 
+/**
+ * Hard coded features to use for development
+ *
+ * @type [Feature,]
+ */
 export const features = generateFeatures(30);
+/**
+ * Context data structure to use
+ *
+ * @type {React.Context<{mode: string, select: select, unselect: unselect, setItems: setItems, setLinked: setLinked, items: {mainItems: {}}, selected: {container: null, index: null, content: null}, linked: *[]}>}
+ */
 export const DataContext = createContext({
     mode: '',
     items: {
@@ -23,6 +36,15 @@ export const DataContext = createContext({
   }
 );
 
+/**
+ * Manipulation function that inserts `item` to `list` at `position`
+ *
+ * @param list {[[number, number],]} - Original list
+ * @param item {{}} - Object to add
+ * @param position {number} - Position to insert `item`
+ *
+ * @returns {[{},]} - Manipulated version of `list`
+ */
 export function insert(list, item, position) {
   const s1 = list.slice(0, position).concat([item]);
   const s2 = list.slice(position);
@@ -32,12 +54,13 @@ export function insert(list, item, position) {
 /**
  * @description Moves items within a given list
  *
- * @param {[]} list - list to manipulate.
- * @param {*|[]} item - item to insert. Could be an array or single object.
- * @param {[number, number]|[[], number]} positions - always arranged [from position, to position].
  * Function is capable of moving items from lower or higher indices.
  *
- * @returns manipulated copy of `list`
+ * @param list {[]} - list to manipulate.
+ * @param item {*|[]} - item to insert. Could be an array or single object.
+ * @param positions {[number, number]|[[], number]} - always arranged [from position, to position].
+ *
+ * @returns {[{},]} Manipulated copy of `list`
  */
 export function move(list, item, positions) {
   /** If both items in `position` are the same, the list is not manipulated, but just returned. */
@@ -81,6 +104,14 @@ export function _delete(list, position) {
   }
 }
 
+/**
+ * Adds the 2-value array `positions` to `list`
+ *
+ * @param list {[[number, number],]} - list to manipulate
+ * @param positions {[number, number]} - positions that are being linked
+ *
+ * @returns {[[number, number],]} - Manipulated version of `list`
+ */
 export function link(list, positions) {
   for (let i = 0; i < positions.length; i++) {
     if (isLinked(list, positions[i])) {
@@ -95,6 +126,12 @@ export function link(list, positions) {
   return list.concat([positions])
 }
 
+/**
+ *
+ * @param list
+ * @param positions
+ * @returns {[]}
+ */
 export function unlink(list, positions) {
   for (let i = 0; i < list.length; i++) {
     if (positions[0] === list[i][0] &&
@@ -118,20 +155,44 @@ const defaultData = {
   },
 }
 
+/**
+ * An interface that provides access to context data and methods.
+ *
+ * @member mode {MODES.*} - Current editor mode
+ * @member items {{}} - Global item storage
+ * @member linked - List of linked items in `items`
+ * @member selected - Currently selected item in UI
+ */
 export default class Provider extends React.Component {
   constructor(props) {
     super(props);
 
+    /**
+     * Sets current mode.
+     * This causes a re-render.
+     *
+     * @param mode {MODES} - Current mode to set
+     */
     this.setMode = (mode) => {
       this.setState({
         mode: mode
       })
     }
+    /**
+     * Updates global item store after manipulation
+     *
+     * @param items {{}} - Updated version of `context.items`
+     */
     this.setItems = (items) => {
       this.setState({
         items: items
       })
     }
+    /**
+     * Updates linked items
+     *
+     * @param linked {[[number, number]]} - Updated version of `context.linked`
+     */
     this.setLinked = (linked) => {
       this.setState({
         linked: linked,
