@@ -78,7 +78,8 @@ export default class Container extends React.Component {
       this.context.setLinked(items);
     } else {
       container = this.context.selected.container;
-      items = func(this.context.items[container], ...args);
+      items = this.context.items;
+      items[container] = func(this.context.items[container], ...args);
       this.context.setItems(items);
     }
 

@@ -51,7 +51,7 @@ export default class InsertMode extends React.Component {
       items[container] = insert(items[container], selected.content, index);
 
       this.context.setLinked(shiftLinked(this.context.linked, index, 1));
-      this.context.setItems(items.mainItems);
+      this.context.setItems(items);
 
     }
     // clear selected

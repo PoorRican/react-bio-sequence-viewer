@@ -65,7 +65,7 @@ export default class MoveMode extends React.Component {
 
       // update
       this.context.setLinked(linked);
-      this.context.setItems(items.mainItems)
+      this.context.setItems(items)
 
     }
     this.context.unselect();

@@ -129,9 +129,7 @@ export default class Provider extends React.Component {
     }
     this.setItems = (items) => {
       this.setState({
-        items: {
-          mainItems: items
-        }
+        items: items
       })
     }
     this.setLinked = (linked) => {
