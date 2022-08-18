@@ -3,11 +3,9 @@
 - Remove width on last feature spacer in `#mainItems`
 - Prevent `link` option showing on context menu when only one feature is selected
 - Moving linked items is buggy:
-    - shifting of `linked` is not correct
-    - If there are multiple linked lists, all linked features are dragged
+    - incorrect shifting of `linked` indices
     - Drag background (`feature-group`) along with features
 - Cursor class is not being set
-- Moving linked group breaks `mainItems`
 
 
 # Program Features

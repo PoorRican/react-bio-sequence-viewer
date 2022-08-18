@@ -17,6 +17,7 @@ import {
 import ViewMode from "./viewMode";
 import InsertMode from "./insertMode";
 import SelectMode from "./selectMode";
+import MoveMode from "./moveMode";
 
 
 export default class Container extends React.Component {
@@ -149,6 +150,8 @@ export default class Container extends React.Component {
             <SelectMode /> : null}
           {(this.context.mode === MODES.insert) ?
             <InsertMode /> : null}
+          {(this.context.mode === MODES.move) ?
+            <MoveMode /> : null}
         </ContextMenu2>
 
       </div>
