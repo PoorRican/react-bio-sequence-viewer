@@ -18,7 +18,7 @@ export const features = generateFeatures(30);
  *
  * @type {React.Context<{mode: string, select: select, unselect: unselect, setItems: setItems, setLinked: setLinked, items: {mainItems: {}}, selected: {container: null, index: null, content: null}, linked: *[]}>}
  */
-export const DataContext = createContext({
+export const FeatureContext = createContext({
     mode: '',
     items: {
       mainItems: {},
@@ -163,7 +163,7 @@ const defaultData = {
  * @member linked - List of linked items in `items`
  * @member selected - Currently selected item in UI
  */
-export default class Provider extends React.Component {
+export default class FeaturesProvider extends React.Component {
   constructor(props) {
     super(props);
 
@@ -298,9 +298,9 @@ export default class Provider extends React.Component {
   }
   render() {
     return (
-      <DataContext.Provider value={this.state}>
+      <FeatureContext.Provider value={this.state}>
         {this.props.children}
-      </DataContext.Provider>
+      </FeatureContext.Provider>
     )
   }
 }

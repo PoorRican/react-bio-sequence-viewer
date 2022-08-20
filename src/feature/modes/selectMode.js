@@ -1,11 +1,11 @@
 import React from 'react'
 
-import {DataContext} from '../data'
+import {FeatureContext} from '../data'
 import MainItems from "../components/mainItems";
 
 
 export default class SelectMode extends React.Component {
-  static contextType = DataContext;
+  static contextType = FeatureContext;
 
   constructor(props, context) {
     super(props, context);

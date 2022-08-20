@@ -9,7 +9,7 @@ import {
 } from '../helpers'
 import {
   insert, features,
-  DataContext,
+  FeatureContext,
 } from '../data'
 import RearrangeableList from "../components/rearrangeableList";
 import MainItems from "../components/mainItems";
@@ -18,7 +18,7 @@ import MainItems from "../components/mainItems";
 const availableContainerId = "availableItems"
 
 export default class InsertMode extends React.Component {
-  static contextType = DataContext;
+  static contextType = FeatureContext;
 
   constructor(props, context) {
     super(props, context);

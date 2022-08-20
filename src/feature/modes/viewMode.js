@@ -1,12 +1,12 @@
 import React from 'react'
 
 import {FeatureDialog} from "../components/featureDialog";
-import {DataContext} from '../data'
+import {FeatureContext} from '../data'
 import MainItems from "../components/mainItems";
 
 
 export default class ViewMode extends React.Component {
-  static contextType = DataContext;
+  static contextType = FeatureContext;
 
   constructor(props, context) {
     super(props, context);

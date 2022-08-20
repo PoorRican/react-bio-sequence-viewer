@@ -25,7 +25,6 @@ _Top-level program features and planned functionality_
 - Stylize feature dialog
 - Improve navbar styling
 - Scroll vertically to scroll horizontally
-- Calculate selected and linked elements by using context instead of using props passed to `RearrangeableList`
 - Dynamically render features based on window position
 
 #### `SelectMode`

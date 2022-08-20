@@ -6,7 +6,7 @@ import {
   shiftLinked,
 } from '../helpers'
 import {
-  DataContext,
+  FeatureContext,
   move,
   link,
   unlink
@@ -18,7 +18,7 @@ import MainItems from "../components/mainItems";
  * Allows moving and rearranging of individual and linked `FeatureItem` components via a drag-and-drop interface.
  */
 export default class MoveMode extends React.Component {
-  static contextType = DataContext;
+  static contextType = FeatureContext;
 
   constructor(props, context) {
     super(props, context);
