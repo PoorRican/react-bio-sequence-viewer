@@ -27,6 +27,17 @@ export default class MoveMode extends React.Component {
     }
   }
 
+  /**
+   * Calculates item count of linked group at `position`.
+   *
+   * @param position {[number, number]} - Indices of linked group
+   *
+   * @returns {number} - Number of items within `position`
+   */
+  count(position) {
+    return position[1] - position[0] + 1;
+  }
+
   // handler functions
   /**
    * Selects `context.selected` based on `e`
@@ -46,31 +57,90 @@ export default class MoveMode extends React.Component {
       const selected = this.context.selected;
       const [index, container] = getItem(e.target)
 
+
+      if (container !== selected.container) {     // rearranging should only occur within the same container
+        alert("Incorrect feature origin or container target")
+      }
+
       // manipulate items
       let items = this.context.items;
       items[container] = move(items[container], selected.content, [selected.index, index])
 
       // manipulate linked
-      const single = typeof(selected.index) === 'number'
-      const magnitude = single ? 1 : index - selected.index[1] - 1
-
-      let linked;
+      const single = typeof(selected.index) === 'number';
       if (single) {
-        linked = shiftLinked(this.context.linked, index, -magnitude, selected.index);
+
+        this.context.setLinked(shiftLinked(this.context.linked, index, -1, selected.index));
+
       } else {
-        linked = unlink(this.context.linked, selected.index);
-        linked = shiftLinked(linked, index, -magnitude, selected.index[0]);
-        linked = link(linked, [selected.index[0] + magnitude, selected.index[1] + magnitude]);
+
+        this.doLinkedShift(selected.index, index);
+
       }
 
       // update
-      this.context.setLinked(linked);
       this.context.setItems(items)
 
     }
     this.context.unselect();
   };
 
+  /**
+   * Handles shifting of linked feature groups.
+   *
+   * @param from {[number, number]} - indices of linked group being moved
+   * @param to {number} - index to move linked group to
+   *
+   */
+  doLinkedShift(from, to) {
+    const count = this.count(from);
+    const upstream = from[0] > to;    // moving group upstream of original position
+
+    /**
+     * Prepare linked group to be shifted
+     */
+    let linked = unlink(this.context.linked, from);
+    let magnitude;
+    if (upstream) {
+      magnitude = count - this.count([to, from[1]]);
+    } else {
+      magnitude = this.count([from[0], to]) - count - 1;
+    }
+    const updated = [from[0] + magnitude, from[1] + magnitude];
+
+    /**
+     * Determine linked groups that are affected: all groups in between `from` and `to`.
+     */
+    let between;
+    if (upstream) {
+      between = linked.filter((group) => {
+        return group[0] > to && group[0] < from[0];
+      });
+    } else {
+      between = linked.filter((group) => {
+        return group[0] < to && group[0] > from[0];
+      });
+    }
+
+    // shift affected linked groups by a magnitude of `count`
+    between.forEach((group) => {
+      linked = unlink(linked, group)
+    });
+
+    magnitude = upstream ? count : -count;
+    between = between.map((group) => {
+      return [group[0] + magnitude, group[1] + magnitude];
+    });
+
+    // re-link
+    between.forEach((group) => {
+      linked = link(linked, group);
+    })
+    linked = link(linked, updated);
+
+    this.context.setLinked(linked);
+
+  }
 
   render() {
     const itemHandlers = {

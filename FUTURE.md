@@ -2,9 +2,7 @@
 - `.selection` doesn't handle `overflow-y: scroll` correctly
 - Remove width on last feature spacer in `#mainItems`
 - Prevent `link` option showing on context menu when only one feature is selected
-- Moving linked items is buggy:
-    - incorrect shifting of `linked` indices
-    - Drag background (`feature-group`) along with features
+- Drag background (`feature-group`) along with features during `move`
 - Cursor class is not being set
 
 

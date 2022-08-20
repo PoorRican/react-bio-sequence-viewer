@@ -147,7 +147,7 @@ const defaultData = {
   items: {
     mainItems: features.slice(0, 15),
   },
-  linked: [],
+  linked: [[2,4], [8,10]],
   selected: {
     index: null,
     container: null,
