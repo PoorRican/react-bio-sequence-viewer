@@ -1,0 +1,16 @@
+.sequence-text {
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.sequence-row {
+    display: block;
+}
+
+.nucleotide {
+    display: inline;
+    font-size: 2em;
+    font-family: "TerminessTTF Nerd Font Mono", monospace;
+    padding: 7px;
+    text-align: center;
+}

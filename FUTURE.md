@@ -20,6 +20,7 @@ _Top-level program features and planned functionality_
     - Implement replace functionality via context menu and side menu
     - Show different content for content menu in selection panel during `insert` mode
 - Scrollbar that displays features and regions
+- Zoom depth to show or hide low or high feature levels
 
 ### Improvements
 - Stylize feature dialog
@@ -40,6 +41,7 @@ _Top-level program features and planned functionality_
 - Display sequence
     - Highlight selected feature/sub-feature/region
       by graying-out unselected sequence
+    - Highlight row onMouseEnter
     - Option to highlight:
         - codons and coding regions
         - activator/inhibitor sites
@@ -47,6 +49,8 @@ _Top-level program features and planned functionality_
         - introns/exons
         - nucleotide modifications (eg: methylation, etc)
 - Show/highlight features based on regions and complexes
+- Hotkeys to navigate
+- Bars to show feature organization
 
 
 # Meta
