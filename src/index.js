@@ -13,7 +13,7 @@ import FeatureContainer from './feature/featureContainer'
 
 // Sequence View
 import {SequenceProvider} from "./sequence/data"
-import {SequenceContainer} from "./sequence/sequenceContainer"
+import SequenceContainer from "./sequence/sequenceContainer"
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

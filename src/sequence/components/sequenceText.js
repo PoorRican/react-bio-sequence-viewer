@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {SequenceRow} from "./sequenceRow";
+import SequenceRow from "./sequenceRow";
 
 
 /**
@@ -11,7 +11,7 @@ import {SequenceRow} from "./sequenceRow";
  *
  * @constructor
  */
-export class SequenceText extends React.Component {
+export default class SequenceText extends React.Component {
   constructor(props) {
     super(props)
 

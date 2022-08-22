@@ -13,7 +13,7 @@ import {Nucleotide} from "./nucleotide";
  *
  * @constructor
  */
-export function SequenceRow(props) {
+export default function SequenceRow(props) {
   const width = props.data.length;
   const num = width * props.row;
 
