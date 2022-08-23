@@ -19,6 +19,8 @@ _Top-level program features and planned functionality_
 - Context Menu
     - Implement replace functionality via context menu and side menu
     - Show different content for content menu in selection panel during `insert` mode
+    - Rename "Link/Unlink" to "Create Feature". Show dialog.
+    - Expand/Minimize individual features
 - Scrollbar that displays features and regions
 - Zoom depth to show or hide low or high feature levels
 
@@ -27,6 +29,8 @@ _Top-level program features and planned functionality_
 - Improve navbar styling
 - Scroll vertically to scroll horizontally
 - Dynamically render features based on window position
+- Change size of `FeatureCard` based on sequence length (via `grid-column`)
+- Show index number grid (ie: 1, 500, etc)
 
 #### `SelectMode`
 - Indicate that `selecting` has begun:
