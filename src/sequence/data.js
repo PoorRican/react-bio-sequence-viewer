@@ -13,6 +13,14 @@ const defaultData = {
           location: [23, 70]
         }
       ]
+    },
+    {
+      id: `endBox`,
+      location: [900, 1000],
+    },
+    {
+      id: `markedIndex`,
+      location: [800, 800],
     }
   ],
   setMode: () => {},

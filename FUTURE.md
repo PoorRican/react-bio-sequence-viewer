@@ -50,10 +50,14 @@ _Top-level program features and planned functionality_
         - nucleotide modifications (eg: methylation, etc)
 - Show/highlight features based on regions and complexes:
   - Show number to notate several levels of features
+- Show index numbers:
+  - Line numbers
+  - Intervals of 10/100
 - Hotkeys to navigate
 - `FeatureBar`:
   - Highlight nucleotides when hovered
   - Option to view feature metadata from context menu
+  - Highlight truncated `FeatureLine` components when hovered
 - "Create feature" from `ContextMenu`
 - Edit Sequence:
   - Allow editing of downloaded sequence:

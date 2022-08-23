@@ -1,6 +1,8 @@
 import React from 'react'
 
 import SequenceRow from "./sequenceRow";
+import FeatureBar from "../../components/featureBar";
+import {SequenceContext} from "../data";
 
 
 /**
@@ -12,6 +14,8 @@ import SequenceRow from "./sequenceRow";
  * @constructor
  */
 export default class SequenceText extends React.Component {
+  static contextType = SequenceContext;
+
   constructor(props) {
     super(props)
 
@@ -22,6 +26,7 @@ export default class SequenceText extends React.Component {
 
   /**
    * Function to determine comfortable width to render sequence
+   * TODO: actually implement this function
    * @returns {number}
    */
   determineWidth() {
@@ -34,7 +39,19 @@ export default class SequenceText extends React.Component {
     for (let i = 0; i < rows; i++) {
       const [start, end] = [i * this.state.width, (i+1) * this.state.width];
       const data = this.props.data.slice(start, end);
-      lines.push(<SequenceRow row={i} data={data} key={i}/>)
+      lines.push(
+        <div className={`sequence-row-group`} key={i}>
+
+          <SequenceRow row={i} data={data}/>
+
+          <FeatureBar width={this.state.width}
+                      range={[start, end]}
+          >
+            {this.context.hierarchy}
+          </FeatureBar>
+
+        </div>
+      )
     }
 
     return(

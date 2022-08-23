@@ -23,13 +23,19 @@ import './featureBar.css'
  */
 export function flattenHierarchy(hierarchy, start, end, depth=0) {
   let contained = [];
+  const width = Math.abs(end - start);
   for (let feature of hierarchy) {
-    if (feature.location[0] <= end || feature.location[1] >= start) {
+    const loc = feature.location
+    if (loc[0] <= end && loc[1] >= start) {
+
+      // truncate `start` & `end` indices
+      const trunc_start = loc[0] <= start ? 0 : (loc[0] % width);
+      const trunc_end = loc[1] >= end ? width : (loc[1] % width);
 
       contained.push(
         <FeatureLine key={feature.id}
                      id={feature.id}
-                     location={feature.location}
+                     location={[trunc_start, trunc_end]}
                      depth={feature.depth}
         />
       );
@@ -100,7 +106,7 @@ export default class FeatureBar extends React.Component {
             `feature-bar`,
             Classes.LIST_UNSTYLED,
           ].join(' ')}
-          style={{gridTemplateColumns: 'calc(100% / ' + this.props.width + ')'}}>
+          style={{gridTemplateColumns: 'repeat(auto-fill, calc(100% / ' + this.props.width + ')'}}>
 
         {flattenHierarchy(this.props.children, this.start, this.end)}
 

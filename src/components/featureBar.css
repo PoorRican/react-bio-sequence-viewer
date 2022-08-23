@@ -1,6 +1,4 @@
 .feature-bar {
-    min-height: 50px;
-    grid-template-rows: max-content;
     display: grid;
     width: 100%;
     list-style: none;
@@ -9,22 +7,27 @@
 .feature-line {
     background-color: tomato;
     display: inline-grid;
-    height: 10px;
+    height: 5px;
     border-radius: 5px;
-    margin-bottom: 2px !important;
+    margin-bottom: 5px !important;
+    opacity: 50%;
+    content: ' ';
 }
 .feature-line:hover {
-    height: 2em;
-    padding: 4px 4px 4px 15px;
-    border-radius: calc(2em / 2);
+    opacity: 100%;
 }
 
 .feature-line span {
-    visibility: hidden;
-    font-weight: bold;
-    color: #222222;
-    font-size: 1em;
+    display: none;
 }
 .feature-line:hover span {
-    visibility: visible;
+    display: block;
+    position: relative;
+    width: fit-content;
+    top: 5px;
+    background: white;
+    padding: 5px;
+    z-index: 5;
+    font-weight: bold;
+    border: gray 1px solid;
 }
