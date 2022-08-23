@@ -5,6 +5,12 @@
 
 .sequence-row {
     display: block;
+    margin-bottom: 5px;
+}
+
+.sequence-row-group:hover {
+    border-radius: 3px;
+    background: whitesmoke;
 }
 
 .nucleotide {
@@ -13,4 +19,8 @@
     font-family: "TerminessTTF Nerd Font Mono", monospace;
     padding: 7px;
     text-align: center;
+}
+
+.nucleotide:hover {
+    background: lightgray;
 }

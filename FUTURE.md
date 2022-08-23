@@ -55,7 +55,6 @@ _Top-level program features and planned functionality_
   - Intervals of 10/100
 - Hotkeys to navigate
 - `FeatureBar`:
-  - Highlight nucleotides when hovered
   - Option to view feature metadata from context menu
   - Highlight truncated `FeatureLine` components when hovered
 - "Create feature" from `ContextMenu`
