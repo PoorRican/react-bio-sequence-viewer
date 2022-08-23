@@ -48,9 +48,17 @@ _Top-level program features and planned functionality_
         - restriction enzyme sites
         - introns/exons
         - nucleotide modifications (eg: methylation, etc)
-- Show/highlight features based on regions and complexes
+- Show/highlight features based on regions and complexes:
+  - Show number to notate several levels of features
 - Hotkeys to navigate
-- Bars to show feature organization
+- `FeatureBar`:
+  - Highlight nucleotides when hovered
+  - Option to view feature metadata from context menu
+- "Create feature" from `ContextMenu`
+- Edit Sequence:
+  - Allow editing of downloaded sequence:
+    - Highlight modified indices
+    - Allow saving of modified feature as new feature
 
 
 # Meta

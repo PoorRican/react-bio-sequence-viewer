@@ -3,6 +3,18 @@ import React, {createContext} from 'react'
 const defaultData = {
   mode: 'view',
   sequence: generateSequence(1000),
+  hierarchy: [                    // `Feature` should be plugged in seamlessly
+    {
+      id: 'testFeature1',
+      location: [0,500],
+      features: [
+        {
+          id: 'testFeature1_sub1',
+          location: [23, 70]
+        }
+      ]
+    }
+  ],
   setMode: () => {},
   setSequence: () => {},
 }
@@ -45,6 +57,7 @@ export class SequenceProvider extends React.Component {
     this.state = {
       mode: defaultData.mode,
       sequence: defaultData.sequence,
+      hierarchy: defaultData.hierarchy,
       setMode: this.setMode,
       setSequence: this.setSequence,
     }
