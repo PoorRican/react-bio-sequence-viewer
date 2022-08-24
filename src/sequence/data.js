@@ -1,7 +1,10 @@
 import React, {createContext} from 'react'
+import {getFeature} from "./helpers";
 
 const defaultData = {
+  // data
   mode: 'view',
+  highlighted: null,
   sequence: generateSequence(1000),
   hierarchy: [                    // `Feature` should be plugged in seamlessly
     {
@@ -23,8 +26,11 @@ const defaultData = {
       location: [800, 800],
     }
   ],
+
+  // setters
   setMode: () => {},
   setSequence: () => {},
+  setHighlighted: () => {},
 }
 
 export const SequenceContext = createContext(defaultData);
@@ -37,7 +43,7 @@ export const SequenceContext = createContext(defaultData);
 export function generateSequence(length) {
   function nucleotide() {
     // generates an integer between 0 and 3
-    const chosen = Math.floor(Math.random() * 3);
+    const chosen = Math.floor(Math.random() * 4);
     return 'ATCG'[chosen];
   }
   let sequence = Array(length);
@@ -51,6 +57,7 @@ export class SequenceProvider extends React.Component {
   constructor(props) {
     super(props);
 
+    // setters
     this.setMode = (mode) => {
       this.setState({
         mode: mode
@@ -61,6 +68,13 @@ export class SequenceProvider extends React.Component {
         sequence: sequence
       })
     }
+    this.setHighlighted = (id) => {
+      const feature = getFeature(this.state.hierarchy, id);
+      if (feature === false) Error(`'id' not found in hierarchy`);
+      this.setState({
+        highlighted: feature
+      })
+    }
 
     this.state = {
       mode: defaultData.mode,
@@ -68,6 +82,7 @@ export class SequenceProvider extends React.Component {
       hierarchy: defaultData.hierarchy,
       setMode: this.setMode,
       setSequence: this.setSequence,
+      setHighlighted: this.setHighlighted,
     }
   }
 

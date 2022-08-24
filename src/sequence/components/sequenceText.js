@@ -1,8 +1,11 @@
 import React from 'react'
 
 import SequenceRow from "./sequenceRow";
-import FeatureBar from "../../components/featureBar";
-import {SequenceContext} from "../data";
+import {
+  SequenceContext,
+} from "../data";
+import FeatureBar from "./featureRowBar";
+import {flattenHierarchy, withinBounds} from "../helpers";
 
 
 /**
@@ -16,11 +19,11 @@ import {SequenceContext} from "../data";
 export default class SequenceText extends React.Component {
   static contextType = SequenceContext;
 
-  constructor(props) {
-    super(props)
+  constructor(props, context) {
+    super(props, context)
 
     this.state = {
-      width: props.width ? props.width : this.determineWidth()
+      width: props.width ? props.width : this.determineWidth(),
     }
   }
 
@@ -33,6 +36,19 @@ export default class SequenceText extends React.Component {
     return 21;
   }
 
+  /**
+   * Render styling helper for determining if any content is highlighted
+   * @returns {boolean} - `true` if start or end of row is within highlighted region
+   */
+  isHighlighted(start, end) {
+    if (!this.context.highlighted) return false
+    return (
+      withinBounds(start,
+        this.context.highlighted.location) ||
+      withinBounds(end,
+        this.context.highlighted.location))
+  }
+
   render() {
     const rows = Math.ceil(this.props.data.length / this.state.width);
     let lines = [];
@@ -40,14 +56,17 @@ export default class SequenceText extends React.Component {
       const [start, end] = [i * this.state.width, (i+1) * this.state.width];
       const data = this.props.data.slice(start, end);
       lines.push(
-        <div className={`sequence-row-group`} key={i}>
+        <div key={i}
+             className={[
+               `sequence-row-group`,
+               this.isHighlighted(start, end) ? 'highlighted' : null,
+             ].join(' ')}
+        >
 
-          <SequenceRow row={i} data={data}/>
+          <SequenceRow row={i} data={data} width={this.state.width}/>
 
-          <FeatureBar width={this.state.width}
-                      range={[start, end]}
-          >
-            {this.context.hierarchy}
+          <FeatureBar length={data.length}>
+            {flattenHierarchy(this.context.hierarchy, start, end)}
           </FeatureBar>
 
         </div>
@@ -55,7 +74,11 @@ export default class SequenceText extends React.Component {
     }
 
     return(
-      <div className={'sequence-text'}>
+      <div className={[
+              'sequence-text',
+              this.context.highlighted ? (this.context.highlighted.id ? 'highlighted' : null) : null,
+            ].join(' ')}
+      >
         {lines}
       </div>
     )

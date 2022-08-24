@@ -68,6 +68,9 @@ _Top-level program features and planned functionality_
     - Allow saving of modified feature as new feature
 
 
+# Low-level Implementation
+- Indicate nested `Feature` by using `::` notation in `id` attributes
+
 # Meta
 _Program structure and organization_
 

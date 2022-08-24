@@ -1,0 +1,5 @@
+.feature-bar {
+    display: grid;
+    width: 100%;
+    list-style: none;
+}

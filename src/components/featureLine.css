@@ -1,11 +1,4 @@
-.feature-bar {
-    display: grid;
-    width: 100%;
-    list-style: none;
-}
-
 .feature-line {
-    background-color: tomato;
     display: inline-grid;
     height: 5px;
     border-radius: 5px;
@@ -13,7 +6,21 @@
     opacity: 50%;
     content: ' ';
 }
-.feature-line:hover {
+.feature-line.red {
+    background: red;
+}
+.feature-line.cyan {
+    background: cyan;
+}
+.feature-line.purple {
+    background: purple;
+}
+.feature-line.green {
+    background: green;
+}
+
+.feature-line:hover,
+.feature-line.highlighted {
     opacity: 100%;
 }
 

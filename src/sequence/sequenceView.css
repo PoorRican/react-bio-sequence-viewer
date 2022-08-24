@@ -1,20 +1,28 @@
+/* .sequence-text */
 .sequence-text {
     width: fit-content;
     margin: 0 auto;
 }
 
+/* .sequence-row */
 .sequence-row {
     display: block;
     margin-bottom: 5px;
 }
 
-.sequence-row-group:hover {
+.sequence-row-group {
+    width: fit-content;
+}
+
+/* .sequence-row-group */
+.sequence-row-group:hover:not(.highlighted) {
     border-radius: 3px;
     background: whitesmoke;
 }
 
+/* .nucleotide */
 .nucleotide {
-    display: inline;
+    display: inline-block;
     font-size: 2em;
     font-family: "TerminessTTF Nerd Font Mono", monospace;
     padding: 7px;
@@ -23,4 +31,23 @@
 
 .nucleotide:hover {
     background: lightgray;
+}
+.nucleotide.red {
+    background-color: rgba(255, 0, 0, .1);
+}
+.nucleotide.cyan {
+    background: rgba(0, 255, 255, .1);
+}
+.nucleotide.green {
+    background: rgba(0, 255, 0, .1);
+}
+.nucleotide.purple {
+    background: rgba(127, 7, 127, .1);
+}
+
+.sequence-text.highlighted .nucleotide.highlighted {
+    opacity: 100%;
+}
+.sequence-text.highlighted .nucleotide:not(.highlighted) {
+    opacity: 40%;
 }

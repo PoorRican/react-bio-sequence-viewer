@@ -1,27 +1,34 @@
 import React from 'react'
 
+import {
+  colorize
+} from "../helpers";
+import {SequenceContext} from "../data";
+
 /**
  * Renders a single nucleotide
+ * @param props.index {number} - index occurring in `SequenceContext.sequence`
  * @param props.value {string} - Single nucleotide character
  * @param props.color {string} - Render color
- * @param props.selected {boolean} - Toggles styling for when component is selected
- *
- * @returns {JSX.Element}
- *
- * @constructor
+ * @param props.highlighted {boolean} - Toggles styling for when component is highlighted
  */
-export function Nucleotide(props) {
-  if (typeof(props.value) !== 'string' || props.value.length !== 1) {
-    Error('Incorrect value passed to Nucleotide component')
+export class Nucleotide extends React.Component {
+  static contextType = SequenceContext;
+
+  render() {
+    if (typeof(this.props.value) !== 'string' || this.props.value.length !== 1) {
+      Error('Incorrect value passed to Nucleotide component')
+    }
+    return (
+      <div className={[
+             'nucleotide',
+             this.props.highlighted ? colorize(this.context.highlighted.depth) : null,
+             this.props.highlighted ? 'highlighted' : null,
+            ].join(' ')}>
+        <span>
+          {this.props.value}
+        </span>
+      </div>
+    )
   }
-  return (
-    <div className={'nucleotide'}>
-      <span className={[
-        props.color,
-        props.selected ? 'selected' : null,
-        ].join(' ')}>
-        {props.value}
-      </span>
-    </div>
-  )
 }
