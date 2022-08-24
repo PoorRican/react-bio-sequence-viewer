@@ -65,12 +65,10 @@ _Top-level program features and planned functionality_
   - Allow editing of downloaded sequence:
     - Highlight modified indices
     - Allow saving of modified feature as new feature
-- Smaller text. Denser
-- Convert `SequenceTest` to `\<table\>`
-  - Vertical grid gap in `\<tr\>`:
-    - Separate into paragraphs of 100bp or so
-    - Use screensize to determine number of columns
-    - Controllable parameter for number of rows/columns
+- Improve readability:
+  - Separate into paragraphs of 100bp or so
+  - Use screensize to determine number of columns
+  - Controllable parameter for number of rows/columns
   - Identify segment as a coding region:
     - Highlight coding region (using `context.highlighted`) when editing
       - Remember previous column/row setting

@@ -12,6 +12,7 @@
 
 .sequence-row-group {
     width: fit-content;
+    margin-bottom: 10px;
 }
 
 /* .sequence-row-group */
@@ -23,9 +24,9 @@
 /* .nucleotide */
 .nucleotide {
     display: inline-block;
-    font-size: 2em;
+    font-size: 1.5em;
     font-family: "TerminessTTF Nerd Font Mono", monospace;
-    padding: 7px;
+    padding: 2px;
     text-align: center;
 }
 

@@ -33,7 +33,7 @@ export default class SequenceText extends React.Component {
    * @returns {number}
    */
   determineWidth() {
-    return 21;
+    return 42;
   }
 
   /**
