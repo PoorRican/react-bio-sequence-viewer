@@ -57,7 +57,6 @@ _Top-level program features and planned functionality_
 - Show index numbers:
   - Line numbers
   - Intervals of 10/100
-- Hotkeys to navigate
 - `FeatureBar`:
   - Option to view feature metadata from context menu
   - Highlight truncated `FeatureLine` components when hovered
@@ -66,6 +65,23 @@ _Top-level program features and planned functionality_
   - Allow editing of downloaded sequence:
     - Highlight modified indices
     - Allow saving of modified feature as new feature
+- Smaller text. Denser
+- Convert `SequenceTest` to `\<table\>`
+  - Vertical grid gap in `\<tr\>`:
+    - Separate into paragraphs of 100bp or so
+    - Use screensize to determine number of columns
+    - Controllable parameter for number of rows/columns
+  - Identify segment as a coding region:
+    - Highlight coding region (using `context.highlighted`) when editing
+      - Remember previous column/row setting
+    - Emphasize codons using vertical gaps for using nucleotide sequence
+    - Show codons as letters of amino acids *or* mnemonic words (user parameter)
+- Vim-style cursor functionality
+  - Navigate by `\<hjkl\>`
+  - Select mode:
+    - Select line/box/cursor mode
+  - Insert/Replace/Copy & Paste/Cut/Delete & Insert functions:
+    - i.e: `\<i\>`, `\<r\>`, `\<y\>`, `\<p\>`, `\<x\>`, `<\s\>`
 
 
 # Low-level Implementation
