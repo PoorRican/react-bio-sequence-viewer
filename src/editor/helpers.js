@@ -79,7 +79,7 @@ export function getFeature(hierarchy, value, attribute='id', traverse='features'
  *
  * Features and their sub-features are notated by `depth` attribute.
  *
- * *Must* be used to process features in `FeatureBar`
+ * *Must* be used to process features in `FeatureRowBar`
  *
  * @param hierarchy {[{},]} - Array of features to scrub
  * @param start {number} - Inclusive start index

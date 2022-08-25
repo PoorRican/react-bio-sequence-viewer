@@ -14,6 +14,6 @@ export default class SequenceContainer extends React.Component {
   static contextType = SequenceContext;
 
   render() {
-    return <SequenceText data={this.context.sequence} />
+    return <SequenceText />
   }
 }
