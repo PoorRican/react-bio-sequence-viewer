@@ -35,7 +35,7 @@ export default class FeatureRowBar extends React.PureComponent {
       ].join(' ')}
           style={{gridTemplateColumns: 'repeat(auto-fill, calc(100% / ' + this.props.length + ')'}}>
 
-        {this.props.children.map((feature) => {
+        {this.props.features.map((feature) => {
           return <FeatureLine key={feature.id}
                               id={feature.id}
                               location={feature.location}
@@ -53,7 +53,7 @@ export default class FeatureRowBar extends React.PureComponent {
 }
 
 FeatureRowBar.propTypes = {
-  children: PropTypes.arrayOf(Feature),
+  features: PropTypes.arrayOf(Feature).isRequired,
   scroll: PropTypes.bool,
   length: PropTypes.number.isRequired,
 }

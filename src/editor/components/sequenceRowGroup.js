@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from "prop-types";
 
+import {Feature} from "../../types/feature";
 import SequenceRow from "./sequenceRow";
 import FeatureRowBar from "./featureRowBar";
 
@@ -24,11 +25,11 @@ export default function SequenceRowGroup(props) {
          ].join(' ')}
     >
 
-      <SequenceRow start={props.start} sequence={props.sequence}/>
+      <SequenceRow start={props.start}
+                   sequence={props.sequence} />
 
-      <FeatureRowBar length={props.sequence.length}>
-        {props.features}
-      </FeatureRowBar>
+      <FeatureRowBar length={props.sequence.length}
+                     features={props.features} />
 
     </div>
   )

@@ -1,3 +1,5 @@
+import {Feature} from "../types/feature";
+
 /**
  * Shorthand to see if a given index is within given boundaries. Inclusive of endpoints.
  *
@@ -85,7 +87,7 @@ export function getFeature(hierarchy, value, attribute='id', traverse='features'
  * @param start {number} - Inclusive start index
  * @param end {number} - Inclusive ending index
  *
- * @returns {[{key: string, id: string, location: [number, number], depth: number}]} - Flattened array of features and sub-features
+ * @returns {Feature[]} - Flattened array of all constrained `Feature` and nested `Feature` objects
  */
 export function flattenHierarchy(hierarchy, start, end) {
   let contained = [];
@@ -99,12 +101,14 @@ export function flattenHierarchy(hierarchy, start, end) {
       const trunc_start = loc[0] <= start ? 0 : (loc[0] % width);
       const trunc_end = loc[1] >= end ? width : (loc[1] % width);
 
-      contained.push({
-        key: feature.id,
-        id: feature.id,
-        location: [trunc_start, trunc_end],
-        depth: feature.depth
-      });
+      contained.push(
+        new Feature({
+          key: feature.id,
+          id: feature.id,
+          location: [trunc_start, trunc_end],
+          depth: feature.depth
+        })
+      );
     }
   }
 
