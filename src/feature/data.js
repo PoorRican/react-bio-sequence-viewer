@@ -4,7 +4,7 @@
 import React, {createContext} from 'react'
 
 import {getItem, isLinked} from "./helpers";
-import {generateFeatures} from "./feature";
+import {generateFeatures} from "../types/feature";
 import {MODES} from "./components/modeMenu";
 
 /**

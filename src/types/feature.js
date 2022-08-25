@@ -12,6 +12,18 @@ export function Data(gene, cdregion, prot, rna, pub, bond, site, rsite, user, tx
   this.num = num;
 }
 
+/**
+ * NCBI Sequence Feature `BioSeqId`.
+ *
+ * The only exception to the standard is the `features` features attribute,
+ * which contains nested `Feature` objects.
+ *
+ * @param data - NCBI BioSeqId standard data
+ * @param data.data {Data} - NCBI DataAttr content.
+ * @param data.features {Feature[]} - Nested `Feature` objects.
+ * This means that all `location` attributes should be within `this.location`
+ * @constructor
+ */
 export function Feature(data) {
   this.id       = data.id;
   this.data     = data.data;
@@ -26,6 +38,7 @@ export function Feature(data) {
   this.cit      = data.cit;
   this.expEv    = data.expEv;
   this.xref     = data.xref;
+  this.features = data.features;
 }
 
 export function generateFeatures(count=15) {

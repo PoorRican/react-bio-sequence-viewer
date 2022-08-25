@@ -1,31 +1,14 @@
 import React, {createContext} from 'react'
+
 import {getFeature} from "./helpers";
+import {Feature} from "../types/feature";
 
 const defaultData = {
   // data
   mode: 'view',
   highlighted: null,
   sequence: generateSequence(1000),
-  hierarchy: [                    // `Feature` should be plugged in seamlessly
-    {
-      id: 'testFeature1',
-      location: [0,500],
-      features: [
-        {
-          id: 'testFeature1_sub1',
-          location: [23, 70]
-        }
-      ]
-    },
-    {
-      id: `endBox`,
-      location: [900, 1000],
-    },
-    {
-      id: `markedIndex`,
-      location: [800, 800],
-    }
-  ],
+  hierarchy: generateFeatures(),
 
   // setters
   setMode: () => {},
@@ -51,6 +34,29 @@ export function generateSequence(length) {
     sequence[i] = nucleotide();
   }
   return sequence;
+}
+
+export function generateFeatures() {
+  return [
+    new Feature({
+      id: 'testFeature1',
+      location: [0,500],
+      features: [
+        new Feature({
+          id: 'testFeature1_sub1',
+          location: [23, 70]
+        })
+      ]
+    }),
+    new Feature({
+      id: 'endBox',
+      location: [900, 1000]
+    }),
+    new Feature({
+      id: 'markedIndex',
+      location: [800, 800]
+    })
+  ]
 }
 
 export class SequenceProvider extends React.Component {
