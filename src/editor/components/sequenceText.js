@@ -15,7 +15,7 @@ import SequenceRowGroup from "./sequenceRowGroup";
  *
  * @constructor
  */
-export default class SequenceText extends React.Component {
+export default class SequenceText extends React.PureComponent {
   static contextType = SequenceContext;
 
   constructor(props, context) {

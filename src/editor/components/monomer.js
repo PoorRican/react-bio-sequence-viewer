@@ -12,7 +12,7 @@ import {SequenceContext} from "../data";
  * @param props.color {string} - Render color
  * @param props.highlighted {boolean} - Toggles styling for when component is highlighted
  */
-export class Monomer extends React.Component {
+export class Monomer extends React.PureComponent {
   static contextType = SequenceContext;
 
   render() {

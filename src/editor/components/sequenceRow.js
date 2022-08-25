@@ -15,7 +15,7 @@ import {Monomer} from "./monomer";
  *
  * @constructor
  */
-export default class SequenceRow extends React.Component {
+export default class SequenceRow extends React.PureComponent {
   static contextType = SequenceContext;
 
   render() {

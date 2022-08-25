@@ -20,7 +20,7 @@ import './featureRowBar.css'
  * @param props.length {number} - The number of indices to be represented.
  * @param props.range {[number, number]} - Defines start and end of row.
  */
-export default class FeatureRowBar extends React.Component {
+export default class FeatureRowBar extends React.PureComponent {
   static contextType = SequenceContext;
 
   render() {
