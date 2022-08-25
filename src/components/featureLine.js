@@ -4,7 +4,7 @@ import './featureLine.css'
 
 
 /**
- * Represents a single feature in `FeatureBar`
+ * Represents a single feature in `FeatureRowBar`
  *
  * @param props.location {[number, number]} - Start and end indices
  * @param props.id {string} - Feature id

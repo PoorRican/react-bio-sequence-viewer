@@ -1,18 +1,17 @@
 import React from 'react'
 
-import SequenceRow from "./sequenceRow";
 import {
   SequenceContext,
 } from "../data";
-import FeatureBar from "./featureRowBar";
 import {flattenHierarchy, withinBounds} from "../helpers";
+import SequenceRowGroup from "./sequenceRowGroup";
 
 
 /**
- * Renders wall of text representing nucleotide sequence and the components to view feature hierarchy
+ * Main component to visualize and interact with monomer sequence, and it's feature hierarchy.
  *
- * @param props.data {[any]} - Nucleotide sequence to render
- * @param props.width {number|undefined} - User-defined characters per row. If undefined, width is automatically calculated.
+ * @param props.width {number|undefined} - User-defined characters per row.
+ * If undefined, it is automatically calculated based on screen width.
  *
  * @constructor
  */
@@ -37,7 +36,8 @@ export default class SequenceText extends React.Component {
   }
 
   /**
-   * Render styling helper for determining if any content is highlighted
+   * Render styling helper for determining if any content is highlighted.
+   *
    * @returns {boolean} - `true` if start or end of row is within highlighted region
    */
   isHighlighted(start, end) {
@@ -49,37 +49,38 @@ export default class SequenceText extends React.Component {
         this.context.highlighted.location))
   }
 
-  render() {
-    const rows = Math.ceil(this.props.data.length / this.state.width);
-    let lines = [];
+  /**
+   * Computes sections of `context.hierarchy` and `context.sequence` then generates an array of `SequenceRowGroup` components
+   *
+   * @returns {SequenceRowGroup[]}
+   */
+  sequenceGroups() {
+    // total number of rows
+    const rows = Math.ceil(this.context.sequence.length / this.state.width);
+    let groups = [];
     for (let i = 0; i < rows; i++) {
-      const [start, end] = [i * this.state.width, (i+1) * this.state.width];
-      const data = this.props.data.slice(start, end);
-      lines.push(
-        <div key={i}
-             className={[
-               `sequence-row-group`,
-               this.isHighlighted(start, end) ? 'highlighted' : null,
-             ].join(' ')}
-        >
+      const [start, end] = [i * this.state.width, (i + 1) * this.state.width];
 
-          <SequenceRow row={i} data={data} width={this.state.width}/>
-
-          <FeatureBar length={data.length}>
-            {flattenHierarchy(this.context.hierarchy, start, end)}
-          </FeatureBar>
-
-        </div>
+      groups.push(
+        <SequenceRowGroup key={start} start={start}
+                          highlighted={this.isHighlighted(start, end)}
+                          sequence={this.context.sequence.slice(start, end)}
+                          features={flattenHierarchy(this.context.hierarchy, start, end)}
+        />
       )
-    }
 
+    }
+    return groups
+  }
+
+  render() {
     return(
       <div className={[
               'sequence-text',
               this.context.highlighted ? (this.context.highlighted.id ? 'highlighted' : null) : null,
             ].join(' ')}
       >
-        {lines}
+        {this.sequenceGroups()}
       </div>
     )
   }

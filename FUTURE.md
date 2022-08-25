@@ -57,9 +57,8 @@ _Top-level program features and planned functionality_
 - Show index numbers:
   - Line numbers
   - Intervals of 10/100
-- `FeatureBar`:
+- `FeatureRowBar`:
   - Option to view feature metadata from context menu
-  - Highlight truncated `FeatureLine` components when hovered
 - "Create feature" from `ContextMenu`
 - Edit Sequence:
   - Allow editing of downloaded sequence:
