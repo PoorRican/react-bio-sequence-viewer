@@ -2,26 +2,30 @@ import React from "react";
 import {
   Classes, UL
 } from "@blueprintjs/core";
+import PropTypes from "prop-types";
 
 import {colorize} from "../helpers";
-import {FeatureLine} from "../../components/featureLine";
+import FeatureLine from "../../components/featureLine";
 import {SequenceContext} from "../data";
+import {Feature} from "../../types/feature";
 
 import './featureRowBar.css'
 
 
 /**
- * Renders hierarchy structure of features contained in the given slice/row as simple lines.
+ * Visualizes `Feature` hierarchy as simple lines.
  *
  * Hierarchy is passed via `props.children`.
  *
- * @param props.children {[{},]} - Hierarchy to display
+ * @param props.children {Feature[]} - Hierarchy to display
  * @param props.scroll {boolean} - Toggles scrollbar functionality
  * @param props.length {number} - The number of indices to be represented.
- * @param props.range {[number, number]} - Defines start and end of row.
  */
 export default class FeatureRowBar extends React.PureComponent {
   static contextType = SequenceContext;
+  static defaultProps = {
+    scroll: false,
+  }
 
   render() {
     return (
@@ -46,4 +50,10 @@ export default class FeatureRowBar extends React.PureComponent {
       </UL>
     )
   }
+}
+
+FeatureRowBar.propTypes = {
+  children: PropTypes.arrayOf(Feature),
+  scroll: PropTypes.bool,
+  length: PropTypes.number.isRequired,
 }

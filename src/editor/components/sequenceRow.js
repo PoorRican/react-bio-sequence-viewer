@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import {withinBounds} from "../helpers";
 import {SequenceContext} from "../data";
@@ -36,4 +37,9 @@ export default class SequenceRow extends React.PureComponent {
       </div>
     )
   }
+}
+
+SequenceRow.propTypes = {
+  sequence: PropTypes.string.isRequired,
+  start: PropTypes.number.isRequired
 }

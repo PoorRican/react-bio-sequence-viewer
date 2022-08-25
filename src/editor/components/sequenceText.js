@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from "prop-types";
 
 import {
   SequenceContext,
@@ -84,4 +85,8 @@ export default class SequenceText extends React.PureComponent {
       </div>
     )
   }
+}
+
+SequenceText.propTypes = {
+  width: PropTypes.number.isRequired
 }

@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from "prop-types";
 
 import {
   colorize
@@ -8,18 +9,18 @@ import {SequenceContext} from "../data";
 /**
  * Renders a single nucleotide
  * @param props.index {number} - index occurring in `SequenceContext.sequence`
- * @param props.value {string} - Single nucleotide character
+ * @param props.value {string} - Value to display. Should be single character, but may be set to string.
  * @param props.color {string} - Render color
  * @param props.highlighted {boolean} - Toggles styling for when component is highlighted
  */
 export class Monomer extends React.PureComponent {
   static contextType = SequenceContext;
+  static defaultProps = {
+    color: '',
+    highlighted: false
+  }
 
   render() {
-    // remove this check if `Monomer` is rendering an amino acid using mnemonic
-    if (typeof(this.props.value) !== 'string' || this.props.value.length !== 1) {
-      Error('Incorrect value passed to Monomer component')
-    }
     return (
       <div className={[
              'nucleotide',
@@ -32,4 +33,11 @@ export class Monomer extends React.PureComponent {
       </div>
     )
   }
+}
+
+Monomer.propTypes = {
+  index: PropTypes.number.isRequired,
+  value: PropTypes.string.isRequired,
+  color: PropTypes.string,
+  highlighted: PropTypes.bool,
 }

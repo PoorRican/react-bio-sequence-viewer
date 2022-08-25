@@ -1,15 +1,17 @@
 import React from 'react'
+import PropTypes from "prop-types";
+
 import SequenceRow from "./sequenceRow";
 import FeatureRowBar from "./featureRowBar";
 
 
 /**
- * Bundles `SequenceRow` and the associated `FeatureRowBar`.
+ * Encapsulates `SequenceRow` and the associated `FeatureRowBar`.
  *
- * @param props.highlighted {boolean} - Toggles highlighted styling
+ * @param props.highlighted {boolean} - Toggles highlighted styling for entire `SequenceRowGroup`
  * @param props.start {number} - First index of row
  * @param props.sequence {[string]} - Pre-processed sequence of monomers
- * @param props.features {[{},]} - Pre-processed `Feature` objects to include
+ * @param props.features {Feature[]} - Pre-processed `Feature` objects to include
  *
  * @returns {JSX.Element}
  * @constructor
@@ -30,4 +32,11 @@ export default function SequenceRowGroup(props) {
 
     </div>
   )
+}
+
+SequenceRowGroup.propTypes = {
+  highlighted: PropTypes.bool,
+  start: PropTypes.number,
+  sequence: PropTypes.string,
+  features: PropTypes.arrayOf(Feature)
 }
