@@ -12,12 +12,13 @@ import {SequenceContext} from "../data";
  * @param props.color {string} - Render color
  * @param props.highlighted {boolean} - Toggles styling for when component is highlighted
  */
-export class Nucleotide extends React.Component {
+export class Monomer extends React.Component {
   static contextType = SequenceContext;
 
   render() {
+    // remove this check if `Monomer` is rendering an amino acid using mnemonic
     if (typeof(this.props.value) !== 'string' || this.props.value.length !== 1) {
-      Error('Incorrect value passed to Nucleotide component')
+      Error('Incorrect value passed to Monomer component')
     }
     return (
       <div className={[

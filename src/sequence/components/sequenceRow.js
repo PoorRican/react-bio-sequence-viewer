@@ -2,11 +2,11 @@ import React from 'react'
 
 import {withinBounds} from "../helpers";
 import {SequenceContext} from "../data";
-import {Nucleotide} from "./nucleotide";
+import {Monomer} from "./monomer";
 
 
 /**
- * Renders a single row of `Nucleotide` values
+ * Renders a single row of `Monomer` values
  *
  * @param props.sequence {[string]} - Segment of `context.sequence`
  * @param props.start {number} - First index of row
@@ -26,10 +26,10 @@ export default class SequenceRow extends React.Component {
 
         {this.props.sequence.map((value, column) => {
           let index = this.props.start + column;
-          return <Nucleotide index={index}
-                             key={index}
-                             value={value}
-                             highlighted={this.context.highlighted ? withinBounds(index,
+          return <Monomer index={index}
+                          key={index}
+                          value={value}
+                          highlighted={this.context.highlighted ? withinBounds(index,
                                this.context.highlighted.location) : false}/>
         })}
 
