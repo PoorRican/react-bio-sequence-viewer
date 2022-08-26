@@ -7,6 +7,8 @@ import {
 import {flattenHierarchy, withinBounds} from "../helpers";
 import SequenceRowGroup from "./sequenceRowGroup";
 
+import './sequenceText.css'
+
 
 /**
  * Main component to visualize and interact with monomer sequence, and it's feature hierarchy.

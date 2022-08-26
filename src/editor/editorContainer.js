@@ -3,8 +3,6 @@ import React from 'react'
 import {SequenceContext} from './data'
 import SequenceText from "./components/sequenceText";
 
-import './sequenceView.css'
-
 
 /**
  * Top-level container for rendering any menus or other content that will be persistent for all modes
