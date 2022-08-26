@@ -2,11 +2,11 @@ import React from 'react'
 import PropTypes from "prop-types";
 
 import SequenceRow from "./sequenceRow";
-import FeatureRowBar from "./featureRowBar";
+import FeatureBar from "../../components/featureBar";
 
 
 /**
- * Encapsulates `SequenceRow` and the associated `FeatureRowBar`.
+ * Encapsulates `SequenceRow` and the associated `FeatureBar`.
  *
  * @param props.highlighted {boolean} - Toggles highlighted styling for entire `SequenceRowGroup`
  * @param props.start {number} - First index of row
@@ -27,8 +27,8 @@ export default function SequenceRowGroup(props) {
       <SequenceRow start={props.start}
                    sequence={props.sequence} />
 
-      <FeatureRowBar length={props.sequence.length}
-                     features={props.features} />
+      <FeatureBar length={props.sequence.length}
+                  features={props.features} />
 
     </div>
   )

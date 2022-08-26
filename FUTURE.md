@@ -67,7 +67,7 @@ _Improvements to existing features/functionality_
     - in respect to local feature
     - in respect to global sequence
     - number of selected `Monomers`
-- `FeatureRowBar`:
+- `FeatureBar`:
   - Option to view feature metadata from context menu
   - "Create feature" from `ContextMenu`
 - Edit Sequence:

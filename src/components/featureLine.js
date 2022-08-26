@@ -6,7 +6,7 @@ import {colorize} from "../editor/helpers";
 
 
 /**
- * Represents a single feature in `FeatureRowBar`
+ * Represents a single feature in `FeatureBar`
  *
  * @param props.location {[number, number]} - Start and end indices
  * @param props.id {string} - Feature id

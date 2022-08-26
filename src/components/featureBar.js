@@ -4,10 +4,10 @@ import {
 } from "@blueprintjs/core";
 import PropTypes from "prop-types";
 
-import FeatureLine from "../../components/featureLine";
-import {SequenceContext} from "../data";
+import FeatureLine from "./featureLine";
+import {SequenceContext} from "../editor/data";
 
-import './featureRowBar.css'
+import './featureBar.css'
 
 
 /**
@@ -19,7 +19,7 @@ import './featureRowBar.css'
  * @param props.scroll {boolean} - Toggles scrollbar functionality
  * @param props.length {number} - The number of indices to be represented.
  */
-export default class FeatureRowBar extends React.PureComponent {
+export default class FeatureBar extends React.PureComponent {
   static contextType = SequenceContext;
   static defaultProps = {
     scroll: false,
@@ -52,7 +52,7 @@ export default class FeatureRowBar extends React.PureComponent {
   }
 }
 
-FeatureRowBar.propTypes = {
+FeatureBar.propTypes = {
   features: PropTypes.array.isRequired,
   scroll: PropTypes.bool,
   length: PropTypes.number.isRequired,
