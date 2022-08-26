@@ -61,12 +61,13 @@ export function* iterateHierarchy(hierarchy, traverse='features', depth=0) {
  * **Assumes that `value` will be unique.**
  *
  * @param hierarchy {[{}]} - Array of nested objects
- * @param value {string} - value to search for
+ * @param value {string|null} - value to search for
  * @param attribute {string} - attribute to compare
  * @param traverse {string} - attribute in which other objects are nested
  * @returns {boolean|{id, location, features}}
  */
 export function getFeature(hierarchy, value, attribute='id', traverse='features') {
+  if (value === null) return false
   for (const feature of iterateHierarchy(hierarchy, traverse)) {
     if (feature[attribute] === value) {
       return feature;

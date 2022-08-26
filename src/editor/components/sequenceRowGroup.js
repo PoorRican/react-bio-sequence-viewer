@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from "prop-types";
 
-import {Feature} from "../../types/feature";
 import SequenceRow from "./sequenceRow";
 import FeatureRowBar from "./featureRowBar";
 
@@ -11,8 +10,8 @@ import FeatureRowBar from "./featureRowBar";
  *
  * @param props.highlighted {boolean} - Toggles highlighted styling for entire `SequenceRowGroup`
  * @param props.start {number} - First index of row
- * @param props.sequence {[string]} - Pre-processed sequence of monomers
- * @param props.features {Feature[]} - Pre-processed `Feature` objects to include
+ * @param props.sequence {string[]} - Pre-processed sequence of monomers
+ * @param props.features {Feature[]|{}[]} - Pre-processed `Feature` objects to include
  *
  * @returns {JSX.Element}
  * @constructor
@@ -37,7 +36,7 @@ export default function SequenceRowGroup(props) {
 
 SequenceRowGroup.propTypes = {
   highlighted: PropTypes.bool,
-  start: PropTypes.number,
-  sequence: PropTypes.string,
-  features: PropTypes.arrayOf(Feature)
+  start: PropTypes.number.isRequired,
+  sequence: PropTypes.arrayOf(PropTypes.string).isRequired,
+  features: PropTypes.array.isRequired
 }

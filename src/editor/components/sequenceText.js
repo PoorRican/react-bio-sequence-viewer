@@ -19,29 +19,12 @@ import SequenceRowGroup from "./sequenceRowGroup";
 export default class SequenceText extends React.PureComponent {
   static contextType = SequenceContext;
 
-  constructor(props, context) {
-    super(props, context)
-
-    this.state = {
-      width: props.width ? props.width : this.determineWidth(),
-    }
-  }
-
   /**
-   * Function to determine comfortable width to render sequence
-   * TODO: actually implement this function
-   * @returns {number}
-   */
-  determineWidth() {
-    return 42;
-  }
-
-  /**
-   * Render styling helper for determining if any content is highlighted.
+   * Render styling helper for determining if *any* indices within given range is highlighted.
    *
    * @returns {boolean} - `true` if start or end of row is within highlighted region
    */
-  isHighlighted(start, end) {
+  isHighlighted = (start, end) => {
     if (!this.context.highlighted) return false
     return (
       withinBounds(start,
@@ -51,21 +34,21 @@ export default class SequenceText extends React.PureComponent {
   }
 
   /**
-   * Computes sections of `context.hierarchy` and `context.sequence` then generates an array of `SequenceRowGroup` components
+   * Process fragments of `context.hierarchy` and `context.sequence` then generate an array of `SequenceRowGroup` components.
    *
    * @returns {SequenceRowGroup[]}
    */
-  sequenceGroups() {
+  sequenceGroups = () => {
     // total number of rows
-    const rows = Math.ceil(this.context.sequence.length / this.state.width);
+    const rows = Math.ceil(this.context.sequence.length / this.props.width);
     let groups = [];
     for (let i = 0; i < rows; i++) {
-      const [start, end] = [i * this.state.width, (i + 1) * this.state.width];
+      const [start, end] = [i * this.props.width, (i + 1) * this.props.width];
 
       groups.push(
         <SequenceRowGroup key={start} start={start}
                           highlighted={this.isHighlighted(start, end)}
-                          sequence={this.context.sequence.slice(start, end)}
+                          sequence={Array(...this.context.sequence).slice(start, end)}
                           features={flattenHierarchy(this.context.hierarchy, start, end)}
         />
       )
@@ -78,7 +61,7 @@ export default class SequenceText extends React.PureComponent {
     return(
       <div className={[
               'sequence-text',
-              this.context.highlighted ? (this.context.highlighted.id ? 'highlighted' : null) : null,
+              this.context.highlighted ? 'highlighted' : null,
             ].join(' ')}
       >
         {this.sequenceGroups()}

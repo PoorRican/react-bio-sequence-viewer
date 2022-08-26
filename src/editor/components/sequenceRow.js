@@ -40,6 +40,6 @@ export default class SequenceRow extends React.PureComponent {
 }
 
 SequenceRow.propTypes = {
-  sequence: PropTypes.string.isRequired,
+  sequence: PropTypes.array.isRequired,
   start: PropTypes.number.isRequired
 }
