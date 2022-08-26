@@ -13,7 +13,7 @@ import FeatureContainer from './feature/featureContainer'
 
 // Sequence View
 import {SequenceProvider} from "./editor/data"
-import SequenceContainer from "./editor/sequenceContainer"
+import EditorContainer from "./editor/editorContainer"
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -27,7 +27,7 @@ root.render(
       }>Home</Route>
       <Route path={'/editor'} element={
         <SequenceProvider>
-          <SequenceContainer />
+          <EditorContainer />
         </SequenceProvider>
       }>Sequence</Route>
     </Routes>
