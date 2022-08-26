@@ -25,6 +25,9 @@ export default class FeatureBar extends React.PureComponent {
     scroll: false,
   }
 
+  // TODO: implement popover element to show info on highlighted feature
+  // TODO: implement `onClick` function to set `this.context.cursor`
+
   renderLines = () => {
     let lines = [];
     this.props.features.forEach(feature => {
