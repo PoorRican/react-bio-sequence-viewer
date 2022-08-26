@@ -24,7 +24,7 @@ import MoveMode from "./modes/moveMode";
  * This class is the top-level container for rendering `ModeMenu`, modes of `MainItems`, and context menu.
  * Data is distributed between different modes by using `this.context`.
  */
-export default class FeatureContainer extends React.Component {
+export default class OverviewContainer extends React.Component {
   static contextType = FeatureContext
 
   constructor(props, context) {

@@ -98,5 +98,4 @@ _Improvements to existing features/functionality_
 # Meta
 _Program structure and organization_
 
-- Rename `feature` directory to `overview`
 - Move `ModeMenu` components to a top-level directory `components`

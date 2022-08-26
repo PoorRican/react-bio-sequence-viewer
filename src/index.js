@@ -8,8 +8,8 @@ import "@blueprintjs/popover2/lib/css/blueprint-popover2.css";
 
 
 // Feature View
-import FeaturesProvider from "./feature/data"
-import FeatureContainer from './feature/featureContainer'
+import FeaturesProvider from "./overview/data"
+import OverviewContainer from './overview/overviewContainer'
 
 // Sequence View
 import {SequenceProvider} from "./editor/data"
@@ -22,7 +22,7 @@ root.render(
     <Routes>
       <Route path='/' element={
         <FeaturesProvider>
-          <FeatureContainer />
+          <OverviewContainer />
         </FeaturesProvider>
       }>Home</Route>
       <Route path={'/editor'} element={
