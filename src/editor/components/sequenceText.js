@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from "prop-types";
 
 import {
-  SequenceContext,
+  EditorContext,
 } from "../data";
 import {flattenHierarchy, withinBounds} from "../helpers";
 import SequenceRowGroup from "./sequenceRowGroup";
@@ -19,7 +19,7 @@ import './sequenceText.css'
  * @constructor
  */
 export default class SequenceText extends React.PureComponent {
-  static contextType = SequenceContext;
+  static contextType = EditorContext;
 
   /**
    * Render styling helper for determining if *any* indices within given range is highlighted.

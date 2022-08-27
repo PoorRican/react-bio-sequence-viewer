@@ -5,13 +5,13 @@ import {
 } from "@blueprintjs/core";
 
 import {FeatureBreadcrumbs} from "../../components/featureBreadcrumbs";
-import {SequenceContext} from "../data";
+import {EditorContext} from "../data";
 
 import './headerNavBar.css'
 
 
 export default class HeaderNavBar extends React.PureComponent {
-  static contextType = SequenceContext;
+  static contextType = EditorContext;
 
   /**
    * Shows current editor mode and provides the ability to change modes.

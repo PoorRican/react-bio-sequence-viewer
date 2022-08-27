@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {SequenceContext} from './data'
+import {EditorContext} from './data'
 import SequenceText from "./components/sequenceText";
 import HeaderNavBar from "./components/headerNavBar";
 
@@ -11,7 +11,7 @@ import './editorContainer.css'
  * (ie: context menu, mode changing menu, scrollbar, etc.) as well as the primary `SequenceText` object.
  */
 export default class EditorContainer extends React.Component {
-  static contextType = SequenceContext;
+  static contextType = EditorContext;
 
   constructor(props, context) {
     super(props, context);

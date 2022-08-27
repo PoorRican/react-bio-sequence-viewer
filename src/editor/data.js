@@ -16,7 +16,7 @@ const defaultData = {
   setHighlighted: () => {},
 }
 
-export const SequenceContext = createContext(defaultData);
+export const EditorContext = createContext(defaultData);
 
 /**
  * Generates a random sequence of nucleotides
@@ -111,9 +111,9 @@ export class EditorProvider extends React.Component {
 
   render() {
     return (
-      <SequenceContext.Provider value={this.state}>
+      <EditorContext.Provider value={this.state}>
         {this.props.children}
-      </SequenceContext.Provider>
+      </EditorContext.Provider>
     )
   }
 }

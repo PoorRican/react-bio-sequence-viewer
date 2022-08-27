@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import {withinBounds} from "../helpers";
-import {SequenceContext} from "../data";
+import {EditorContext} from "../data";
 import {Monomer} from "./monomer";
 
 
@@ -17,7 +17,7 @@ import {Monomer} from "./monomer";
  * @constructor
  */
 export default class SequenceRow extends React.PureComponent {
-  static contextType = SequenceContext;
+  static contextType = EditorContext;
 
   render() {
     return (
