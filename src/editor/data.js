@@ -67,7 +67,7 @@ export function generateFeatures() {
   ]
 }
 
-export class SequenceProvider extends React.Component {
+export class EditorProvider extends React.Component {
   constructor(props) {
     super(props);
 

@@ -12,7 +12,7 @@ import FeaturesProvider from "./overview/data"
 import OverviewContainer from './overview/overviewContainer'
 
 // Sequence View
-import {SequenceProvider} from "./editor/data"
+import {EditorProvider} from "./editor/data"
 import EditorContainer from "./editor/editorContainer"
 
 
@@ -26,9 +26,9 @@ root.render(
         </FeaturesProvider>
       }>Home</Route>
       <Route path={'/editor'} element={
-        <SequenceProvider>
+        <EditorProvider>
           <EditorContainer />
-        </SequenceProvider>
+        </EditorProvider>
       }>Sequence</Route>
     </Routes>
   </BrowserRouter>)
