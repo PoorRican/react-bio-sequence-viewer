@@ -59,12 +59,23 @@ export default class SequenceText extends React.PureComponent {
     return groups
   }
 
+  /**
+   * Handles resetting of `context.mode` when `MouseUpEvent` has not been handled by `Monomer.handleEndSelect`.
+   * @see Monomer.handleEndSelect
+   */
+  resetMode = () => {
+    if (this.context.mode === 'selecting') {
+      this.context.setMode('view');
+    }
+  }
+
   render() {
     return(
       <div className={[
               'sequence-text',
               this.context.highlighted ? 'highlighted' : null,
             ].join(' ')}
+           onMouseUp={this.resetMode}
       >
         {this.sequenceGroups()}
       </div>

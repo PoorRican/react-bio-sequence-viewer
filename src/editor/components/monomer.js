@@ -6,6 +6,15 @@ import {
 } from "../helpers";
 import {EditorContext} from "../data";
 
+
+function isDragging(event) {
+  return event.buttons === 1
+}
+
+function getIndex(event) {
+  return Number(event.currentTarget.dataset.index)
+}
+
 /**
  * Renders a single nucleotide
  * @param props.index {number} - index occurring in `EditorContext.sequence`
@@ -20,14 +29,71 @@ export class Monomer extends React.PureComponent {
     highlighted: false
   }
 
-  // TODO: should a modifier key be used here?
-  // TODO: handle drag
-  updateCursor = (e) => {
-    const index = Number(e.currentTarget.dataset.index);
+  /**
+   * Updates `context.cursor` with `index` based on whichever coordinate is closer to index.
+   * If `context.cursor` points to an index, then it is updated to an array.
+   *
+   * Used as visual feedback when updating cursor by dragging.
+   *
+   * @param index {number} - New index for `context.cursor` to point to
+   *
+   * @example
+   * If `context.cursor = [50, 100]` and `index = 110`, then cursor is set to `[50, 110]`
+   */
+  updateCursor(index) {
+    if (typeof(this.context.cursor) === 'number') {
+      this.context.setCursor([index, this.context.cursor].sort())
+    }
+    else {
+      const distances = [index - this.context.cursor[0], index - this.context.cursor[1]];
+      if (distances[0] === Math.min(...distances)) {
+        this.context.setCursor([index, this.context.cursor[1]])
+      } else {
+        this.context.setCursor([this.context.cursor[0], index])
+      }
+    }
+  }
+
+  /**
+   * Sets `context.cursor` to current index. Gets called during `MouseDownEvent`.
+   * @param e {MouseEvent}
+   */
+  // TODO: implement a modifier key be used here
+  setCursor = (e) => {
+    const index = getIndex(e);
     this.context.setCursor(index);
   }
 
-  render() {
+  /**
+   * Updates `context.cursor` when dragging.
+   * @param e
+   */
+  handleDrag = (e) => {
+    if (isDragging(e)) {
+      this.context.setMode('selecting')
+      this.updateCursor(getIndex(e));
+    }
+  }
+
+  /**
+   * Ends selection mode.
+   *
+   * In the event that mouse leaves area, `context.cursor` has already been updated by `this.handleDrag`
+   * and `context.mode` reset is handled by `SequenceText.resetMode`
+   *
+   * @see SequenceText.resetMode
+   * @see Monomer.handleDrag
+   *
+   * @param e {MouseEvent}
+   */
+  handleEndSelect = (e) => {
+    if (this.context.mode === 'selecting') {
+      this.updateCursor(getIndex(e))
+      this.context.setMode('view')
+    }
+  }
+
+render() {
     return (
       <div className={[
              'nucleotide',
@@ -35,7 +101,9 @@ export class Monomer extends React.PureComponent {
              this.props.highlighted ? 'highlighted' : null,
             ].join(' ')}
            data-index={this.props.index}
-           onClick={this.updateCursor}
+           onMouseDown={this.setCursor}
+           onMouseUp={this.handleEndSelect}
+           onMouseEnter={this.handleDrag}
       >
         <span>
           {this.props.value}
