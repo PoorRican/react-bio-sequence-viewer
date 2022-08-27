@@ -7,6 +7,7 @@ const defaultData = {
   // data
   mode: 'view',
   highlighted: null,
+  cursor: null,
   sequence: generateSequence(1000),
   hierarchy: generateFeatures(),
 
@@ -14,6 +15,7 @@ const defaultData = {
   setMode: () => {},
   setSequence: () => {},
   setHighlighted: () => {},
+  setCursor: () => {},
 }
 
 export const EditorContext = createContext(defaultData);
@@ -99,13 +101,42 @@ export class EditorProvider extends React.Component {
       })
     }
 
+    /**
+     * Points `context.cursor` to `Feature`, index, or range.
+     *
+     * Used for manipulating `context.sequence` or interacting with `Feature`
+     *
+     * @param value {string|[]|number|null}
+     */
+    this.setCursor = (value) => {
+
+      /**
+       * Point cursor to object
+       */
+      if (typeof(value) === 'string') {
+        const feature = getFeature(this.state.hierarchy, value);
+        if (feature === false) Error(`'id' not found in hierarchy`);
+        this.setState({
+          cursor: feature
+        })
+
+      } else {
+        /**
+         * Point cursor to index or range
+         */
+        this.setState({
+          cursor: value
+        })
+
+      }
+    }
+
     this.state = {
-      mode: defaultData.mode,
-      sequence: defaultData.sequence,
-      hierarchy: defaultData.hierarchy,
+      ...defaultData,
       setMode: this.setMode,
       setSequence: this.setSequence,
       setHighlighted: this.setHighlighted,
+      setCursor: this.setCursor,
     }
   }
 

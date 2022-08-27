@@ -32,6 +32,7 @@ function FeatureLine(props) {
         }}
         onMouseEnter={props.onMouseEnter}
         onMouseLeave={props.onMouseLeave}
+        onClick={props.onClick}
     >
       <span>{props.id}</span>
     </li>
@@ -46,6 +47,7 @@ FeatureLine.propTypes = {
   highlighted: PropTypes.bool,
   onMouseEnter: PropTypes.func.isRequired,
   onMouseLeave: PropTypes.func.isRequired,
+  onClick: PropTypes.func,
 }
 
 export default FeatureLine;

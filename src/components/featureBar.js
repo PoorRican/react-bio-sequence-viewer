@@ -35,7 +35,9 @@ export default class FeatureBar extends React.PureComponent {
                               depth={feature.depth} location={feature.location} id={feature.id}
                               highlighted={this.context.highlighted ? this.context.highlighted.id === feature.id : false}
                               onMouseEnter={() => this.context.setHighlighted(feature.id)}
-                              onMouseLeave={() => this.context.setHighlighted(null)} />)
+                              onMouseLeave={() => this.context.setHighlighted(null)}
+                              onClick={() => this.context.setCursor(feature.id)}
+      />)
     })
     return lines;
   }

@@ -20,13 +20,23 @@ export class Monomer extends React.PureComponent {
     highlighted: false
   }
 
+  // TODO: should a modifier key be used here?
+  // TODO: handle drag
+  updateCursor = (e) => {
+    const index = Number(e.currentTarget.dataset.index);
+    this.context.setCursor(index);
+  }
+
   render() {
     return (
       <div className={[
              'nucleotide',
              this.props.highlighted ? colorize(this.context.highlighted.depth) : null,
              this.props.highlighted ? 'highlighted' : null,
-            ].join(' ')}>
+            ].join(' ')}
+           data-index={this.props.index}
+           onClick={this.updateCursor}
+      >
         <span>
           {this.props.value}
         </span>

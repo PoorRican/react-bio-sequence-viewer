@@ -6,7 +6,7 @@ const BREADCRUMBS = [
   // root URL should change depending on mode (ie: overview, editor)
   { href: "/editor", icon: "folder-close", text: "Project Title" },
   { href: "/editor/feature1", icon: "folder-close", text: "feature1" },
-  { icon: "document", text: "feature1::sub_feature3" },
+  { icon: "document", text: "sub_feature3" },
 ];
 
 export class FeatureBreadcrumbs extends React.PureComponent {

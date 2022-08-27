@@ -1,13 +1,60 @@
 import React from 'react'
+import PropTypes from "prop-types";
 import {
   Navbar, NavbarGroup,
   Button, Alignment, Tag,
+  Text,
 } from "@blueprintjs/core";
 
 import {FeatureBreadcrumbs} from "../../components/featureBreadcrumbs";
 import {EditorContext} from "../data";
 
 import './headerNavBar.css'
+import {Feature} from "../../types/feature";
+
+
+/**
+ * Shows info about cursor location, whether it points to a `Feature`, a range, or an index
+ *
+ * @param props
+ *
+ * @constructor
+ * @returns {JSX.Element}
+ */
+function CursorTag(props) {
+  return (
+    <>
+      <Tag round={true} large={true} minimal={true} className={`cursor-position`}>
+
+        {(props.id ?
+          <>
+            <Text ellipsize={true}
+                  tagName={'span'}>
+              {props.id}
+            </Text>
+
+            &nbsp;
+          </> : null
+        )}
+
+        <span>
+          {typeof(props.location) === 'number' ?
+            <>Index:&nbsp;{props.location}</> :
+            <>({props.location[0]},&nbsp;{props.location[1]})</>
+          }
+
+        </span>
+
+      </Tag>
+    </>
+  )
+}
+CursorTag.propTypes = {
+  id: PropTypes.string,
+  location: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.number),
+    PropTypes.number])
+}
 
 
 export default class HeaderNavBar extends React.PureComponent {
@@ -18,7 +65,7 @@ export default class HeaderNavBar extends React.PureComponent {
    * @returns {JSX.Element}
    */
   mode() {
-    // TODO: should show menu to change mode
+    // TODO: show menu to change mode
     return (
       <>
         Mode:&nbsp;
@@ -59,19 +106,18 @@ export default class HeaderNavBar extends React.PureComponent {
     )
   }
 
-  current_info() {
-    return (
-      <>
-        {(this.context.cursor) ?
-          <Tag round={true} large={true} minimal={true} className={`cursor-position`}>
-            <span>{this.context.cursor.id}</span>
-            &nbsp;
-            <span>({this.context.cursor.location[0]},&nbsp;{this.context.cursor.location[1]})</span>
-          </Tag> : null
-        }
-        }
-      </>
-    )
+  /**
+   * Display range of cursor selection and `feature.id` if cursor selection is `Feature`
+   * @returns {JSX.Element}
+   */
+  cursor_info() {
+    if (this.context.cursor) {
+      if (typeof(this.context.cursor) === Feature) {
+        return <CursorTag id={this.context.cursor.id} location={this.context.cursor.location} />
+      } else {
+        return <CursorTag location={this.context.cursor} />
+      }
+    }
   }
 
   /**
@@ -107,7 +153,7 @@ export default class HeaderNavBar extends React.PureComponent {
         <NavbarGroup align={Alignment.RIGHT}
                      className={`editor-details`} >
 
-          {this.current_info()}
+          {this.cursor_info()}
 
           {this.details()}
 
