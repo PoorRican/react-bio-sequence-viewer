@@ -10,7 +10,6 @@ import {FeatureBreadcrumbs} from "../../components/featureBreadcrumbs";
 import {EditorContext} from "../data";
 
 import './headerNavBar.css'
-import {Feature} from "../../types/feature";
 
 
 /**
@@ -112,7 +111,7 @@ export default class HeaderNavBar extends React.PureComponent {
    */
   cursor_info() {
     if (this.context.cursor) {
-      if (typeof(this.context.cursor) === Feature) {
+      if (this.context.cursor.hasOwnProperty('id')) {     // is instance of `Feature`
         return <CursorTag id={this.context.cursor.id} location={this.context.cursor.location} />
       } else {
         return <CursorTag location={this.context.cursor} />
