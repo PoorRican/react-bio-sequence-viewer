@@ -1,9 +1,15 @@
 # Bugs
+
+## Overview Mode
 - `.selection` doesn't handle `overflow-y: scroll` correctly
 - Remove width on last feature spacer in `#mainItems`
 - Prevent `link` option showing on context menu when only one feature is selected
 - Drag background (`feature-group`) along with features during `move`
 - Cursor class is not being set
+
+## Editor Mode:
+  - Select by dragging does not work in reverse
+  - when starting drag outside of `SequenceText`, `Monomer.handleDrag` is called
 
 
 # Program Features
@@ -13,7 +19,8 @@ _Top-level program features and planned functionality_
 
 ### Functionality
 - Construct gene using drag and drop
-- Dual-strand features
+- Dual-strand features:
+  - When deleting a feature, resolve hanging strands via editor
 - Option to visualize GC-content
 - Show/highlight features based on regions and complexes
 - Ability to zoom-in and navigate regions and complexes
@@ -50,9 +57,6 @@ _Improvements to existing features/functionality_
 ## Sequence Editor
 
 ### Functionality
-- Display sequence
-  - Indicate direction (5'->3' / 3'-> 5'):
-    - Editable via feature metadata
 - Option to highlight:
   - codons and coding regions
   - activator/inhibitor sites  
@@ -69,7 +73,7 @@ _Improvements to existing features/functionality_
     - number of selected `Monomers`
 - `FeatureBar`:
   - Option to view feature metadata from context menu
-  - "Create feature" from `ContextMenu`
+  - "Create feature" from `ContextMenu` if selected range is not a feature
 - Edit Sequence:
   - Allow editing of downloaded sequence:
     - Highlight modified indices
