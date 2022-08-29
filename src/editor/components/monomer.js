@@ -93,12 +93,42 @@ export class Monomer extends React.PureComponent {
     }
   }
 
+  /**
+   * Choose appropriate style derived from `SequenceRow.topLevelStyling`
+   *
+   * @param value {boolean|'start'|'end'|'single'} - `false` if not related to a top-level feature
+   *
+   * @returns {null|string} - value to pass to `className`
+   *
+   * @see SequenceRow.isTopLevelFeature
+   */
+  topLevelStyling(value) {
+    switch (value) {
+      case 'single': {
+        return 'top-level start end'
+      }
+      case 'start': {
+        return 'top-level start';
+      }
+      case 'end': {
+        return 'top-level end';
+      }
+      case true: {
+        return 'top-level'
+      }
+      default: {
+        return null;
+      }
+    }
+  }
+
 render() {
     return (
       <div className={[
              'nucleotide',
              this.props.highlighted ? colorize(this.context.highlighted.depth) : null,
              this.props.highlighted ? 'highlighted' : null,
+             this.topLevelStyling(this.props.topLevel),
             ].join(' ')}
            data-index={this.props.index}
            onMouseDown={this.setCursor}

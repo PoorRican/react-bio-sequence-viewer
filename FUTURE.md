@@ -59,9 +59,9 @@ _Improvements to existing features/functionality_
 ### Functionality
 - Option to highlight:
   - codons and coding regions
-  - activator/inhibitor sites  
-  - restriction enzyme sites  
-  - introns/exons  
+  - activator/inhibitor sites
+  - restriction enzyme sites
+  - introns/exons
   - nucleotide modifications as subscript (eg: methylation, etc)
 - Show/highlight features based on regions and complexes:
   - Show number to notate several levels of features
@@ -94,6 +94,10 @@ _Improvements to existing features/functionality_
   - Insert/Replace/Copy & Paste/Cut/Delete & Insert functions:
     - i.e: `\<i\>`, `\<r\>`, `\<y\>`, `\<p\>`, `\<x\>`, `<\s\>`
   - Goto line
+
+### Improvements
+- Highlighting of features should occur after render
+- Speed up `flattenHierarchy` by not iterating through top-level features
 
 
 # Low-level Implementation

@@ -58,6 +58,7 @@ export class Feature extends Object {
        */
       this.features = data.features;
       this.depth = data.depth;
+      this.global_location = data.global_location;
     }
 
 }

@@ -17,6 +17,7 @@ import FeatureBar from "../../components/featureBar";
  * @constructor
  */
 export default function SequenceRowGroup(props) {
+  const topLevel = props.features.filter((feature) => feature.depth === 0 )
   return(
     <div className={[
            `sequence-row-group`,
@@ -25,7 +26,8 @@ export default function SequenceRowGroup(props) {
     >
 
       <SequenceRow start={props.start}
-                   sequence={props.sequence} />
+                   sequence={props.sequence}
+                   topLevel={topLevel} />
 
       <FeatureBar length={props.sequence.length}
                   features={props.features} />

@@ -107,6 +107,7 @@ export function flattenHierarchy(hierarchy, start, end) {
           key: feature.id,
           id: feature.id,
           location: [trunc_start, trunc_end],
+          global_location: feature.location,
           depth: feature.depth
         })
       );
