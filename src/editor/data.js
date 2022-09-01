@@ -1,6 +1,6 @@
 import React, {createContext} from 'react'
 
-import {getFeature} from "./helpers";
+import {FeatureContainer} from '../types/featureContainer'
 import {Feature} from "../types/feature";
 
 const defaultData = {
@@ -9,7 +9,7 @@ const defaultData = {
   highlighted: null,
   cursor: null,
   sequence: generateSequence(1000),
-  hierarchy: generateFeatures(),
+  hierarchy: new FeatureContainer(generateFeatures()),
 
   // setters
   setMode: () => {},
@@ -50,20 +50,24 @@ export function generateFeatures() {
   return [
     new Feature({
       id: 'testFeature1',
+      accessor: 'testFeature1',
       location: [0,500],
       features: [
         new Feature({
           id: 'testFeature1_sub1',
+          accessor: 'testFeature1::testFeature1_sub1',
           location: [23, 70]
         })
       ]
     }),
     new Feature({
       id: 'endBox',
+      accessor: 'endBox',
       location: [900, 1000]
     }),
     new Feature({
       id: 'markedIndex',
+      accessor: 'markedIndex',
       location: [800, 800]
     })
   ]
@@ -94,7 +98,7 @@ export class EditorProvider extends React.Component {
      * @param id {string|null}
      */
     this.setHighlighted = (id) => {
-      const feature = getFeature(this.state.hierarchy, id);
+      const feature = this.state.hierarchy.retrieve(id);
       if (feature === false) Error(`'id' not found in hierarchy`);
       this.setState({
         highlighted: feature
@@ -114,7 +118,7 @@ export class EditorProvider extends React.Component {
        * Point cursor to object
        */
       if (typeof(value) === 'string') {
-        const feature = getFeature(this.state.hierarchy, value);
+        const feature = this.state.hierarchy.retrieve(value);
         if (feature === false) Error(`'id' not found in hierarchy`);
         this.setState({
           cursor: feature

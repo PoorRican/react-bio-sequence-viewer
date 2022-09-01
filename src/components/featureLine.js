@@ -1,16 +1,15 @@
 import React from 'react'
 import PropTypes from "prop-types";
 
-import './featureLine.css'
+import {Feature} from "../types/feature";
 import {colorize} from "../editor/helpers";
 
+import './featureLine.css'
 
 /**
  * Represents a single feature in `FeatureBar`
  *
- * @param props.location {[number, number]} - Start and end indices
- * @param props.id {string} - Feature id
- * @param props.depth {number} - Level of nesting. Used to set `grid-row` CSS attribute.
+ * @param props.feature {Feature} - Feature object to represent
  * @param props.highlighted {boolean} - Toggles 100% opacity when highlighted
  * @param props.onMouseEnter {function} - Event callback for mouse hovering
  * @param props.onMouseLeave {function} - Event callback for when mouse leaves
@@ -20,30 +19,28 @@ import {colorize} from "../editor/helpers";
  */
 function FeatureLine(props) {
   return(
-    <li id={props.id}
+    <li id={props.feature.accessor}
         className={[
           `feature-line`,
-          colorize(props.depth),
+          colorize(props.feature.depth),
           props.highlighted ? 'highlighted' : null,
         ].join(' ')}
         style={{
-          gridRow: props.depth + 1,
-          gridColumn: [props.location[0] + 1, props.location[1] + 2].join('/'),
+          gridRow: props.feature.depth + 1,
+          gridColumn: [props.feature.location[0] + 1, props.feature.location[1] + 2].join('/'),
         }}
         onMouseEnter={props.onMouseEnter}
         onMouseLeave={props.onMouseLeave}
         onClick={props.onClick}
     >
-      <span>{props.id}</span>
+      <span>{props.feature.accessor}</span>
     </li>
   )
 }
 
 
 FeatureLine.propTypes = {
-  location: PropTypes.arrayOf(PropTypes.number).isRequired,
-  id: PropTypes.string.isRequired,
-  depth: PropTypes.number.isRequired,
+  feature: PropTypes.instanceOf(Feature),
   highlighted: PropTypes.bool,
   onMouseEnter: PropTypes.func.isRequired,
   onMouseLeave: PropTypes.func.isRequired,

@@ -60,6 +60,8 @@ export function* iterateHierarchy(hierarchy, traverse='features', depth=0) {
  *
  * **Assumes that `value` will be unique.**
  *
+ * @deprecated Use `FeatureContainer.retrieve` instead
+ *
  * @param hierarchy {[{}]} - Array of nested objects
  * @param value {string|null} - value to search for
  * @param attribute {string} - attribute to compare
@@ -83,6 +85,8 @@ export function getFeature(hierarchy, value, attribute='id', traverse='features'
  * Features and their sub-features are notated by `depth` attribute.
  *
  * *Must* be used to process features in `FeatureBar`
+ *
+ * @deprecated Use `FeatureContainer.within` instead
  *
  * @param hierarchy {[{},]} - Array of features to scrub
  * @param start {number} - Inclusive start index

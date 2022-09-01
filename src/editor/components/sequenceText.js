@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import {
   EditorContext,
 } from "../data";
-import {flattenHierarchy, withinBounds} from "../helpers";
+import {withinBounds} from "../helpers";
 import SequenceRowGroup from "./sequenceRowGroup";
 
 import './sequenceText.css'
@@ -51,7 +51,7 @@ export default class SequenceText extends React.PureComponent {
         <SequenceRowGroup key={start} start={start}
                           highlighted={this.isHighlighted(start, end)}
                           sequence={Array(...this.context.sequence).slice(start, end)}
-                          features={flattenHierarchy(this.context.hierarchy, start, end)}
+                          features={this.context.hierarchy.within(start, end)}
         />
       )
 

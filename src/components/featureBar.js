@@ -15,7 +15,7 @@ import './featureBar.css'
  *
  * Hierarchy is passed via `props.children`.
  *
- * @param props.features {Feature[]|{}[]} - Hierarchy to display
+ * @param props.hierarchy {Feature[]|{}[]} - Hierarchy to display
  * @param props.scroll {boolean} - Toggles scrollbar functionality
  * @param props.length {number} - The number of indices to be represented.
  */
@@ -31,12 +31,12 @@ export default class FeatureBar extends React.PureComponent {
   renderLines = () => {
     let lines = [];
     this.props.features.forEach(feature => {
-      lines.push(<FeatureLine key={feature.id}
-                              depth={feature.depth} location={feature.location} id={feature.id}
-                              highlighted={this.context.highlighted ? this.context.highlighted.id === feature.id : false}
-                              onMouseEnter={() => this.context.setHighlighted(feature.id)}
+      lines.push(<FeatureLine key={feature.accessor}
+                              feature={feature}
+                              highlighted={this.context.highlighted ? this.context.highlighted.accessor === feature.accessor : false}
+                              onMouseEnter={() => this.context.setHighlighted(feature.accessor)}
                               onMouseLeave={() => this.context.setHighlighted(null)}
-                              onClick={() => this.context.setCursor(feature.id)}
+                              onClick={() => this.context.setCursor(feature.accessor)}
       />)
     })
     return lines;
