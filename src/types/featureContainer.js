@@ -100,3 +100,31 @@ export class FeatureContainer extends Array {
   }
 
 }
+
+
+export function generateFeatures() {
+  return [
+    new Feature({
+      id: 'testFeature1',
+      accessor: 'testFeature1',
+      location: [0, 500],
+      features: [
+        new Feature({
+          id: 'testFeature1_sub1',
+          accessor: 'testFeature1::testFeature1_sub1',
+          location: [23, 70]
+        })
+      ]
+    }),
+    new Feature({
+      id: 'endBox',
+      accessor: 'endBox',
+      location: [900, 1000]
+    }),
+    new Feature({
+      id: 'markedIndex',
+      accessor: 'markedIndex',
+      location: [800, 800]
+    })
+  ]
+}

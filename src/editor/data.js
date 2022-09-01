@@ -1,7 +1,6 @@
 import React, {createContext} from 'react'
 
-import {FeatureContainer} from '../types/featureContainer'
-import {Feature} from "../types/feature";
+import {FeatureContainer, generateFeatures} from '../types/featureContainer'
 
 const defaultData = {
   // data
@@ -44,33 +43,6 @@ export function generateSequence(length) {
     sequence[i] = nucleotide();
   }
   return sequence;
-}
-
-export function generateFeatures() {
-  return [
-    new Feature({
-      id: 'testFeature1',
-      accessor: 'testFeature1',
-      location: [0,500],
-      features: [
-        new Feature({
-          id: 'testFeature1_sub1',
-          accessor: 'testFeature1::testFeature1_sub1',
-          location: [23, 70]
-        })
-      ]
-    }),
-    new Feature({
-      id: 'endBox',
-      accessor: 'endBox',
-      location: [900, 1000]
-    }),
-    new Feature({
-      id: 'markedIndex',
-      accessor: 'markedIndex',
-      location: [800, 800]
-    })
-  ]
 }
 
 export class EditorProvider extends React.Component {
