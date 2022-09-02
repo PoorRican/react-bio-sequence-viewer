@@ -8,8 +8,9 @@
 - Cursor class is not being set
 
 ## Editor Mode:
-  - Select by dragging does not work in reverse
-  - when starting drag outside of `SequenceText`, `Monomer.handleDrag` is called
+- Select by dragging does not work in reverse
+- when starting drag outside of `SequenceText`, `Monomer.handleDrag` is called
+- `ContextTag` does not show when first `Monomer` is clicked (false-negative on when index is 0)
 
 
 # Program Features
@@ -57,7 +58,7 @@ _Improvements to existing features/functionality_
 ## Sequence Editor
 
 ### Functionality
-- Option to highlight:
+- Option to highlight/emphasize/de-emphasize:
   - codons and coding regions
   - activator/inhibitor sites
   - restriction enzyme sites
@@ -72,6 +73,7 @@ _Improvements to existing features/functionality_
     - in respect to global sequence
     - number of selected `Monomers`
 - `FeatureBar`:
+  - `Popover` on `FeatureLine`
   - Option to view feature metadata from context menu
   - "Create feature" from `ContextMenu` if selected range is not a feature
 - Edit Sequence:
@@ -79,11 +81,11 @@ _Improvements to existing features/functionality_
     - Highlight modified indices
     - Allow saving of modified feature as new feature
 - Improve readability:
-  - Separate into paragraphs of 100bp or so
+  - Separate into "paragraphs" of 100bp or so
   - Use screen size to determine number of columns
   - Controllable parameter for number of rows/columns
   - Identify segment as a coding region:
-    - Highlight coding region (using `context.highlighted`) when editing
+    - Emphasize coding region (using `context.highlighted`) when editing
       - Remember previous column/row setting
     - Emphasize codons using vertical gaps for using nucleotide sequence
     - Show codons as letters of amino acids *or* mnemonic words (user parameter)
@@ -98,6 +100,9 @@ _Improvements to existing features/functionality_
 ### Improvements
 - Highlighting of features should occur after render
 - Speed up `flattenHierarchy` by not iterating through top-level features
+- `Navbar`:
+  - Reduce height
+  - Show info on bottom; reserve top bar for controls/functions/modes
 
 
 # Low-level Implementation
@@ -107,3 +112,6 @@ _Improvements to existing features/functionality_
 _Program structure and organization_
 
 - Move `ModeMenu` components to a top-level directory `components`
+- `Feature`
+  - Sanitize `Feature` attributes by creating a `RenderFeature` to store non-standard data
+  - Implement checking `location` of `Feature.features` conforms to boundaries by utilizing `Array.every`
