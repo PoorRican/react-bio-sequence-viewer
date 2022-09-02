@@ -11,8 +11,7 @@ export class FeatureContainer extends Array {
    * @param hierarchy {Feature[]} - Initial tree of `Feature` objects
    */
   constructor(hierarchy) {
-    super(hierarchy);
-    this.hierarchy = hierarchy;
+    super(...hierarchy);
   }
 
   /**
@@ -30,7 +29,7 @@ export class FeatureContainer extends Array {
       const updated = new Feature({...feature, accessor: accessor})
       _parent.features.push(updated);
     } else {
-      this.hierarchy.push(new Feature({...feature, accessor: feature.id}))
+      this.push(new Feature({...feature, accessor: feature.id}))
     }
   }
 
@@ -48,7 +47,7 @@ export class FeatureContainer extends Array {
       let chain = [];
       for (let i of nodes) chain.push(i.groups.node)
 
-      let feature = this.hierarchy[chain.shift()]
+      let feature = this[chain.shift()]
       while (chain.length) {
         feature = feature.features[chain.shift()]
       }
@@ -69,7 +68,7 @@ export class FeatureContainer extends Array {
    *
    * @returns {Feature[]} - A copy of `Feature` objects whose `location` intersects with range
    */
-  within(start, end, features=this.hierarchy) {
+  within(start, end, features=this) {
     let contained = [];
 
     const width = Math.abs(end - start)

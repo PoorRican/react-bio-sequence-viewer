@@ -3,29 +3,25 @@
  * Handles insertion, deletion, replacement, and rearrangement of segments.
  * Provides an interface to store manipulations in an 'undo tree'.
  */
-class Sequence extends Array {
+export class Sequence extends Array {
   /**
    * Separate string into array
+   *
    * @param sequence {string|String[]}
    * @constructor
    */
   constructor(sequence) {
-    super(sequence);
-
-    if (typeof(sequence) === 'string') {
-      this.sequence = [...sequence];
-    } else {
-      this.sequence = sequence;
-    }
+    super(...sequence);
   }
 
   /**
    * Insert given string at `index`
+   *
    * @param value {string[]}
    * @param index {number}
    */
   insert(value, index) {
-    this.sequence.splice(index, 0, ...value);
+    this.splice(index, 0, ...value);
   }
 
   /**
@@ -34,7 +30,7 @@ class Sequence extends Array {
    * @param range {[number, number]}
    */
   delete(range) {
-    this.sequence.splice(range[0], range[1] - range[0]);
+    this.splice(range[0], range[1] - range[0]);
   }
 
   /**
@@ -46,7 +42,7 @@ class Sequence extends Array {
    * @param range {[number, number]} - Range to perform modification
    */
   swap(value, range) {
-    this.sequence.splice(range[0], range[1] - range[0], ...value);
+    this.splice(range[0], range[1] - range[0], ...value);
   }
 
   /**
@@ -59,6 +55,6 @@ class Sequence extends Array {
    */
   replace(value, index) {
     if (value.length !== 1) Error('incorrect length of value');
-    this.sequence.splice(index, 1, value);
+    this.splice(index, 1, value);
   }
 }
