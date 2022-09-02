@@ -2,6 +2,8 @@
 .sequence-text {
     width: fit-content;
     margin: 0 auto;
+    padding-top: 15px;
+    padding-bottom: 15px;
 }
 
 /* .sequence-row */
