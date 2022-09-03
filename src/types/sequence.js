@@ -58,3 +58,31 @@ export class Sequence extends Array {
     this.splice(index, 1, value);
   }
 }
+
+
+/**
+ * Generates a random sequence of nucleotides
+ *
+ * @param length {number} - Length of generated sequence
+ *
+ * @returns {string[]}
+ */
+export function generateSequence(length) {
+
+  /**
+   * Generate a random nucleotide
+   *
+   * @returns {string}
+   */
+  function nucleotide() {
+    // generates an integer between 0 and 3
+    const chosen = Math.floor(Math.random() * 4);
+    return 'ATCG'[chosen];
+  }
+
+  let sequence = Array(length);
+  for (let i = 0; i < length; i++) {
+    sequence[i] = nucleotide();
+  }
+  return sequence;
+}

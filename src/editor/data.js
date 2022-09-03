@@ -1,13 +1,14 @@
 import React, {createContext} from 'react'
 
 import {FeatureContainer, generateFeatures} from '../types/featureContainer'
+import {Sequence, generateSequence} from "../types/sequence";
 
 const defaultData = {
   // data
   mode: 'view',
   highlighted: null,
   cursor: null,
-  sequence: generateSequence(1000),
+  sequence: new Sequence(generateSequence(1000)),
   hierarchy: new FeatureContainer(generateFeatures()),
 
   // setters
@@ -18,32 +19,6 @@ const defaultData = {
 }
 
 export const EditorContext = createContext(defaultData);
-
-/**
- * Generates a random sequence of nucleotides
- *
- * @param length {number} - Length of generated sequence
- *
- * @returns {string[]}
- */
-export function generateSequence(length) {
-
-  /**
-   * Generate a random nucleotide
-   * @returns {string}
-   */
-  function nucleotide() {
-    // generates an integer between 0 and 3
-    const chosen = Math.floor(Math.random() * 4);
-    return 'ATCG'[chosen];
-  }
-
-  let sequence = Array(length);
-  for (let i = 0; i < length; i++) {
-    sequence[i] = nucleotide();
-  }
-  return sequence;
-}
 
 export class EditorProvider extends React.Component {
   constructor(props) {
