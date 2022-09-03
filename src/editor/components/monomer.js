@@ -125,7 +125,7 @@ export class Monomer extends React.PureComponent {
 render() {
     return (
       <div className={[
-             'nucleotide',
+             'monomer',
              this.props.highlighted ? colorize(this.context.highlighted.depth) : null,
              this.props.highlighted ? 'highlighted' : null,
              this.topLevelStyling(this.props.topLevel),
