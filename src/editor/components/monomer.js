@@ -122,6 +122,34 @@ export class Monomer extends React.PureComponent {
     }
   }
 
+  /**
+   *
+   * @param value {boolean|'start'|'end'|'single'} - `false` if not selected
+   *
+   * @returns {null|string} - value to pass to `className`
+   *
+   * @see SequenceRow.isSelected
+   */
+  selectedStyling(value) {
+    switch (value) {
+      case 'single': {
+        return 'selected start end'
+      }
+      case 'start': {
+        return 'selected start';
+      }
+      case 'end': {
+        return 'selected end';
+      }
+      case true: {
+        return 'selected'
+      }
+      default: {
+        return null;
+      }
+    }
+  }
+
 render() {
     return (
       <div className={[
@@ -129,6 +157,7 @@ render() {
              this.props.highlighted ? colorize(this.context.highlighted.depth) : null,
              this.props.highlighted ? 'highlighted' : null,
              this.topLevelStyling(this.props.topLevel),
+             this.selectedStyling(this.props.selected),
             ].join(' ')}
            data-index={this.props.index}
            onMouseDown={this.setCursor}

@@ -75,3 +75,25 @@
 .sequence-text.highlighted .monomer:not(.highlighted) {
     opacity: 40%;
 }
+
+/* Selected styling */
+.monomer.selected {
+    border-top-style: solid;
+    border-bottom-style: solid;
+    border-top-width: 1px !important;
+    border-bottom-width: 1px !important;
+    border-color: rgba(0, 0, 255, .3) !important;
+    background: rgba(0, 0, 255, .2) !important;
+}
+
+.monomer.selected.start {
+    border-left-style: solid;
+    border-left-width: 1px !important;
+    margin-left: -1px !important;
+}
+
+.monomer.selected.end {
+    border-right-style: solid;
+    border-right-width: 1px !important;
+    margin-right: -1px !important;
+}
