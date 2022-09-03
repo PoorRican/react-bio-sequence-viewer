@@ -27,38 +27,51 @@ export function FeatureData(gene, cdregion, prot, rna, pub, bond, site, rsite, u
  * @see iterateHierarchy
  */
 export class Feature extends Object {
-    constructor(data) {
-      super(data)
+  constructor(data) {
+    super(data)
 
-      // NCBI BioSeqId specification
-      this.id       = data.id;
-      this.data     = data.data;
-      this.partial  = data.partial;
-      this.except   = data.except;
-      this.comment  = data.comment;
-      this.product  = data.product;
-      this.location = data.location;
-      this.qual     = data.qual;
-      this.title    = data.title;
-      this.ext      = data.ext;
-      this.cit      = data.cit;
-      this.expEv    = data.expEv;
-      this.xref     = data.xref;
+    // NCBI BioSeqId specification
+    this.id       = data.id;
+    this.data     = data.data;
+    this.partial  = data.partial;
+    this.except   = data.except;
+    this.comment  = data.comment;
+    this.product  = data.product;
+    this.location = data.location;
+    this.qual     = data.qual;
+    this.title    = data.title;
+    this.ext      = data.ext;
+    this.cit      = data.cit;
+    this.expEv    = data.expEv;
+    this.xref     = data.xref;
 
-      // Non-standard data
-      // TODO: these attributes should be separate from object. Implement `RenderFeature` to avoid deviating from specification.
-      /**
-       * Nested features are `Feature` instances whose `location` occurs within `this.location`.
-       * Nesting is computed server-side to improve client performance.
-       * @type {Feature[]}
-       */
-      this.features = data.features;
-      this.global_location = data.global_location;
-      this.accessor = data.accessor
-    }
+    // Non-standard data
+    // TODO: these attributes should be separate from object. Implement `RenderFeature` to avoid deviating from specification.
+    /**
+     * Nested features are `Feature` instances whose `location` occurs within `this.location`.
+     * Nesting is computed server-side to improve client performance.
+     * @type {Feature[]}
+     */
+    this.features = data.features;
+    this.global_location = data.global_location;
+    this.accessor = data.accessor
+  }
 
-    get depth() {
-      return (this.accessor.match(/::/g) || []).length
+  get depth() {
+    return (this.accessor.match(/::/g) || []).length
+  }
+
+  /**
+   * Fetch top-level feature in `features`
+   * @param id {string} - Accessor key
+   * @returns {Feature}
+   */
+  fetch(id) {
+      for (let i of this.features) {
+        if (i.id === id) {
+          return i;
+        }
+      }
     }
 }
 

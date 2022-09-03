@@ -33,6 +33,23 @@ export class FeatureContainer extends Array {
     }
   }
 
+  /**
+   * Fetch a top-level feature using id.
+   *
+   * This is similar to `Array.filter((val) => val === id)`
+   *
+   * @param id {string}
+   *
+   * @returns {Feature|any}
+   */
+  fetch(id) {
+    for (let i of this) {
+      if (i.id === id) {
+        return i;
+      }
+    }
+  }
+
 
   /**
    * Retrieve a nested feature by a string
@@ -43,13 +60,11 @@ export class FeatureContainer extends Array {
    */
   retrieve(accessor) {
     try {
-      const nodes = accessor.match(/(?<node>\w+)(?:::)?/);
-      let chain = [];
-      for (let i of nodes) chain.push(i.groups.node)
+      let chain = accessor.split('::');
 
-      let feature = this[chain.shift()]
+      let feature = this.fetch(chain.shift())
       while (chain.length) {
-        feature = feature.features[chain.shift()]
+        feature = feature.fetch(chain.shift())
       }
 
       return feature
