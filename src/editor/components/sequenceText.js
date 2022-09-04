@@ -69,15 +69,25 @@ export default class SequenceText extends React.PureComponent {
     }
   }
 
+  clearSelected = () => this.context.setCursor(null);
+
   render() {
     return(
-      <div className={[
-              'sequence-text',
-              this.context.highlighted ? 'highlighted' : null,
-            ].join(' ')}
+
+      <div className={'wrapper'}
            onMouseUp={this.resetMode}
+           onMouseDownCapture={this.clearSelected}
       >
-        {this.sequenceGroups()}
+
+        <div className={[
+          'sequence-text',
+          this.context.highlighted ? 'highlighted' : null,
+        ].join(' ')}>
+
+          {this.sequenceGroups()}
+
+        </div>
+
       </div>
     )
   }

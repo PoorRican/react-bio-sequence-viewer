@@ -1,3 +1,7 @@
+.wrapper {
+    width: 100%;
+}
+
 /* .sequence-text */
 .sequence-text {
     width: fit-content;

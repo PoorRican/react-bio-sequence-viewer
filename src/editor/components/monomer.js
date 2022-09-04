@@ -169,8 +169,8 @@ render() {
              this.selectedStyling(this.props.selected),
             ].join(' ')}
            data-index={this.props.index}
-           onMouseDown={this.setCursor}
-           onMouseUp={this.handleEndSelect}
+           onMouseDownCapture={this.setCursor}
+           onMouseUpCapture={this.handleEndSelect}
            onMouseEnter={this.handleDrag}
       >
         <span>
