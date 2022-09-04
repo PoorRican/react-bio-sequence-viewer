@@ -7,13 +7,14 @@ import {
 import {EditorContext} from "../data";
 
 
-function isDragging(event) {
+function isPrimaryButton(event) {
   return event.buttons === 1
 }
 
 function getIndex(event) {
   return Number(event.currentTarget.dataset.index)
 }
+
 
 /**
  * Renders a single nucleotide
@@ -60,8 +61,10 @@ export class Monomer extends React.PureComponent {
    */
   // TODO: implement a modifier key be used here
   setCursor = (e) => {
-    const index = getIndex(e);
-    this.context.setCursor(index);
+    if (isPrimaryButton(e)) {
+      const index = getIndex(e);
+      this.context.setCursor(index);
+    }
   }
 
   /**
@@ -69,7 +72,7 @@ export class Monomer extends React.PureComponent {
    * @param e
    */
   handleDrag = (e) => {
-    if (isDragging(e)) {
+    if (isPrimaryButton(e)) {
       this.context.setMode('selecting')
       this.updateCursor(getIndex(e));
     }
