@@ -42,16 +42,22 @@ export class Monomer extends React.PureComponent {
    * If `context.cursor = [50, 100]` and `index = 110`, then cursor is set to `[50, 110]`
    */
   updateCursor(index) {
+    // this is true upon the MouseDown event
     if (typeof(this.context.cursor) === 'number') {
       this.context.setCursor([index, this.context.cursor].sort())
     }
     else {
-      const distances = [index - this.context.cursor[0], index - this.context.cursor[1]];
+
+      const distances = [
+        Math.abs(index - this.context.cursor[0]),
+        Math.abs(index - this.context.cursor[1])];
+
       if (distances[0] === Math.min(...distances)) {
         this.context.setCursor([index, this.context.cursor[1]])
       } else {
         this.context.setCursor([this.context.cursor[0], index])
       }
+
     }
   }
 
