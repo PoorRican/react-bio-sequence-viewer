@@ -19,18 +19,26 @@ export class Sequence extends Array {
    *
    * @param value {string[]}
    * @param index {number}
+   *
+   * @returns {Sequence} - Mutated copy of `this`
    */
   insert(value, index) {
-    this.splice(index, 0, ...value);
+    let updated = new Sequence(this);
+    updated.splice(index, 0, ...value);
+    return updated;
   }
 
   /**
    * Delete given range
    *
    * @param range {[number, number]}
+   *
+   * @returns {Sequence} - Mutated copy of `this`
    */
   delete(range) {
-    this.splice(range[0], range[1] - range[0]);
+    let updated = new Sequence(this);
+    updated.splice(range[0], range[1] - range[0]);
+    return updated;
   }
 
   /**
@@ -40,9 +48,13 @@ export class Sequence extends Array {
    *
    * @param value {string[]} - Sequence to insert
    * @param range {[number, number]} - Range to perform modification
+   *
+   * @returns {Sequence} - Mutated copy of `this`
    */
   swap(value, range) {
-    this.splice(range[0], range[1] - range[0], ...value);
+    let updated = new Sequence(this);
+    updated.splice(range[0], range[1] - range[0], ...value);
+    return updated;
   }
 
   /**
@@ -52,10 +64,14 @@ export class Sequence extends Array {
    *
    * @param value {string} - Replacement value
    * @param index {number} - Index to perform replacement
+   *
+   * @returns {Sequence} - Mutated copy of `this`
    */
   replace(value, index) {
     if (value.length !== 1) Error('incorrect length of value');
-    this.splice(index, 1, value);
+    let updated = new Sequence(this);
+    updated.splice(index, 1, value);
+    return updated;
   }
 }
 
