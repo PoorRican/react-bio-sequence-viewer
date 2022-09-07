@@ -107,6 +107,8 @@ _Improvements to existing features/functionality_
 
 # Low-level Implementation
 - Indicate nested `Feature` by using `::` notation in `id` attributes
+- Server-side, implement a [Service-oriented Architecture](https://en.wikipedia.org/wiki/Service-oriented_architecture)
+to efficiently distribute computing power. Computations should handle data immutably, and a separate server should be used to handle saves/auto-saves.
 
 # Meta
 _Program structure and organization_
