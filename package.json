@@ -43,7 +43,8 @@
     ]
   },
   "devDependencies": {
-    "@blueprintjs/core": "^4.7.0"
+    "@blueprintjs/core": "^4.7.0",
+    "jest": "^29.0.2"
   },
   "description": "Component testing for compilr program",
   "main": "index.js",
