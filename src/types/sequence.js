@@ -5,13 +5,14 @@
  */
 export class Sequence extends Array {
   /**
-   * Separate string into array
+   * Factory that separates string into array.
    *
-   * @param sequence {string|String[]}
-   * @constructor
+   * Using a factory-function eliminates errors regarding `Symbol.species` and non-callable iterators.
+   *
+   * @param sequence {string|string[]}
    */
-  constructor(sequence) {
-    super(...sequence);
+  static from(sequence) {
+    return new Sequence(...sequence);
   }
 
   /**
@@ -23,7 +24,7 @@ export class Sequence extends Array {
    * @returns {Sequence} - Mutated copy of `this`
    */
   insert(value, index) {
-    let updated = new Sequence(this);
+    let updated = Sequence.from(this);
     updated.splice(index, 0, ...value);
     return updated;
   }
@@ -31,28 +32,28 @@ export class Sequence extends Array {
   /**
    * Delete given range
    *
-   * @param range {[number, number]}
+   * @param range {[number, number]} - *Inclusive* start index; *exclusive* end index
    *
    * @returns {Sequence} - Mutated copy of `this`
    */
   delete(range) {
-    let updated = new Sequence(this);
-    updated.splice(range[0], range[1] - range[0]);
+    let updated = Sequence.from(this);
+    updated.splice(range[0], (range[1] - range[0]));
     return updated;
   }
 
   /**
-   * Swap out given `range` with `insert`.
+   * Swap out segment.
    *
    * Differs from `replace` in the sense that `replace` works in an element-wise manner.
    *
-   * @param value {string[]} - Sequence to insert
-   * @param range {[number, number]} - Range to perform modification
+   * @param value {string[]|string} - Sequence to insert
+   * @param range {[number, number]} - *Inclusive* start index; *exclusive* end index
    *
    * @returns {Sequence} - Mutated copy of `this`
    */
   swap(value, range) {
-    let updated = new Sequence(this);
+    let updated = Sequence.from(this);
     updated.splice(range[0], range[1] - range[0], ...value);
     return updated;
   }
@@ -69,7 +70,7 @@ export class Sequence extends Array {
    */
   replace(value, index) {
     if (value.length !== 1) Error('incorrect length of value');
-    let updated = new Sequence(this);
+    let updated = new Sequence(...this);
     updated.splice(index, 1, value);
     return updated;
   }

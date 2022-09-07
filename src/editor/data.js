@@ -8,7 +8,7 @@ const defaultData = {
   mode: 'view',
   highlighted: null,
   cursor: null,
-  sequence: new Sequence(generateSequence(1000)),
+  sequence: Sequence.from(generateSequence(1000)),
   hierarchy: FeatureContainer.from(generateFeatures()),
 
   // setters
