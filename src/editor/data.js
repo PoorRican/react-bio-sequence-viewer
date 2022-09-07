@@ -9,7 +9,7 @@ const defaultData = {
   highlighted: null,
   cursor: null,
   sequence: new Sequence(generateSequence(1000)),
-  hierarchy: new FeatureContainer(generateFeatures()),
+  hierarchy: FeatureContainer.from(generateFeatures()),
 
   // setters
   setMode: () => {},

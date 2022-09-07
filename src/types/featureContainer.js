@@ -8,11 +8,17 @@ import {Feature} from "./feature";
  */
 export class FeatureContainer extends Array {
   /**
+   * Factory function
+   *
    * @param hierarchy {Feature[]} - Initial tree of `Feature` objects
+   *
+   * @returns {FeatureContainer}
    */
-  constructor(hierarchy) {
-    super(...hierarchy);
+  from(hierarchy) {
+    return new FeatureContainer(...hierarchy);
   }
+
+  // Manipulation Functions
 
   /**
    * Add copy of `feature` to nesting tree
@@ -21,58 +27,133 @@ export class FeatureContainer extends Array {
    *
    * @param feature {Feature}
    * @param parent {string} - parent accessor string
+   *
+   * @returns {FeatureContainer} - Mutated copy of `this`
    */
   add(feature, parent=undefined) {
+    const updated = FeatureContainer.from(this);
+
     if (parent) {
-      const _parent = this.retrieve(parent);
+
+      const _parent = updated.retrieve(parent);
       const accessor = _parent.accessor + '::' + feature.id;
-      const updated = new Feature({...feature, accessor: accessor})
-      _parent.features.push(updated);
+      const feat = new Feature({...feature, accessor: accessor})
+      _parent.features.push(feat);
+
     } else {
-      this.push(new Feature({...feature, accessor: feature.id}))
+
+      updated.push(new Feature({...feature, accessor: feature.id}))
+
     }
+
+    return updated;
   }
 
   /**
-   * Fetch a top-level feature using id.
+   * Delete specific `Feature` from tree
    *
-   * This is similar to `Array.filter((val) => val === id)`
+   * @param accessor {string} - Accessor key delimited by `::`
    *
-   * @param id {string}
+   * @returns {FeatureContainer} - mutated copy of `this`
+   */
+  delete(accessor) {
+    const updated = FeatureContainer.from(this);
+
+    let chain = this.retrieve(accessor, true);
+
+    if (chain.length > 1) {
+      let nested = updated[chain.shift()];
+      while (chain.length > 0) {
+        nested = nested.features[chain.shift()]
+      }
+
+      nested = nested.features;
+      nested.splice(chain.shift(), 1);
+    } else
+      updated.splice(chain.shift(), 1)
+
+    return updated;
+  }
+
+  /**
+   * Edit a specific
+   * @param accessor {string} - Accessor key delimited by `::`
+   * @param kwargs {{}} - Key-value pairs of edits to make
+   */
+  edit(accessor, kwargs) {
+
+  }
+
+  // Retrieval Functions
+
+  /**
+   * Fetch a top-level feature.
+   *
+   * When `index=false`, `this.filter(() => val.id === id)`
+   *
+   * @param id {string} - `id` of top-level feature
+   * @param index=false {boolean} - Optional flag to return index instead of `Feature`
    *
    * @returns {Feature|any}
    */
-  fetch(id) {
-    for (let i of this) {
-      if (i.id === id) {
-        return i;
+  fetch(id, index=false) {
+    if (index) {
+      for (let i in this) {
+        if (this[i].id === id) {
+          return Number(i);
+        }
+      }
+    } else {
+      for (let i of this) {
+        if (i.id === id) {
+          return i;
+        }
       }
     }
   }
 
-
   /**
-   * Retrieve a nested feature by a string
+   * Retrieve a nested feature or string of indexes
    *
-   * @param accessor {string}
+   * @param accessor {string} - Accessor string delimited by `::`
+   * @param index=false {boolean} - Flag to return a string of indexes
    *
-   * @returns {Feature|false}
+   * @returns {Feature|number[]|false}
+   *
+   * @see Feature.fetch
    */
-  retrieve(accessor) {
+  retrieve(accessor, index=false) {
     try {
       let chain = accessor.split('::');
 
-      let feature = this.fetch(chain.shift())
-      while (chain.length) {
-        feature = feature.fetch(chain.shift())
-      }
+      if (index) {
+        let indices = [this.fetch(chain.shift(), true)];
+        let feature = this[indices[0]];
 
-      return feature
+        while (chain.length) {
+          const i = feature.fetch(chain.shift(), true);
+          feature = feature.features[i]
+          indices.push(i);
+        }
+
+        return indices;
+
+      } else {
+
+        let feature = this.fetch(chain.shift())
+        while (chain.length) {
+          feature = feature.fetch(chain.shift())
+        }
+
+        return feature
+      }
     }
     catch (err) {
       return false
     }
   }
+
+  // Miscellaneous Functions
 
   /**
    * Derive a flattened array of all features and sub-features who's `location` fall within range.
