@@ -2,8 +2,9 @@ import {Feature} from "./feature";
 
 /**
  * Array-like container for storing and interacting with `Feature` objects.
- * Find a specific `Feature` by `id`.
- * Modify index values when corresponding `Sequence` is manipulated.
+ * Since this will be directly related to React context state, this object and methods are immutable,
+ * however, `Feature` object and methods _are_ mutable.
+ *
  * Provides an interface to store manipulations in an 'undo tree'.
  */
 export class FeatureContainer extends Array {
@@ -33,14 +34,18 @@ export class FeatureContainer extends Array {
   add(feature, parent=undefined) {
     const updated = FeatureContainer.from(this);
 
+    // add nested `Feature`
     if (parent) {
 
       const _parent = updated.retrieve(parent);
       const accessor = _parent.accessor + '::' + feature.id;
       const feat = new Feature({...feature, accessor: accessor})
-      _parent.features.push(feat);
+      _parent.add(feat);
 
-    } else {
+    }
+
+    // add top-level feature
+    else {
 
       updated.push(new Feature({...feature, accessor: feature.id}))
 
@@ -63,7 +68,7 @@ export class FeatureContainer extends Array {
 
     if (chain.length > 1) {
       let nested = updated[chain.shift()];
-      while (chain.length > 0) {
+      while (chain.length > 1) {
         nested = nested.features[chain.shift()]
       }
 
@@ -76,12 +81,19 @@ export class FeatureContainer extends Array {
   }
 
   /**
-   * Edit a specific
+   * Edit specific `Feature`
+   *
    * @param accessor {string} - Accessor key delimited by `::`
    * @param kwargs {{}} - Key-value pairs of edits to make
+   *
+   * @returns {FeatureContainer} - Mutated copy of `this`
    */
   edit(accessor, kwargs) {
+    const updated = FeatureContainer.from(this);
+    const feature = updated.retrieve(accessor);
+    feature.edit(kwargs);
 
+    return updated;
   }
 
   // Retrieval Functions
@@ -113,7 +125,7 @@ export class FeatureContainer extends Array {
   }
 
   /**
-   * Retrieve a nested feature or string of indexes
+   * Retrieve feature object or string of indexes.
    *
    * @param accessor {string} - Accessor string delimited by `::`
    * @param index=false {boolean} - Flag to return a string of indexes
