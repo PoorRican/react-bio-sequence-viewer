@@ -197,7 +197,14 @@ export class FeatureContainer extends Array {
 }
 
 
-export function generateFeatures() {
+/**
+ * Generate hardcoded structure of `Feature` objects.
+ *
+ * This is used during testing purposes.
+ *
+ * @returns {Feature[]}
+ */
+export function generateFeatureStructure() {
   return [
     new Feature({
       id: 'testFeature1',

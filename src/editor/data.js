@@ -1,6 +1,6 @@
 import React, {createContext} from 'react'
 
-import {FeatureContainer, generateFeatures} from '../types/featureContainer'
+import {FeatureContainer, generateFeatureStructure} from '../types/featureContainer'
 import {Sequence, generateSequence} from "../types/sequence";
 
 const defaultData = {
@@ -9,7 +9,7 @@ const defaultData = {
   highlighted: null,
   cursor: null,
   sequence: Sequence.from(generateSequence(1000)),
-  hierarchy: FeatureContainer.from(generateFeatures()),
+  hierarchy: FeatureContainer.from(generateFeatureStructure()),
 
   // setters
   setMode: () => {},

@@ -93,7 +93,14 @@ export class Feature extends Object {
 }
 
 
-export function generateFeatures(count=15) {
+/**
+ * Generate a list of numbered, identical features.
+ *
+ * @param count {number} - Number of features to create
+ *
+ * @returns {Feature[]}
+ */
+export function generateMultipleFeatures(count=15) {
   let features = [];
 
   for (let i = 0; i < count; i++) {

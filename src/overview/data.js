@@ -4,7 +4,7 @@
 import React, {createContext} from 'react'
 
 import {getItem, isLinked} from "./helpers";
-import {generateFeatures} from "../types/feature";
+import {generateMultipleFeatures} from "../types/feature";
 import {MODES} from "./components/modeMenu";
 
 /**
@@ -12,7 +12,7 @@ import {MODES} from "./components/modeMenu";
  *
  * @type [Feature,]
  */
-export const features = generateFeatures(30);
+export const features = generateMultipleFeatures(30);
 /**
  * Context data structure to use
  *
