@@ -33,8 +33,25 @@ export class SegmentMenu extends React.Component {
     super(props, context);
 
     this.state = {
-      disabled: false,
+
+      /**
+       * index or range is fully within a feature
+       * @type Boolean
+       */
+      inFeature: false,
+
+      /**
+       * cursor points to `Feature`
+       * @type Boolean
+       */
+      isFeature: false,
+
+      /**
+       * MouseEvent occurred in `SequenceRow` (therefore on a `Monomer`)
+       * @type Boolean
+       */
       onSequence: false,
+
     }
   }
 
@@ -57,6 +74,63 @@ export class SegmentMenu extends React.Component {
   replace = (e) => {}
 
   /**
+   * Set `isFeature` flag when cursor points to a `Feature`
+   */
+  #checkIsFeature() {
+    this.setState({isFeature: true, inFeature: false});
+  }
+
+  /**
+   * Set `inFeature` flag when cursor points to an index or range.
+   *
+   * `inFeature = true` when a range does not overlap the endpoint of a feature
+   */
+  #checkInFeature() {
+    this.setState({isFeature: false})
+
+    // assume that cursor points to a range
+    if (typeof this.context.cursor !== 'number') {
+      const loc = this.context.cursor;
+      const features = this.context.hierarchy.within(loc[0], loc[1]);
+
+      const filtered = features.filter((feature) => {   // filter features whose endpoint intersect with range
+        return (
+          (feature.global_location[0] >= loc[0] && feature.global_location[0] <= loc[1]) ||
+          (feature.global_location[1] >= loc[0] && feature.global_location[1] <= loc[1])
+        )
+      })
+      this.setState({inFeature: !filtered.length})
+
+    } else
+
+      this.setState({inFeature: true})
+
+  }
+
+  /**
+   * Set `onSequence` flag when MouseEvent occurs outside of cursor or `SequenceRow`
+   *
+   * If clicked outside of cursor, cursor is pointed to whatever has been selected.
+   * Otherwise, if clicked outside `SequenceRow`, `onSequence` flag is set to true or false depending
+   * on if cursor is not null.
+   *
+   * @param index {number|null}
+   */
+  #checkOnSequence(index) {
+    // MouseEvent occurred outside of cursor
+    if ( (typeof this.context.cursor === 'number' && index !== this.context.cursor) || !withinBounds(index, this.context.cursor)) {
+      this.context.setCursor(index);
+      this.setState({onSequence: true})
+    }
+
+    // MouseEvent did not occur on `SequenceRow` and cursor is not set
+    else if (index === null && this.context.cursor === null) {
+      this.setState({onSequence: false});
+    } else
+      this.setState({onSequence: true});
+  }
+
+  /**
    * Interpret user intent for `Sequence` manipulation functions.
    *
    * Sets internal state before rendering menu, to disable menu elements
@@ -66,41 +140,46 @@ export class SegmentMenu extends React.Component {
    * @see Sequence
    */
   checkIntent = (e) => {
+
     const index = getIndex(e.target);
 
-    // MouseEvent occurred outside of cursor
-    if ( (typeof this.context.cursor === 'number' && index !== this.context.cursor) || !withinBounds(index, this.context.cursor)) {
-      this.context.setCursor(index);
-    }
+    if (index) {
+      (this.context.cursor && this.context.cursor['hierarchy']) ? this.#checkIsFeature() : this.#checkInFeature();
 
-    // MouseEvent did not occur on an index and cursor is not set
-    if (index === null || this.context.cursor === null) {
-      this.setState({onSequence: true});
-    } else
-      this.setState({onSequence: false});
+      this.#checkOnSequence(index);
+    }
+    else this.setState({inFeature: false, isFeature: false, onSequence: false})
 
   }
 
-
   render() {
     return (
-      <ContextMenu2
-        onContextMenu={this.checkIntent}
-        content={
-        <Menu>
-          <MenuItem2 text={'Create Feature'}
-                     disabled={this.state.onSequence} />
-          <MenuItem2 text={'Modify Selection'}
-                     disabled={this.state.onSequence}>
-            <MenuItem2 text={'Insert'}  onClick={this.insert} />
-            <MenuItem2 text={'Delete'}  onClick={this.delete} />
-            <MenuItem2 text={'Swap'}    onClick={this.swap} />
-            <MenuItem2 text={'Replace'} onClick={this.replace} />
-          </MenuItem2>
-        </Menu>
-      } >
-        {this.props.children}
-      </ContextMenu2>
+      <>
+        <ContextMenu2
+          onContextMenu={this.checkIntent}
+          content={
+            <Menu>
+
+              <MenuItem2 text={'Create Feature'}
+                         disabled={this.state.isFeature || !this.state.inFeature} />
+
+              <MenuItem2 text={'Modify Selection'}
+                         disabled={!this.state.onSequence}>
+
+                <MenuItem2 text={'Insert'}  onClick={this.insert} />
+                <MenuItem2 text={'Delete'}  onClick={this.delete} />
+                <MenuItem2 text={'Swap'}    onClick={this.swap} />
+                <MenuItem2 text={'Replace'} onClick={this.replace} />
+
+              </MenuItem2>
+
+            </Menu>
+          } >
+
+          {this.props.children}
+
+        </ContextMenu2>
+      </>
     )
   }
 }
