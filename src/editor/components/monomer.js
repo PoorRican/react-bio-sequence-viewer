@@ -1,15 +1,9 @@
 import React from 'react'
 import PropTypes from "prop-types";
 
-import {
-  colorize
-} from "../helpers";
+import {colorize, isPrimaryButton} from "../helpers";
 import {EditorContext} from "../data";
 
-
-function isPrimaryButton(event) {
-  return event.buttons === 1
-}
 
 function getIndex(event) {
   return Number(event.currentTarget.dataset.index)

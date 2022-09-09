@@ -34,7 +34,7 @@ export class EditorProvider extends React.Component {
       })
     }
     /**
-     * @param sequence {string[]}
+     * @param sequence {string[]|Sequence}
      */
     this.setSequence = (sequence) => {
       this.setState({
@@ -42,7 +42,7 @@ export class EditorProvider extends React.Component {
       })
     }
     /**
-     * @param id {string|null}
+     * @param id {string|null} - Accessor to retrieve `Feature`
      */
     this.setHighlighted = (id) => {
       const feature = this.state.hierarchy.retrieve(id);
@@ -57,7 +57,7 @@ export class EditorProvider extends React.Component {
      *
      * Used for manipulating `context.sequence` or interacting with `Feature`
      *
-     * @param value {string|[]|number|null}
+     * @param value {string|[number, number]|number|null} - Accessor, range or index
      */
     this.setCursor = (value) => {
 
@@ -73,7 +73,7 @@ export class EditorProvider extends React.Component {
 
       } else {
         /**
-         * Point cursor to index or range
+         * Point cursor to index, range, or null
          */
         this.setState({
           cursor: value

@@ -103,6 +103,7 @@ _Improvements to existing features/functionality_
 - `Navbar`:
   - Reduce height
   - Show info on bottom; reserve top bar for controls/functions/modes
+- Use custom scrollbar that does not change screen width during context menu open
 
 
 # Low-level Implementation

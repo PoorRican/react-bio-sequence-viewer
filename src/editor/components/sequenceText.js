@@ -4,10 +4,11 @@ import PropTypes from "prop-types";
 import {
   EditorContext,
 } from "../data";
-import {withinBounds} from "../helpers";
+import {isPrimaryButton, withinBounds} from "../helpers";
 import SequenceRowGroup from "./sequenceRowGroup";
 
 import './sequenceText.css'
+import {SegmentMenu} from "./segmentMenu";
 
 
 /**
@@ -69,7 +70,10 @@ export default class SequenceText extends React.PureComponent {
     }
   }
 
-  clearSelected = () => this.context.setCursor(null);
+  clearSelected = (e) => {
+    if (isPrimaryButton(e) && e.target.getAttribute('class') === 'wrapper')
+      this.context.setCursor(null);
+  }
 
   render() {
     return(
@@ -79,14 +83,18 @@ export default class SequenceText extends React.PureComponent {
            onMouseDownCapture={this.clearSelected}
       >
 
-        <div className={[
-          'sequence-text',
-          this.context.highlighted ? 'highlighted' : null,
-        ].join(' ')}>
+          <div className={[
+            'sequence-text',
+            this.context.highlighted ? 'highlighted' : null,
+          ].join(' ')}>
 
-          {this.sequenceGroups()}
+            <SegmentMenu>
 
-        </div>
+              {this.sequenceGroups()}
+
+            </SegmentMenu>
+
+          </div>
 
       </div>
     )

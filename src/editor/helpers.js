@@ -120,3 +120,14 @@ export function flattenHierarchy(hierarchy, start, end) {
 
   return contained
 }
+
+/**
+ * Determine if input has been called with Primary Mouse button
+ *
+ * @param event {MouseEvent}
+ *
+ * @returns {boolean}
+ */
+export function isPrimaryButton(event) {
+  return event.buttons === 1
+}
