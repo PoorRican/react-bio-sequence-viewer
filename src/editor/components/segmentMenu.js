@@ -55,6 +55,11 @@ export class SegmentMenu extends React.Component {
     }
   }
 
+  insert = () => {
+    this.context.setMode('insert');
+    this.props.editSequence();
+  }
+
   delete = () => {
     let range = this.context.cursor;
     if (range.hasOwnProperty('features')) {
@@ -67,7 +72,10 @@ export class SegmentMenu extends React.Component {
 
   swap = () => {}
 
-  replace = () => {}
+  replace = () => {
+    this.context.setMode('replace');
+    this.props.editSequence();
+  }
 
   /**
    * Set `isFeature` flag when cursor points to a `Feature`
@@ -140,7 +148,7 @@ export class SegmentMenu extends React.Component {
     const index = getIndex(e.target);
 
     if (index) {
-      (this.context.cursor && this.context.cursor['hierarchy']) ? this.#checkIsFeature() : this.#checkInFeature();
+      (this.context.cursor && this.context.cursor['location']) ? this.#checkIsFeature() : this.#checkInFeature();
 
       this.#checkOnSequence(index);
     }
@@ -167,7 +175,7 @@ export class SegmentMenu extends React.Component {
                          icon={`edit`} >
 
                 <MenuItem2 text={'Insert'}
-                           onClick={this.props.insertSequence}
+                           onClick={this.insert}
                            icon={`add-to-artifact`} />
                 <MenuItem2 text={'Delete'}
                            onClick={this.delete}
@@ -193,6 +201,12 @@ export class SegmentMenu extends React.Component {
 }
 
 SegmentMenu.propTypes = {
+  /**
+   * @see SequenceText.createFeature
+   */
   createFeature: PropTypes.func.isRequired,
-  insertSequence: PropTypes.func.isRequired,
+  /**
+   * @see SequenceText.editSequence
+   */
+  editSequence: PropTypes.func.isRequired,
 }

@@ -125,16 +125,11 @@ export default class SequenceText extends React.Component {
   /**
    * Callback to open `SequenceEditDialog`
    */
-  insertSequence = () => {
+  editSequence = () => {
     this.setState({sequenceEditDialog: true})
   }
 
   render() {
-    const funcHandlers = {
-      createFeature: this.createFeature,
-      insertSequence: this.insertSequence,
-    }
-
     return(
 
       <div className={'wrapper'}
@@ -147,7 +142,8 @@ export default class SequenceText extends React.Component {
             this.context.highlighted ? 'highlighted' : null,
           ].join(' ')}>
 
-            <SegmentMenu {...funcHandlers}>
+            <SegmentMenu createFeature={this.createFeature}
+                         editSequence={this.editSequence} >
 
               {this.sequenceGroups()}
 

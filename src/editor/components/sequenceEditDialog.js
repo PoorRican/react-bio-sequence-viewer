@@ -23,7 +23,40 @@ export class SequenceEditDialog extends React.Component {
   }
 
   /**
-   * Update `this.context.Sequence` based on user-input
+   * Get segment content pointed to by `cursor`
+   *
+   * @returns {String} - content pointed to by `cursor`
+   */
+  #getSegment() {
+    if (this.context.cursor) {
+      const [start, end] = this.context.cursor;
+      return this.context.sequence.slice(start, end+1).join('');
+    }
+    return '';
+  }
+
+  /**
+   * Lifecycle function that sets or clears `this.state.sequence` based on mode.
+   */
+  setSequence = () => {
+    this.#inInsertMode() ? this.setState({sequence: ''}) : this.setState({sequence: this.#getSegment()})
+  }
+
+  #inInsertMode() {
+    return this.context.mode === 'insert'
+  }
+
+  /**
+   * Validate that user-input is valid sequence.
+   *
+   * @returns {boolean}
+   */
+  #validateSequence() {
+    return true;
+  }
+
+  /**
+   * Update `this.context.sequence` based on user-input
    *
    * @see Sequence.insert
    */
@@ -31,8 +64,30 @@ export class SequenceEditDialog extends React.Component {
     const index = (typeof this.context.cursor === 'number') ? this.context.cursor : this.context.cursor[0];
     const updated = this.context.sequence.insert(this.state.sequence, index);
 
-    this.context.setSequence(updated);
-    this.props.onClose(false);
+    if (this.#validateSequence()) {
+      this.context.setSequence(updated);
+      this.props.onClose(false);
+    }
+  }
+
+  /**
+   * Replace segment in `this.context.sequence` based on user-input
+   *
+   * @see Sequence.swap
+   */
+  replaceSequence = () => {
+    const updated = this.context.sequence.swap(this.state.sequence, this.context.cursor);
+
+    if (this.#validateSequence()) {
+      // update cursor length
+      if (typeof this.context.cursor !== 'number' && !this.context.cursor['location']) {
+        const cursor = [this.context.cursor[0], this.state.sequence.length - 1 + this.context.cursor[0]];
+        this.context.setCursor(cursor);
+      }
+
+      this.context.setSequence(updated);
+      this.props.onClose(false)
+    }
   }
 
   /**
@@ -49,8 +104,10 @@ export class SequenceEditDialog extends React.Component {
 
   render() {
     return(
-      <Dialog isOpen={this.props.isOpen} title={"Insert Sequence"}
+      <Dialog isOpen={this.props.isOpen}
+              title={(this.#inInsertMode() ? "Insert" : "Replace") +" Sequence"}
               onClose={this.props.onClose}
+              onOpening={this.setSequence}
               icon={`add-to-artifact`} >
 
         <div className={Classes.DIALOG_BODY}>
@@ -61,8 +118,8 @@ export class SequenceEditDialog extends React.Component {
           <div className={Classes.DIALOG_FOOTER_ACTIONS}>
             <Button onClick={this.cancel}
                     text={'Cancel'} />
-            <Button onClick={this.insertSequence}
-                    text={'Insert'}
+            <Button onClick={this.#inInsertMode() ? this.insertSequence : this.replaceSequence}
+                    text={this.#inInsertMode() ? 'Insert' : 'Replace'}
                     intent={"primary"} />
           </div>
         </div>

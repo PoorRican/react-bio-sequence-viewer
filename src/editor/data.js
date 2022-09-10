@@ -26,7 +26,17 @@ export class EditorProvider extends React.Component {
     super(props);
 
     this.state = {
-      ...defaultData,
+      mode: defaultData.mode,
+      highlighted: defaultData.highlighted,
+      cursor: defaultData.cursor,
+      /**
+       * @type {Sequence}
+       */
+      sequence: defaultData.sequence,
+      /**
+       * @type {FeatureContainer}
+       */
+      hierarchy: defaultData.hierarchy,
       setMode: this.setMode,
       setSequence: this.setSequence,
       setHighlighted: this.setHighlighted,

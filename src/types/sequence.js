@@ -10,6 +10,8 @@ export class Sequence extends Array {
    * Using a factory-function eliminates errors regarding `Symbol.species` and non-callable iterators.
    *
    * @param sequence {string|string[]}
+   *
+   * @returns {Sequence}
    */
   static from(sequence) {
     return new Sequence(...sequence);
@@ -67,6 +69,8 @@ export class Sequence extends Array {
    * @param index {number} - Index to perform replacement
    *
    * @returns {Sequence} - Mutated copy of `this`
+   *
+   * @deprecated This is a pointless feature.
    */
   replace(value, index) {
     if (value.length !== 1) Error('incorrect length of value');
