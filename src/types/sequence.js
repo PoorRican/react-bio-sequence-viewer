@@ -72,7 +72,7 @@ export class Sequence extends Array {
    *
    * @deprecated This is a pointless feature.
    */
-  replace(value, index) {
+  createSNP(value, index) {
     if (value.length !== 1) Error('incorrect length of value');
     let updated = new Sequence(...this);
     updated.splice(index, 1, value);

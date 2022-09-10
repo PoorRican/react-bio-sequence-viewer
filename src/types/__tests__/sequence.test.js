@@ -30,9 +30,9 @@ describe('Manipulation functions', () => {
     expect(updated).toEqual(Sequence.from('ABEFG'));
   });
 
-  test('replace index', () => {
+  test('create SNP at index', () => {
     let seq = Sequence.from(content);
-    const updated = seq.replace('X', 2);
+    const updated = seq.createSNP('X', 2);
     expect(updated).toEqual(Sequence.from('ABXDEFG'));
   });
 
