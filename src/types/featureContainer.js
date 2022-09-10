@@ -206,6 +206,33 @@ export class FeatureContainer extends Array {
     return contained;
   }
 
+  /**
+   * Find the deepest feature within a given range.
+   *
+   * This is used for finding a parent when creating a new feature.
+   *
+   * @param start {number}
+   * @param end {number}
+   *
+   * @returns {string|null} - Accessor key of the deepest feature; `null` if there is no feature in given range.
+   */
+  deepest(start, end) {
+    const features = this.within(start, end);
+    let accessor = null;
+
+    if (features !== []) {
+      let deepest = -1;
+      features.forEach((feature) => {
+        if (feature.depth > deepest) {
+          deepest = feature.depth;
+          accessor = feature.accessor;
+        }
+      })
+    }
+
+    return accessor;
+  }
+
 }
 
 

@@ -9,6 +9,7 @@ import SequenceRowGroup from "./sequenceRowGroup";
 
 import './sequenceText.css'
 import {SegmentMenu} from "./segmentMenu";
+import {CreateFeatureDialog} from "./createFeatureDialog";
 
 
 /**
@@ -19,8 +20,20 @@ import {SegmentMenu} from "./segmentMenu";
  *
  * @constructor
  */
-export default class SequenceText extends React.PureComponent {
+export default class SequenceText extends React.Component {
   static contextType = EditorContext;
+
+  constructor(props, context) {
+    super(props, context);
+
+    this.state = {
+      /**
+       * Control `CreateFeatureDialog`
+       * @type {Boolean}
+       */
+      createDialogOpen: false,
+    };
+  }
 
   /**
    * Render styling helper for determining if *any* indices within given range is highlighted.
@@ -70,12 +83,34 @@ export default class SequenceText extends React.PureComponent {
     }
   }
 
+  /**
+   * Nullify `this.context.cursor` when clicked outside of main text area.
+   * @param e {MouseEvent}
+   */
   clearSelected = (e) => {
     if (isPrimaryButton(e) && e.target.getAttribute('class') === 'wrapper')
       this.context.setCursor(null);
   }
 
+  // Dialog Methods
+
+  /**
+   * Close dialog and nullify cursor.
+   */
+  onDialogClose = () => {
+    this.setState({createDialogOpen: false});
+    this.context.setCursor(null)
+  }
+
+  createFeature = () => {
+    this.setState({createDialogOpen: true})
+  }
+
   render() {
+    const funcHandlers = {
+      createFeature: this.createFeature,
+    }
+
     return(
 
       <div className={'wrapper'}
@@ -88,11 +123,14 @@ export default class SequenceText extends React.PureComponent {
             this.context.highlighted ? 'highlighted' : null,
           ].join(' ')}>
 
-            <SegmentMenu>
+            <SegmentMenu {...funcHandlers}>
 
               {this.sequenceGroups()}
 
             </SegmentMenu>
+
+            <CreateFeatureDialog isOpen={this.state.createDialogOpen}
+                                 onClose={this.onDialogClose} />
 
           </div>
 

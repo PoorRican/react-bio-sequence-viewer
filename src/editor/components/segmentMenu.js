@@ -1,6 +1,7 @@
 import React from 'react'
 import {Menu} from "@blueprintjs/core";
 import {ContextMenu2, MenuItem2} from "@blueprintjs/popover2";
+import PropTypes from "prop-types";
 
 import {EditorContext} from '../data'
 import {withinBounds} from "../helpers";
@@ -51,15 +52,12 @@ export class SegmentMenu extends React.Component {
        * @type Boolean
        */
       onSequence: false,
-
     }
   }
 
-  insert = (e) => {
+  insert = () => {}
 
-  }
-
-  delete = (e) => {
+  delete = () => {
     let range = this.context.cursor;
     if (range.hasOwnProperty('features')) {
       range = range.location;
@@ -69,9 +67,9 @@ export class SegmentMenu extends React.Component {
     this.context.setCursor(null);
   }
 
-  swap = (e) => {}
+  swap = () => {}
 
-  replace = (e) => {}
+  replace = () => {}
 
   /**
    * Set `isFeature` flag when cursor points to a `Feature`
@@ -161,7 +159,10 @@ export class SegmentMenu extends React.Component {
             <Menu>
 
               <MenuItem2 text={'Create Feature'}
-                         disabled={this.state.isFeature || !this.state.inFeature} />
+                         disabled={this.state.isFeature || !this.state.inFeature}
+                         onClick={this.props.createFeature}
+                         icon={`add-clip`}
+              />
 
               <MenuItem2 text={'Modify Selection'}
                          disabled={!this.state.onSequence}>
@@ -182,4 +183,8 @@ export class SegmentMenu extends React.Component {
       </>
     )
   }
+}
+
+SegmentMenu.propTypes = {
+  createFeature: PropTypes.func.isRequired,
 }

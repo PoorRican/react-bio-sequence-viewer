@@ -16,6 +16,7 @@ const defaultData = {
   setSequence: () => {},
   setHighlighted: () => {},
   setCursor: () => {},
+  setHierarchy: () => {},
 }
 
 export const EditorContext = createContext(defaultData);
@@ -82,13 +83,25 @@ export class EditorProvider extends React.Component {
       }
     }
 
+
     this.state = {
       ...defaultData,
       setMode: this.setMode,
       setSequence: this.setSequence,
       setHighlighted: this.setHighlighted,
       setCursor: this.setCursor,
+      setHierarchy: this.setHierarchy,
     }
+  }
+
+  /**
+   * Updates `hierarchy` value
+   * @param value {FeatureContainer}
+   */
+  setHierarchy = (value) => {
+    this.setState({
+      hierarchy: value
+    })
   }
 
   render() {
