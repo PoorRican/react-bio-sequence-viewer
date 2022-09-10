@@ -55,8 +55,6 @@ export class SegmentMenu extends React.Component {
     }
   }
 
-  insert = () => {}
-
   delete = () => {
     let range = this.context.cursor;
     if (range.hasOwnProperty('features')) {
@@ -79,9 +77,9 @@ export class SegmentMenu extends React.Component {
   }
 
   /**
-   * Set `inFeature` flag when cursor points to an index or range.
+   * Set `inFeature` flag when a range does not overlap any `Feature` endpoints.
    *
-   * `inFeature = true` when a range does not overlap the endpoint of a feature
+   * This only occurs when `cursor` points to an index or a range, _NOT_ a `Feature`.
    */
   #checkInFeature() {
     this.setState({isFeature: false})
@@ -169,11 +167,11 @@ export class SegmentMenu extends React.Component {
                          icon={`edit`} >
 
                 <MenuItem2 text={'Insert'}
-                           onClick={this.insert}
-                           icon={`add`} />
+                           onClick={this.props.insertSequence}
+                           icon={`add-to-artifact`} />
                 <MenuItem2 text={'Delete'}
                            onClick={this.delete}
-                           icon={`delete`} />
+                           icon={`eraser`} />
                 <MenuItem2 text={'Swap'}
                            onClick={this.swap}
                            icon={`refresh`} />
@@ -196,4 +194,5 @@ export class SegmentMenu extends React.Component {
 
 SegmentMenu.propTypes = {
   createFeature: PropTypes.func.isRequired,
+  insertSequence: PropTypes.func.isRequired,
 }

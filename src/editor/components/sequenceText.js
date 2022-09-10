@@ -10,6 +10,7 @@ import SequenceRowGroup from "./sequenceRowGroup";
 import './sequenceText.css'
 import {SegmentMenu} from "./segmentMenu";
 import {CreateFeatureDialog} from "./createFeatureDialog";
+import {SequenceEditDialog} from "./sequenceEditDialog";
 
 
 /**
@@ -32,6 +33,11 @@ export default class SequenceText extends React.Component {
        * @type {Boolean}
        */
       createDialogOpen: false,
+      /**
+       * Control `SequenceEditDialog`
+       * @type {Boolean}
+       */
+      sequenceEditDialog: false,
     };
   }
 
@@ -95,20 +101,38 @@ export default class SequenceText extends React.Component {
   // Dialog Methods
 
   /**
-   * Close dialog and nullify cursor.
+   * Close all dialogs and nullify cursor.
+   *
+   * @param clear=true {Boolean} - Flag to clear cursor
    */
-  onDialogClose = () => {
-    this.setState({createDialogOpen: false});
-    this.context.setCursor(null)
+  onDialogClose = (clear=true) => {
+    this.setState({
+      createDialogOpen: false,
+      sequenceEditDialog: false,
+    });
+    if (clear) {
+      this.context.setCursor(null)
+    }
   }
 
+  /**
+   * Callback to open `CreateFeatureDialog`
+   */
   createFeature = () => {
     this.setState({createDialogOpen: true})
+  }
+
+  /**
+   * Callback to open `SequenceEditDialog`
+   */
+  insertSequence = () => {
+    this.setState({sequenceEditDialog: true})
   }
 
   render() {
     const funcHandlers = {
       createFeature: this.createFeature,
+      insertSequence: this.insertSequence,
     }
 
     return(
@@ -131,6 +155,8 @@ export default class SequenceText extends React.Component {
 
             <CreateFeatureDialog isOpen={this.state.createDialogOpen}
                                  onClose={this.onDialogClose} />
+            <SequenceEditDialog isOpen={this.state.sequenceEditDialog}
+                                onClose={this.onDialogClose} />
 
           </div>
 
