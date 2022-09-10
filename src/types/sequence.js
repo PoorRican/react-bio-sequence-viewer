@@ -54,7 +54,7 @@ export class Sequence extends Array {
    *
    * @returns {Sequence} - Mutated copy of `this`
    */
-  swap(value, range) {
+  replaceSegment(value, range) {
     let updated = Sequence.from(this);
     updated.splice(range[0], range[1] - range[0], ...value);
     return updated;

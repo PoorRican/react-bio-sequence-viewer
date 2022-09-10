@@ -73,10 +73,10 @@ export class SequenceEditDialog extends React.Component {
   /**
    * Replace segment in `this.context.sequence` based on user-input
    *
-   * @see Sequence.swap
+   * @see Sequence.replaceSegment
    */
-  replaceSequence = () => {
-    const updated = this.context.sequence.swap(this.state.sequence, this.context.cursor);
+  replaceSegment = () => {
+    const updated = this.context.sequence.replaceSegment(this.state.sequence, this.context.cursor);
 
     if (this.#validateSequence()) {
       // update cursor length
@@ -118,7 +118,7 @@ export class SequenceEditDialog extends React.Component {
           <div className={Classes.DIALOG_FOOTER_ACTIONS}>
             <Button onClick={this.cancel}
                     text={'Cancel'} />
-            <Button onClick={this.#inInsertMode() ? this.insertSequence : this.replaceSequence}
+            <Button onClick={this.#inInsertMode() ? this.insertSequence : this.replaceSegment}
                     text={this.#inInsertMode() ? 'Insert' : 'Replace'}
                     intent={"primary"} />
           </div>

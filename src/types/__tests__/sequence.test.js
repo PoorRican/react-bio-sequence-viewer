@@ -38,7 +38,7 @@ describe('Manipulation functions', () => {
 
   test('swap segment', () => {
     let seq = Sequence.from(content);
-    const updated = seq.swap('XYZ', [2,4]);
+    const updated = seq.replaceSegment('XYZ', [2,4]);
     expect(updated).toEqual(Sequence.from('ABXYZEFG'));
   });
 
