@@ -165,12 +165,21 @@ export class SegmentMenu extends React.Component {
               />
 
               <MenuItem2 text={'Modify Selection'}
-                         disabled={!this.state.onSequence}>
+                         disabled={!this.state.onSequence}
+                         icon={`edit`} >
 
-                <MenuItem2 text={'Insert'}  onClick={this.insert} />
-                <MenuItem2 text={'Delete'}  onClick={this.delete} />
-                <MenuItem2 text={'Swap'}    onClick={this.swap} />
-                <MenuItem2 text={'Replace'} onClick={this.replace} />
+                <MenuItem2 text={'Insert'}
+                           onClick={this.insert}
+                           icon={`add`} />
+                <MenuItem2 text={'Delete'}
+                           onClick={this.delete}
+                           icon={`delete`} />
+                <MenuItem2 text={'Swap'}
+                           onClick={this.swap}
+                           icon={`refresh`} />
+                <MenuItem2 text={'Replace'}
+                           onClick={this.replace}
+                           icon={`manually-entered-data`} />
 
               </MenuItem2>
 
