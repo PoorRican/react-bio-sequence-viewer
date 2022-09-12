@@ -2,7 +2,6 @@ import React from 'react'
 import {
   Classes,
   Dialog,
-  IconName,
   Button,
 } from '@blueprintjs/core'
 import PropTypes from "prop-types";
@@ -65,7 +64,7 @@ FeatureDialog.propTypes = {
    */
   data: PropTypes.object,
   title: PropTypes.string,
-  icon: PropTypes.objectOf(IconName),
+  icon: PropTypes.string,
   /**
    * Array of footer contents
    */
@@ -73,6 +72,6 @@ FeatureDialog.propTypes = {
     onClick: PropTypes.func.isRequired,
     text: PropTypes.string.isRequired,
     intent: PropTypes.string,
-    icon: PropTypes.objectOf(IconName),
+    icon: PropTypes.string,
   }))
 }
