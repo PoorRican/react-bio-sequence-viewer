@@ -102,8 +102,8 @@ export class SegmentMenu extends React.Component {
 
       const filtered = features.filter((feature) => {   // filter features whose endpoint intersect with range
         return (
-          (feature.global_location[0] >= loc[0] && feature.global_location[0] <= loc[1]) ||
-          (feature.global_location[1] >= loc[0] && feature.global_location[1] <= loc[1])
+          (feature.global_location[0] > loc[0] && feature.global_location[0] < loc[1]) ||
+          (feature.global_location[1] > loc[0] && feature.global_location[1] < loc[1])
         )
       })
       this.setState({inFeature: !filtered.length})
