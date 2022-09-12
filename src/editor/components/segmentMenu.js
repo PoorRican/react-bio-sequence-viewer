@@ -137,8 +137,11 @@ export class SegmentMenu extends React.Component {
    * @param index {number|null}
    */
   #checkOnSequence(index) {
-    // MouseEvent occurred outside of cursor
-    if ( (typeof this.context.cursor === 'number' && index !== this.context.cursor) || !withinBounds(index, this.context.cursor)) {
+    // Updated cursor if MouseEvent occurred outside of cursor
+    if ( (typeof this.context.cursor === 'number' && index !== this.context.cursor) ||
+      (this.context.cursor['location'] === undefined && !withinBounds(index, this.context.cursor)) ||
+      (this.context.cursor['location'] && !withinBounds(index, this.context.cursor.location))) {
+
       this.context.setCursor(index);
       this.setState({onSequence: true})
     }
@@ -172,7 +175,9 @@ export class SegmentMenu extends React.Component {
 
       this.#checkOnSequence(index);
     }
-    else this.setState({inFeature: false, isFeature: false, onSequence: false})
+
+    else
+      this.setState({inFeature: false, isFeature: false, onSequence: false})
 
   }
 
