@@ -80,7 +80,7 @@ export default class SequenceRow extends React.PureComponent {
    * @see handleRangeStyling
  */
   isSelected(index) {
-    if (this.context.cursor) {
+    if (this.context.cursor !== null) {
       if (typeof this.context.cursor === 'number') {
         return this.handleRangeStyling(index, [this.context.cursor, this.context.cursor]);
       } else {

@@ -110,7 +110,7 @@ export default class HeaderNavBar extends React.PureComponent {
    * @returns {JSX.Element}
    */
   cursor_info() {
-    if (this.context.cursor) {
+    if (this.context.cursor !== null) {
       if (this.context.cursor.hasOwnProperty('id')) {     // is instance of `Feature`
         return <CursorTag id={this.context.cursor.id} location={this.context.cursor.location} />
       } else {
