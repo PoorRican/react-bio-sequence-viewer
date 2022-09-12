@@ -34,13 +34,13 @@ export class Sequence extends Array {
   /**
    * Delete given range
    *
-   * @param range {[number, number]} - *Inclusive* start index; *exclusive* end index
+   * @param range {[number, number]} - *Inclusive* start index; *inclusive* end index
    *
    * @returns {Sequence} - Mutated copy of `this`
    */
   delete(range) {
     let updated = Sequence.from(this);
-    updated.splice(range[0], (range[1] - range[0]));
+    updated.splice(range[0], (range[1] - range[0] + 1));
     return updated;
   }
 
