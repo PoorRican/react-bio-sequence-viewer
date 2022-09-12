@@ -37,18 +37,27 @@ export class SegmentMenu extends React.Component {
 
       /**
        * index or range is fully within a feature
+       *
+       * Disables 'Create Feature' menu option.
+       *
        * @type Boolean
        */
       inFeature: false,
 
       /**
-       * cursor points to `Feature`
+       * cursor points to `Feature`.
+       *
+       * Disables 'Create Feature' menu option.
+       *
        * @type Boolean
        */
       isFeature: false,
 
       /**
-       * MouseEvent occurred in `SequenceRow` (therefore on a `Monomer`)
+       * MouseEvent occurred in `SequenceRow` (therefore on a `Monomer`).
+       *
+       * Disables both 'Create Feature` and `Modify Sequence' options.
+       *
        * @type Boolean
        */
       onSequence: false,
@@ -88,9 +97,12 @@ export class SegmentMenu extends React.Component {
   }
 
   /**
-   * Set `inFeature` flag when a range does not overlap any `Feature` endpoints.
+   * Set `inFeature` flag if `context.cursor` does not overlap any `Feature` endpoints.
    *
-   * This only occurs when `cursor` points to an index or a range, _NOT_ a `Feature`.
+   * @description This only occurs when `cursor` points to an index or a range, _NOT_ a `Feature`
+   * and is used to disable the `Create Feature` menu option.
+   *
+   * @example If `context.cursor` points to (25,30) and there is a `Feature` that example extends from (20,26), `state.inFeature = false`.
    */
   #checkInFeature() {
     this.setState({isFeature: false})
@@ -106,6 +118,7 @@ export class SegmentMenu extends React.Component {
           (feature.global_location[1] > loc[0] && feature.global_location[1] < loc[1])
         )
       })
+
       this.setState({inFeature: !filtered.length})
 
     } else
