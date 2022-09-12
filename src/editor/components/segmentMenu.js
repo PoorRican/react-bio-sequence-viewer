@@ -62,10 +62,13 @@ export class SegmentMenu extends React.Component {
 
   delete = () => {
     let range = this.context.cursor;
-    if (range.hasOwnProperty('features')) {
+
+    if (range.hasOwnProperty('features'))
       range = range.location;
-    }
-    // TODO: change selected feature range
+    else if (typeof this.context.cursor === 'number')
+      range = [this.context.cursor, this.context.cursor]
+
+    // TODO: `AnnotatedFeature` call to update feature lengths
     this.context.setSequence(this.context.sequence.delete(range));
     this.context.setCursor(null);
   }
