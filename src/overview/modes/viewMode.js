@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {FeatureDialog} from "../components/featureDialog";
+import {FeatureDialog} from "../../components/featureDialog";
 import {FeatureContext} from '../data'
 import MainItems from "../components/mainItems";
 
