@@ -1,16 +1,19 @@
 import React from 'react'
-import {
-  Dialog,
-  Classes,
-  Button,
-} from "@blueprintjs/core";
 import PropTypes from "prop-types";
 
+import {FeatureForm} from "../../components/featureForm";
+import {FeatureDialog} from "../../components/featureDialog";
 import {Feature} from "../../types/feature"
 import {EditorContext} from "../data";
 
+
 /**
- * Handle user input for the creation of a feature based on selected sequence
+ * Composes `FeatureDialog` and `FeatureForm` to handle user input and create `Feature` using `cursor` position.
+ *
+ * TODO: create an intermediate HOC `FeatureDialogForm` that reduces boilerplate for editing functionality.
+ *
+ * @see FeatureForm
+ * @see FeatureDialog
  */
 export class CreateFeatureDialog extends React.Component {
   static contextType = EditorContext
@@ -25,7 +28,7 @@ export class CreateFeatureDialog extends React.Component {
 
   /**
    * Incorporate `context.cursor` and `this.state` to add `Feature` to `context.hierarchy`
-   * TODO: this is where a mediator will be used.
+   * TODO: this is where a mediator will be implemented.
    */
   addFeature = () => {
     const data = {
@@ -49,32 +52,35 @@ export class CreateFeatureDialog extends React.Component {
   }
 
   update = (e) => {
-    // TODO: store property value as HTML dataset attribute
-    this.setState({id: e.target.value})
+    let update = {};
+    update[e.currentTarget.dataset.attribute] = e.target.value;
+
+    this.setState(update)
   }
 
   render() {
+    const footer = [
+      {
+        onClick: this.cancel,
+        text: 'Cancel'
+      },
+      {
+        onClick: this.addFeature,
+        text: 'Create',
+        intent: "primary"
+      }
+    ]
     return(
-      <Dialog isOpen={this.props.isOpen} title={"Create Feature / Annotate Sequence"}
-              onClose={this.props.onClose}
-              icon={`add-clip`}
-      >
+      <FeatureDialog isOpen={this.props.isOpen}
+                     title={"Create Feature / Annotate Sequence"}
+                     onClose={this.props.onClose}
+                     icon={`add-clip`}
+                     footer={footer} >
 
-        <div className={Classes.DIALOG_BODY}>
-          <input value={this.state.id} onChange={this.update}/>
-        </div>
+        <FeatureForm update={this.update}
+                     id={this.state.id} />
 
-        <div className={Classes.DIALOG_FOOTER}>
-          <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button onClick={this.cancel}
-                    text={'Cancel'} />
-            <Button onClick={this.addFeature}
-                    text={'Create'}
-                    intent={"primary"} />
-          </div>
-        </div>
-
-      </Dialog>
+      </FeatureDialog>
     )
   }
 }
