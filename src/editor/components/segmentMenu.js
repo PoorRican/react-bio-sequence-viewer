@@ -83,7 +83,7 @@ export class SegmentMenu extends React.Component {
   /**
    * Set `isFeature` flag when cursor points to a `Feature`
    */
-  #checkIsFeature() {
+  #setIsFeature() {
     this.setState({isFeature: true, inFeature: false});
   }
 
@@ -151,7 +151,11 @@ export class SegmentMenu extends React.Component {
     const index = getIndex(e.target);
 
     if (index) {
-      (this.context.cursor && this.context.cursor['location']) ? this.#checkIsFeature() : this.#checkInFeature();
+
+      if (this.context.cursor === null)
+        this.context.setCursor(index);
+      else
+        this.context.cursor['location'] ? this.#setIsFeature() : this.#checkInFeature();
 
       this.#checkOnSequence(index);
     }
