@@ -27,7 +27,7 @@ describe('Manipulation functions', () => {
   test('delete range', () => {
     let seq = Sequence.from(content);
     const updated = seq.delete([2,4]);
-    expect(updated).toEqual(Sequence.from('ABEFG'));
+    expect(updated).toEqual(Sequence.from('ABFG'));
   });
 
   test('create SNP at index', () => {
