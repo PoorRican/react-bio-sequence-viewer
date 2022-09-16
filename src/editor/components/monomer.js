@@ -1,4 +1,4 @@
-import React from 'react'
+import {PureComponent} from 'react'
 import PropTypes from "prop-types";
 
 import {colorize, isPrimaryButton} from "../helpers";
@@ -17,7 +17,7 @@ function getIndex(event) {
  * @param props.color {string} - Render color
  * @param props.highlighted {boolean} - Toggles styling for when component is highlighted
  */
-export class Monomer extends React.PureComponent {
+export class Monomer extends PureComponent {
   static contextType = EditorContext;
   static defaultProps = {
     color: '',

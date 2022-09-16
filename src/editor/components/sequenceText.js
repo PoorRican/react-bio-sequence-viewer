@@ -11,6 +11,7 @@ import './sequenceText.css'
 import {SegmentMenu} from "./segmentMenu";
 import {CreateFeatureDialog} from "./createFeatureDialog";
 import {SequenceEditDialog} from "./sequenceEditDialog";
+import {EditFeatureDialog} from "./editFeatureDialog";
 
 
 /**
@@ -33,6 +34,11 @@ export default class SequenceText extends React.Component {
        * @type {Boolean}
        */
       createDialogOpen: false,
+      /**
+       * Control `EditFeatureDialog`
+       * @type {Boolean}
+       */
+      editDialogOpen: false,
       /**
        * Control `SequenceEditDialog`
        * @type {Boolean}
@@ -109,6 +115,7 @@ export default class SequenceText extends React.Component {
     this.setState({
       createDialogOpen: false,
       sequenceEditDialog: false,
+      editDialogOpen: false,
     });
     if (clear) {
       this.context.setCursor(null)
@@ -120,6 +127,13 @@ export default class SequenceText extends React.Component {
    */
   createFeature = () => {
     this.setState({createDialogOpen: true})
+  }
+
+  /**
+   * Call back to open `EditFeatureDialog`
+   */
+  editFeature = () => {
+    this.setState({editDialogOpen: true})
   }
 
   /**
@@ -142,7 +156,7 @@ export default class SequenceText extends React.Component {
             this.context.highlighted ? 'highlighted' : null,
           ].join(' ')}>
 
-            <SegmentMenu createFeature={this.createFeature}
+            <SegmentMenu createFeature={this.createFeature} editFeature={this.editFeature}
                          editSequence={this.editSequence} >
 
               {this.sequenceGroups()}
@@ -151,6 +165,8 @@ export default class SequenceText extends React.Component {
 
             <CreateFeatureDialog isOpen={this.state.createDialogOpen}
                                  onClose={this.onDialogClose} />
+            <EditFeatureDialog isOpen={this.state.editDialogOpen}
+                               onClose={this.onDialogClose} />
             <SequenceEditDialog isOpen={this.state.sequenceEditDialog}
                                 onClose={this.onDialogClose} />
 

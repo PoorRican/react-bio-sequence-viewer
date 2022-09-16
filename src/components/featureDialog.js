@@ -27,6 +27,7 @@ export class FeatureDialog extends React.Component {
               onClose={this.props.onClose}
               title={this.props.title}
               icon={this.props.icon}
+              onOpening={this.props.initialize}
               lazy={true}
       >
         {(this.props.children) ?
@@ -73,5 +74,11 @@ FeatureDialog.propTypes = {
     text: PropTypes.string.isRequired,
     intent: PropTypes.string,
     icon: PropTypes.string,
-  }))
+  })),
+  /**
+   * Callback to run when opening dialog.
+   *
+   * @see Dialog.onOpening
+   */
+  onOpening: PropTypes.func,
 }

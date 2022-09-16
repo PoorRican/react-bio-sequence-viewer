@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 
 import {EditorContext} from '../data'
 import {withinBounds} from "../helpers";
+import {isFeatureLine} from "../../components/helpers";
 
 
 /**
@@ -156,7 +157,9 @@ export class SegmentMenu extends React.Component {
   /**
    * Interpret user intent for `Sequence` manipulation functions.
    *
-   * Sets internal state before rendering menu, to disable menu elements
+   * Sets `cursor` and internal state before rendering menu.
+   * Value of `cursor` gets changed when `MouseEvent` has fired on a `FeatureLine`,
+   * or when `Monomer` outside `cursor` range.
    *
    * @param e {MouseEvent}
    *
@@ -176,6 +179,13 @@ export class SegmentMenu extends React.Component {
       this.#checkOnSequence(index);
     }
 
+    else if (isFeatureLine(e)) {
+      this.context.setCursor(e.target.id);
+
+      this.#setIsFeature();
+      this.setState({onSequence: false});
+    }
+
     else
       this.setState({inFeature: false, isFeature: false, onSequence: false})
 
@@ -192,8 +202,12 @@ export class SegmentMenu extends React.Component {
               <MenuItem2 text={'Create Feature'}
                          disabled={this.state.isFeature || !this.state.inFeature}
                          onClick={this.props.createFeature}
-                         icon={`add-clip`}
-              />
+                         icon={`add-clip`} />
+
+              <MenuItem2 text={'Edit Feature'}
+                         disabled={!this.state.isFeature || this.state.onSequence}
+                         onClick={this.props.editFeature}
+                         icon={'annotation'} />
 
               <MenuItem2 text={'Modify Selection'}
                          disabled={!this.state.onSequence}
@@ -230,6 +244,10 @@ SegmentMenu.propTypes = {
    * @see SequenceText.createFeature
    */
   createFeature: PropTypes.func.isRequired,
+  /**
+   * @see SequenceText.editFeature
+   */
+  editFeature: PropTypes.func.isRequired,
   /**
    * @see SequenceText.editSequence
    */
