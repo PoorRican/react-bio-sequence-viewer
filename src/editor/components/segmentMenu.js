@@ -65,6 +65,8 @@ export class SegmentMenu extends React.Component {
     }
   }
 
+  // Sequence Methods
+
   insert = () => {
     this.context.setMode('insert');
     this.props.editSequence();
@@ -88,6 +90,13 @@ export class SegmentMenu extends React.Component {
   replace = () => {
     this.context.setMode('replace');
     this.props.editSequence();
+  }
+
+  // Feature Methods
+
+  removeFeature = () => {
+    const updated = this.context.hierarchy.delete(this.context.cursor.accessor, true);
+    this.context.setHierarchy(updated);
   }
 
   /**
@@ -209,6 +218,11 @@ export class SegmentMenu extends React.Component {
                          onClick={this.props.editFeature}
                          icon={'annotation'} />
 
+              <MenuItem2 text={'Remove Feature/Annotation'}
+                         disabled={!this.state.isFeature || this.state.onSequence}
+                         onClick={this.removeFeature}
+                         icon={'remove'} />
+
               <MenuItem2 text={'Modify Selection'}
                          disabled={!this.state.onSequence}
                          icon={`edit`} >
@@ -241,14 +255,18 @@ export class SegmentMenu extends React.Component {
 
 SegmentMenu.propTypes = {
   /**
+   * Opens `CreateFeatureDialog`
    * @see SequenceText.createFeature
    */
   createFeature: PropTypes.func.isRequired,
   /**
+   * Opens `EditFeatureDialog`
    * @see SequenceText.editFeature
    */
   editFeature: PropTypes.func.isRequired,
+
   /**
+   * Opens `EditSequenceDialog`
    * @see SequenceText.editSequence
    */
   editSequence: PropTypes.func.isRequired,
