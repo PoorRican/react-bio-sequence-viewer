@@ -57,6 +57,13 @@ export class Feature extends Object {
      */
     this.features = data.features ? data.features : [];
     this.global_location = data.global_location;
+    /**
+     * Key used to access while in `FeatureContainer`
+     *
+     * @type {string}
+     *
+     * @see FeatureContainer.retrieve
+     */
     this.accessor = data.accessor
   }
 
@@ -75,16 +82,29 @@ export class Feature extends Object {
    * @see Feature.edit
    */
   updateAccessor(value, parent=false) {
-    const index = this.accessor.lastIndexOf('::')
+    const index = this.accessor.lastIndexOf('::');
 
     if (parent) {
-      const end = this.accessor.slice(index);
-      this.accessor = value + end;
+      const end = this.accessor.slice(index + 2);
+      /**
+       * Do not add delimiter if `value` is empty string
+       * @type {string}
+       */
+      const delimiter = value === '' ? '' : '::'
+
+      this.accessor = value + delimiter + end;
     } else if (index > 0) {
       const parent = this.accessor.slice(0, index);
+
       this.accessor = parent + '::' + value;
     } else {
       this.accessor = value;
+    }
+
+    if (this.features) {
+      this.features.forEach((feature) => {
+        feature.updateAccessor(this.accessor + value, parent);
+      })
     }
   }
 

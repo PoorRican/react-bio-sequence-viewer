@@ -31,6 +31,18 @@ describe('Manipulation Functions', () => {
     expect(fs.delete('endBox')).toStrictEqual(expected);
   })
 
+  test('preserve nested features when deleting top-level feature', () => {
+    let fs = FeatureContainer.from(generateFeatureStructure());
+
+    let expected = FeatureContainer.from(generateFeatureStructure());
+    const nested = expected[0].features
+    nested[0].accessor = nested[0].id
+    nested[0].features[0].accessor = nested[0].id + '::' + nested[0].features[0].id
+    expected.splice(0, 1, ...nested)
+
+    expect(fs.delete('testFeature1', true)).toStrictEqual(expected);
+  })
+
   test('delete nested feature', () => {
     let fs = FeatureContainer.from(generateFeatureStructure());
 
@@ -38,6 +50,18 @@ describe('Manipulation Functions', () => {
     expected[0].features.splice(0, 1);
 
     expect(fs.delete('testFeature1::testFeature1_sub1')).toStrictEqual(expected);
+  })
+
+  test('preserve nested features when deleting nested feature', () => {
+    let fs = FeatureContainer.from(generateFeatureStructure());
+
+    let expected = FeatureContainer.from(generateFeatureStructure());
+    const nested = expected[0].features[0].features
+    // manually update accessors
+    expected[0].features[0].features[0].accessor = expected[0].id + '::' + expected[0].features[0].features[0].id
+    expected[0].features.splice(0, 1, ...nested)
+
+    expect(fs.delete('testFeature1::testFeature1_sub1', true)).toStrictEqual(expected);
   })
 
   test('edit feature', () => {

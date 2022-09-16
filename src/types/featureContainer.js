@@ -55,27 +55,63 @@ export class FeatureContainer extends Array {
   }
 
   /**
-   * Delete specific `Feature` from tree
+   * Delete specific `Feature` from tree.
+   * This does not delete any `Monomer` objects from `Sequence`
    *
    * @param accessor {string} - Accessor key delimited by `::`
+   * @param preserve=false {boolean} - Flag to preserve nested features
    *
    * @returns {FeatureContainer} - mutated copy of `this`
    */
-  delete(accessor) {
+  delete(accessor, preserve=false) {
     const updated = FeatureContainer.from(this);
 
     let chain = this.retrieve(accessor, true);
+    let nested;
 
     if (chain.length > 1) {
-      let nested = updated[chain.shift()];
+      // nested feature
+      nested = updated[chain.shift()];
       while (chain.length > 1) {
         nested = nested.features[chain.shift()]
       }
 
       nested = nested.features;
-      nested.splice(chain.shift(), 1);
     } else
-      updated.splice(chain.shift(), 1)
+      // top level feature
+      nested = updated;
+
+    /**
+     * Index that points to nested
+     * @type {number}
+     */
+    const index = chain.shift() + 0;
+    if (preserve && nested[index].features) {
+      /**
+       * Preserve nested features
+       */
+      const features = nested[index].features;
+
+      /**
+       * Determine what new parent segment of accessor will be.
+       *
+       * For top-level features, *new* accessor will just be `id` of nested feature, therefore,
+       * the empty string is passed to `updateAccessor`.
+       * @type {string}
+       */
+      const accessor = nested[index].accessor.match(/::/g) ?
+        nested[index].accessor.slice(0, nested[index].accessor.lastIndexOf('::')) :     // nested feature
+        '';                                                                             // top level
+      features.forEach((feature) => {
+        /**
+         * Change accessors of nested features
+         */
+        feature.updateAccessor(accessor, true);
+      })
+
+      nested.splice(index, 1, ...features)
+    } else
+      nested.splice(index, 1)
 
     return updated;
   }
@@ -253,7 +289,14 @@ export function generateFeatureStructure() {
         new Feature({
           id: 'testFeature1_sub1',
           accessor: 'testFeature1::testFeature1_sub1',
-          location: [23, 70]
+          location: [23, 70],
+          features: [
+            new Feature({
+              id: 'deeply_nested',
+              accessor: 'testFeature1::testFeature1_sub1::deeply_nested',
+              location: [50, 55],
+            })
+          ]
         })
       ]
     }),
