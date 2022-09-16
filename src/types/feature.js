@@ -64,9 +64,48 @@ export class Feature extends Object {
     return (this.accessor.match(/::/g) || []).length
   }
 
+  /**
+   * Update accessor during `edit`
+   *
+   * Update of parent or self portion is dependent on the `parent` flag.
+   *
+   * @param value {string} - Value to use when updating
+   * @param parent=false {boolean} - Update parent segment when `true`
+   *
+   * @see Feature.edit
+   */
+  updateAccessor(value, parent=false) {
+    const index = this.accessor.lastIndexOf('::')
+
+    if (parent) {
+      const end = this.accessor.slice(index);
+      this.accessor = value + end;
+    } else if (index > 0) {
+      const parent = this.accessor.slice(0, index);
+      this.accessor = parent + '::' + value;
+    } else {
+      this.accessor = value;
+    }
+  }
+
+  /**
+   * Update keys with given values.
+   * Also updates `accessor` when `id` is updated.
+   *
+   * @param kwargs {{}}
+   */
   edit(kwargs) {
     for (let [key, val] of Object.entries(kwargs)) {
       this[key] = val;
+    }
+
+    // update accessor and nested features
+    if (kwargs.id) {
+      this.updateAccessor(kwargs.id);
+
+      this.features.forEach((feature) => {
+        feature.updateAccessor(this.accessor, true);
+      })
     }
   }
 
