@@ -5,7 +5,7 @@ import {
   EditorContext,
 } from "../data";
 import {isPrimaryButton, withinBounds} from "../helpers";
-import SequenceRowGroup from "./sequenceRowGroup";
+import {SequenceRowGroup} from "./sequenceRowGroup";
 
 import './sequenceText.css'
 import {SegmentMenu} from "./segmentMenu";

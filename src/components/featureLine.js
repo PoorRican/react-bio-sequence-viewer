@@ -17,7 +17,7 @@ import './featureLine.css'
  * @returns {JSX.Element}
  * @constructor
  */
-function FeatureLine(props) {
+export function FeatureLine(props) {
   return(
     <li id={props.feature.accessor}
         className={[
@@ -46,5 +46,3 @@ FeatureLine.propTypes = {
   onMouseLeave: PropTypes.func.isRequired,
   onClick: PropTypes.func,
 }
-
-export default FeatureLine;

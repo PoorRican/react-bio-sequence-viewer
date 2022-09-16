@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from "prop-types";
 
-import SequenceRow from "./sequenceRow";
-import FeatureBar from "../../components/featureBar";
+import {SequenceRow} from "./sequenceRow";
+import {FeatureBar} from "../../components/featureBar";
 
 
 /**
@@ -16,7 +16,7 @@ import FeatureBar from "../../components/featureBar";
  * @returns {JSX.Element}
  * @constructor
  */
-export default function SequenceRowGroup(props) {
+export function SequenceRowGroup(props) {
   const topLevel = props.features.filter((feature) => feature.depth === 0 )
   return(
     <div className={[

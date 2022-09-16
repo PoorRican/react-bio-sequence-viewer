@@ -14,7 +14,7 @@ import {Monomer} from "./monomer";
  * @param props.start {number} - First index of row
  * @param props.topLevel {[]} - Top-level features. Handled by `SequenceRow.isTopLevelFeature`
  */
-export default class SequenceRow extends React.PureComponent {
+export class SequenceRow extends React.PureComponent {
   static contextType = EditorContext;
 
   /**

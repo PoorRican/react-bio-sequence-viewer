@@ -4,7 +4,7 @@ import {
 } from "@blueprintjs/core";
 import PropTypes from "prop-types";
 
-import FeatureLine from "./featureLine";
+import {FeatureLine} from "./featureLine";
 import {EditorContext} from "../editor/data";
 
 import './featureBar.css'
@@ -19,7 +19,7 @@ import './featureBar.css'
  * @param props.scroll {boolean} - Toggles scrollbar functionality
  * @param props.length {number} - The number of indices to be represented.
  */
-export default class FeatureBar extends React.PureComponent {
+export class FeatureBar extends React.PureComponent {
   static contextType = EditorContext;
   static defaultProps = {
     scroll: false,
