@@ -58,7 +58,13 @@ export class Feature extends Object {
     this.features = data.features ? data.features : [];
     this.global_location = data.global_location;
     /**
-     * Key used to access while in `FeatureContainer`
+     * Accessor to parent `Feature`
+     *
+     * @type {string}
+     */
+    this.parent = data.parent;
+    /**
+     * Key used to access while in `FeatureContainer`.
      *
      * @type {string}
      *
@@ -67,8 +73,52 @@ export class Feature extends Object {
     this.accessor = data.accessor
   }
 
+  get accessor() {
+    return ((this.parent && this.parent.length) ? this.parent + '::' : '') + this.id;
+  }
+
+  set accessor(value) {
+    if (typeof value === 'string') {
+      const index = value.lastIndexOf('::');
+      if (index > 0) {
+        this.parent = value.slice(0, index);
+        this.id = value.slice(index+2);
+      }
+      else {
+        this.parent = false;
+        this.id = value;
+      }
+    }
+  }
+
+  get parent() {
+    return this._parent;
+  }
+
+  set parent(value) {
+    if (value)
+      this._parent = value;
+    else
+      this._parent = false;
+
+    if (this.features && this.features.length) {
+      this.#propagateParentUpdate();
+    }
+  }
+
   get depth() {
     return (this.accessor.match(/::/g) || []).length
+  }
+
+  /**
+   * Propagate changes made to `accessor` onto nested features.
+   * @see Feature.parent
+   * @see Feature.accessor
+   */
+  #propagateParentUpdate() {
+    this.features.forEach((feature) => {
+      feature.parent = this.accessor;
+    })
   }
 
   /**
@@ -80,6 +130,7 @@ export class Feature extends Object {
    * @param parent=false {boolean} - Update parent segment when `true`
    *
    * @see Feature.edit
+   * @deprecated Use accessor setter/getter properties, or `propagateAccessorChange`
    */
   updateAccessor(value, parent=false) {
     const index = this.accessor.lastIndexOf('::');
@@ -90,7 +141,7 @@ export class Feature extends Object {
        * Do not add delimiter if `value` is empty string
        * @type {string}
        */
-      const delimiter = value === '' ? '' : '::'
+      const delimiter = value === "" ? "" : "::"
 
       this.accessor = value + delimiter + end;
     } else if (index > 0) {

@@ -7,7 +7,7 @@ describe('Manipulation Functions', () => {
     const feature = new Feature({id: 'new', location: [69, 71]});
 
     let expected = FeatureContainer.from(generateFeatureStructure());
-    expected.push(new Feature({...feature, accessor: 'new'}));
+    expected.push(new Feature({...feature, accessor: "new"}));
 
     expect(fs.add(feature)).toStrictEqual(expected);
   })
@@ -35,9 +35,8 @@ describe('Manipulation Functions', () => {
     let fs = FeatureContainer.from(generateFeatureStructure());
 
     let expected = FeatureContainer.from(generateFeatureStructure());
-    const nested = expected[0].features
-    nested[0].accessor = nested[0].id
-    nested[0].features[0].accessor = nested[0].id + '::' + nested[0].features[0].id
+    const nested = expected.retrieve('testFeature1').features
+    nested[0].parent = false;
     expected.splice(0, 1, ...nested)
 
     expect(fs.delete('testFeature1', true)).toStrictEqual(expected);

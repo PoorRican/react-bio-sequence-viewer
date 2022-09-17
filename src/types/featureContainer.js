@@ -19,6 +19,14 @@ export class FeatureContainer extends Array {
     return new FeatureContainer(...hierarchy);
   }
 
+  get features() {
+    return false;
+  }
+
+  get accessor() {
+    return false;
+  }
+
   // Manipulation Functions
 
   /**
@@ -66,52 +74,41 @@ export class FeatureContainer extends Array {
   delete(accessor, preserve=false) {
     const updated = FeatureContainer.from(this);
 
-    let chain = this.retrieve(accessor, true);
-    let nested;
-
-    if (chain.length > 1) {
-      // nested feature
-      nested = updated[chain.shift()];
-      while (chain.length > 1) {
-        nested = nested.features[chain.shift()]
-      }
-
-      nested = nested.features;
-    } else
-      // top level feature
-      nested = updated;
+    const feature = updated.retrieve(accessor);
+    const parent  = feature.parent ? updated.retrieve(feature.parent) : updated;
 
     /**
-     * Index that points to nested
+     * Callback indexes to the `Feature` to be deleted
+     * @type {number[]|false}
+     */
+    let chain = updated.retrieve(accessor, true);
+    /**
+     * Index in respect to `parent.features`
      * @type {number}
      */
-    const index = chain.shift() + 0;
-    if (preserve && nested[index].features) {
-      /**
-       * Preserve nested features
-       */
-      const features = nested[index].features;
+    const index = Number(chain.slice(-1));
 
-      /**
-       * Determine what new parent segment of accessor will be.
-       *
-       * For top-level features, *new* accessor will just be `id` of nested feature, therefore,
-       * the empty string is passed to `updateAccessor`.
-       * @type {string}
-       */
-      const accessor = nested[index].accessor.match(/::/g) ?
-        nested[index].accessor.slice(0, nested[index].accessor.lastIndexOf('::')) :     // nested feature
-        '';                                                                             // top level
-      features.forEach((feature) => {
-        /**
-         * Change accessors of nested features
-         */
-        feature.updateAccessor(accessor, true);
-      })
+    const nested = feature.features;
 
-      nested.splice(index, 1, ...features)
-    } else
-      nested.splice(index, 1)
+    if (preserve && nested) {
+      /**
+       * Modify nested features
+       * @type {Feature[]}
+       */
+      let features = nested.map((feature) => {
+        const _feature = new Feature(feature);
+        _feature.parent = parent.accessor;
+        return _feature;
+      });
+
+      (parent.features || updated).splice(index, 1, ...features);
+    }
+    /**
+     * Do not preserve, or no values to preserve
+     */
+    else {
+      (parent.features || updated).splice(index, 1)
+    }
 
     return updated;
   }
@@ -283,17 +280,16 @@ export function generateFeatureStructure() {
   return [
     new Feature({
       id: 'testFeature1',
-      accessor: 'testFeature1',
       location: [0, 500],
       features: [
         new Feature({
           id: 'testFeature1_sub1',
-          accessor: 'testFeature1::testFeature1_sub1',
+          parent: 'testFeature1',
           location: [23, 70],
           features: [
             new Feature({
               id: 'deeply_nested',
-              accessor: 'testFeature1::testFeature1_sub1::deeply_nested',
+              parent: 'testFeature1::testFeature1_sub1',
               location: [50, 55],
             })
           ]
@@ -302,12 +298,10 @@ export function generateFeatureStructure() {
     }),
     new Feature({
       id: 'endBox',
-      accessor: 'endBox',
       location: [900, 1000]
     }),
     new Feature({
       id: 'markedIndex',
-      accessor: 'markedIndex',
       location: [800, 800]
     })
   ]
