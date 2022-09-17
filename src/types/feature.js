@@ -59,8 +59,13 @@ export class Feature extends Object {
     this.global_location = data.global_location;
     /**
      * Accessor to parent `Feature`
+     */
+    this.parent = data.parent;
+    /**
+     * Key used to access while in `FeatureContainer`.
+     * Accessor to parent `Feature`
      *
-     * @type {string}
+     * @type {string|false}
      */
     this.parent = data.parent;
     /**
