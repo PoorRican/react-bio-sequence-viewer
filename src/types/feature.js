@@ -58,17 +58,61 @@ export class Feature extends Object {
     this.features = data.features ? data.features : [];
     this.global_location = data.global_location;
     /**
-     * Key used to access while in `FeatureContainer`
+     * Accessor to parent `Feature`
+     */
+    this.parent = data.parent;
+    /**
+     * Key used to access while in `FeatureContainer`.
      *
-     * @type {string}
+     * update `id`.
      *
      * @see FeatureContainer.retrieve
      */
     this.accessor = data.accessor
   }
 
+  get accessor() {
+    return (this.parent ? this.parent + '::' : '') + this.id;
+  }
+
+  set accessor(value) {
+    if (value !== undefined) {
+      const index = value.lastIndexOf('::');
+      if (index > 0) {
+        this.parent = value.splice(0, index);
+        this.id = value.splice(index+2);
+      }
+      else {
+        this.parent = false;
+        this.id = value;
+      }
+    }
+  }
+
+  get parent() {
+    return this._parent;
+  }
+
+  set parent(value) {
+    this._parent = value;
+    if (this.features) {
+      this.#propagateParentUpdate();
+    }
+  }
+
   get depth() {
     return (this.accessor.match(/::/g) || []).length
+  }
+
+  /**
+   * Propagate changes made to `accessor` onto nested features.
+   * @see Feature.parent
+   * @see Feature.accessor
+   */
+  #propagateParentUpdate() {
+    this.features.forEach((feature) => {
+      feature.parent = this.accessor;
+    })
   }
 
   /**
@@ -80,6 +124,7 @@ export class Feature extends Object {
    * @param parent=false {boolean} - Update parent segment when `true`
    *
    * @see Feature.edit
+   * @deprecated Use accessor setter/getter properties, or `propagateAccessorChange`
    */
   updateAccessor(value, parent=false) {
     const index = this.accessor.lastIndexOf('::');
