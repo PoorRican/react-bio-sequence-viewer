@@ -30,36 +30,37 @@ export class FeatureContainer extends Array {
   // Manipulation Functions
 
   /**
-   * Add copy of `feature` to nesting tree
+   * Add copy of `feature` to nesting tree. Automatically encapsulates any constrained features.
    *
    * TODO: prevent overlap of `location` using `validateFeature`
    *
    * @param feature {Feature}
-   * @param parent {string} - parent accessor string
+   * @param parent=undefined {string} - parent accessor string
+   * @param encapsulate=true {boolean} - Option flag to encapsulate enclosed features.
+   * Needed when called from `encapsulate` so `accessor` does not point back to original `parent`
    *
    * @returns {FeatureContainer} - Mutated copy of `this`
    */
-  add(feature, parent=undefined) {
+  add(feature, parent=undefined, encapsulate=true) {
     const updated = FeatureContainer.from(this);
 
     // add nested `Feature`
     if (parent) {
 
-      const _parent = updated.retrieve(parent);
-      const accessor = _parent.accessor + '::' + feature.id;
-      const feat = new Feature({...feature, accessor: accessor})
-      _parent.add(feat);
+      feature.edit({parent: parent})
+      updated.retrieve(parent).add(feature);
 
     }
 
     // add top-level feature
     else {
 
-      updated.push(new Feature({...feature, accessor: feature.id}))
+      feature.edit({parent: false})
+      updated.push(feature)
 
     }
 
-    return updated;
+    return encapsulate ? updated.encapsulate(feature) : updated;
   }
 
   /**
@@ -257,7 +258,12 @@ export class FeatureContainer extends Array {
     if (features !== []) {
       let deepest = -1;
       features.forEach((feature) => {
-        if (feature.depth > deepest) {
+        /**
+         * `Feature` is outside of given range
+         * @type {boolean}
+         */
+        const outside = feature.global_location[0] <= start && feature.global_location[1] >= end;
+        if (feature.depth > deepest && outside) {
           deepest = feature.depth;
           accessor = feature.accessor;
         }
@@ -327,7 +333,7 @@ export class FeatureContainer extends Array {
     constrained.forEach((child) => {
       const copy = new Feature(child)
       copy.parent = feature.accessor;
-      updated = updated.add(copy, feature.accessor)
+      updated = updated.add(copy, feature.accessor, false)
     });
 
     /**

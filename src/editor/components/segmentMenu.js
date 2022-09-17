@@ -107,29 +107,36 @@ export class SegmentMenu extends React.Component {
   }
 
   /**
-   * Set `inFeature` flag if `context.cursor` does not overlap any `Feature` endpoints.
+   * Set `inFeature` flag if `context.cursor` does not partially overlap any features.
    *
-   * @description This only occurs when `cursor` points to an index or a range, _NOT_ a `Feature`
+   * @description Should only be called when `cursor` points to an index or a range, _NOT_ a `Feature`
    * and is used to disable the `Create Feature` menu option.
    *
-   * @example If `context.cursor` points to (25,30) and there is a `Feature` that example extends from (20,26), `state.inFeature = false`.
+   * @description **Example:** If `context.cursor` points to (25,30) and there is a `Feature` that example
+   * extends from (20,26), `state.inFeature = false`.
    */
   #checkInFeature() {
     this.setState({isFeature: false})
 
-    // assume that cursor points to a range
+    /**
+     * Assume that cursor points to a range or number and not a `Feature`
+     */
     if (typeof this.context.cursor !== 'number') {
       const loc = this.context.cursor;
       const features = this.context.hierarchy.within(loc[0], loc[1]);
 
-      const filtered = features.filter((feature) => {   // filter features whose endpoint intersect with range
-        return (
-          (feature.global_location[0] > loc[0] && feature.global_location[0] < loc[1]) ||
-          (feature.global_location[1] > loc[0] && feature.global_location[1] < loc[1])
-        )
+      /**
+       * Features where both endpoints aren't fully inside or fully outside range.
+       *
+       * @type {Feature[]}
+       */
+      const partially = features.filter((feature) => {
+        const inside = feature.global_location[0] >= loc[0] && feature.global_location[1] <= loc[1]
+        const outside = feature.global_location[0] <= loc[0] && feature.global_location[1] >= loc[1]
+        return !(inside || outside)
       })
 
-      this.setState({inFeature: !filtered.length})
+      this.setState({inFeature: features.length ? !Boolean(partially.length) : true})
 
     } else
 
