@@ -82,5 +82,47 @@ describe('Miscellaneous Functions', () => {
     const expected = [0, 0];
 
     expect(fs.retrieve('testFeature1::testFeature1_sub1', true)).toStrictEqual(expected);
+  });
+
+  test('Correctly encapsulate overlapping features', () => {
+    const feature = new Feature({id: 'future_parent', location: [5, 25], accessor: 'parent::future_parent'});
+
+    /**
+     * Feature tree with future parent already added
+     */
+    const fs = FeatureContainer.from([
+      new Feature({
+        id: 'parent',
+        location: [0, 50],
+        features: [
+          new Feature({id: 'a', location: [10, 12], parent: 'parent'}),
+          new Feature({id: 'b', location: [20, 22], parent: 'parent'}),
+          new Feature({id: 'c', location: [30, 32], parent: 'parent'}),
+
+          new Feature({id: 'future_parent', location: [5, 25], parent: 'parent'})
+        ]
+      })
+    ]);
+
+    const expected = FeatureContainer.from([
+      new Feature({
+        id: 'parent',
+        accessor: 'parent',
+        location: [0, 50],
+        features: [
+          new Feature({id: 'c', location: [30, 32], parent: 'c'}),
+
+          new Feature({id: 'future_parent', location: [5, 25], parent: 'parent',
+            features: [
+              new Feature({id: 'a', location: [10, 12], parent: 'parent::future_parent'}),
+              new Feature({id: 'b', location: [20, 22], parent: 'parent::future_parent'}),
+            ]
+          })
+        ]
+      })
+    ]);
+
+    const result = fs.encapsulate(feature)
+    expect(result).toStrictEqual(expected);
   })
 })

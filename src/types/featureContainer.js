@@ -239,6 +239,7 @@ export class FeatureContainer extends Array {
     return contained;
   }
 
+
   /**
    * Find the deepest feature within a given range.
    *
@@ -264,6 +265,79 @@ export class FeatureContainer extends Array {
     }
 
     return accessor;
+  }
+
+  /**
+   * Find overlapping features in `parent.features` container.
+   *
+   * @example
+   * `Parent {
+   *  location: [0, 50],
+   *  features: [
+   *    {id: a, location: [10, 12]},
+   *    {id: b, location: [20, 22]},
+   *    {id: c, location: [30, 32]}
+   * ]`
+   */
+   constrained(feature) {
+    const parent = feature.parent ? this.retrieve(feature.parent) : this;
+    // iterate through siblings
+    return (parent.features || parent).filter((child) => {
+      return (
+        child.location[0] >= feature.location[0] &&
+        child.location[1] <= feature.location[1] && child.id !== feature.id
+      )
+    })
+  }
+
+  /**
+   * Encapsulate any overlapping sibling Features as nested features.
+   *
+   * Rearrangement occurs after `Feature` is created *and* added to parent `Feature`.
+   *
+   * @param feature {Feature} - future parent feature
+   *
+   * @example
+   * `Parent {
+   *  location: [0, 50],
+   *  features: [
+   *    {id: a, location: [10, 12]},
+   *    {id: b, location: [20, 22]},
+   *    {id: c, location: [30, 32]}
+   * ]`
+   * If a new feature 'Capsule' whose location is [5, 25], is created, features 'Capsule' and 'c' would
+   * be nested features of 'Parent'. Features 'a' and 'b' would then become be nested features of 'Capsule'
+   *
+   * @returns {FeatureContainer} - Mutated copy of `this`
+   */
+  encapsulate(feature) {
+    let updated = this.from(this);
+    const constrained = updated.constrained(feature);
+    /**
+     * Old accessors for deletion
+     * @type {string[]}
+     */
+    const accessors = constrained.map((feature) => {
+      return feature.accessor
+    });
+
+    /**
+     * Make copies of constrained features before adding, so they are not deleted.
+     */
+    constrained.forEach((child) => {
+      const copy = new Feature(child)
+      copy.parent = feature.accessor;
+      updated = updated.add(copy, feature.accessor)
+    });
+
+    /**
+     * Delete previous children from main tree
+     */
+    accessors.forEach((accessor) => {
+      updated = updated.delete(accessor);
+    })
+
+    return updated;
   }
 
 }
