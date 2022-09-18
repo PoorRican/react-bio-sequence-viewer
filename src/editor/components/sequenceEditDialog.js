@@ -62,9 +62,11 @@ export class SequenceEditDialog extends React.Component {
    */
   insertSequence = () => {
     const index = (typeof this.context.cursor === 'number') ? this.context.cursor : this.context.cursor[0];
-    const updated = this.context.sequence.insert(this.state.sequence, index);
 
     if (this.#validateSequence()) {
+      const updated = this.context.sequence.insert(this.state.sequence, index);
+      this.context.mediator().resize(this.state.sequence.length, index);
+
       this.context.setSequence(updated);
       this.props.onClose(false);
     }

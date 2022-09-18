@@ -2,14 +2,16 @@ import React, {createContext} from 'react'
 
 import {FeatureContainer, generateFeatureStructure} from '../types/featureContainer'
 import {Sequence, generateSequence} from "../types/sequence";
+import {AnnotatedSequence} from "../types/AnnotatedSequence";
 
 const defaultData = {
   // data
   mode: 'view',
   highlighted: null,
   cursor: null,
-  sequence: Sequence.from(generateSequence(1000)),
-  hierarchy: FeatureContainer.from(generateFeatureStructure()),
+  sequence: generateSequence(1000),
+  hierarchy: generateFeatureStructure(),
+  mediator: () => {},
 
   // setters
   setMode: () => {},
@@ -32,17 +34,22 @@ export class EditorProvider extends React.Component {
       /**
        * @type {Sequence}
        */
-      sequence: defaultData.sequence,
+      sequence: Sequence.from(defaultData.sequence),
       /**
        * @type {FeatureContainer}
        */
-      hierarchy: defaultData.hierarchy,
+      hierarchy: FeatureContainer.from(defaultData.hierarchy),
+      mediator: this.mediator,
       setMode: this.setMode,
       setSequence: this.setSequence,
       setHighlighted: this.setHighlighted,
       setCursor: this.setCursor,
       setHierarchy: this.setHierarchy,
     }
+  }
+
+  mediator = () => {
+    return new AnnotatedSequence(this.state.sequence, this.state.hierarchy, this.setSequence, this.setHierarchy);
   }
 
   /**

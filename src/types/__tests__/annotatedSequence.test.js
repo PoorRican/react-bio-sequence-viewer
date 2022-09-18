@@ -92,64 +92,6 @@ describe('Sequence Manipulation', () => {
     expect(container.hierarchy).toStrictEqual(expected);
   });
 
-  test('sequence deleted', () => {
-    const container = makeContainer();
-
-    const expected = makeContainer();
-    expected.sequence = Sequence.from(container.sequence);
-
-    /**
-     * Set up expectations for `container.hierarchy`
-     */
-    // contract first feature by 5
-    expected.hierarchy[0].location[1] = expected.hierarchy[0].location[1] - 5;
-
-    // shift 2nd and 3rd features by 5 bp
-    [1,2].forEach((index) => {
-      const feature = expected.hierarchy[index];
-      feature.location = [feature.location[0]-5, feature.location[1]-5]
-    })
-
-    /**
-     * Set up expectations for `container.sequence`
-     */
-    expected.sequence.delete(5, 400);
-
-    const mediator = makeMediator(container);
-    mediator.delete(5, 400)
-
-    expect(container).toStrictEqual(expected);
-  })
-
-  test('sequence inserted', () => {
-    const container = makeContainer();
-
-    const expected = makeContainer();
-    expected.sequence = Sequence.from(container.sequence);
-
-    /**
-     * Set up expectations for `container.hierarchy`
-     */
-    // contract first feature by 5
-    expected.hierarchy[0].location[1] = expected.hierarchy[0].location[1] + 5;
-
-    // shift 2nd and 3rd features by 5 bp
-    [1,2].forEach((index) => {
-      const feature = expected.hierarchy[index];
-      feature.location = [feature.location[0]+5, feature.location[1]+5]
-    })
-
-    /**
-     * Set up expectations for `container.sequence`
-     */
-    expected.sequence.insert('AAAA', 400);
-
-    const mediator = makeMediator(container);
-    mediator.insert('AAAAA', 400)
-
-    expect(container).toStrictEqual(expected);
-  })
-
 });
 
 describe('Feature Manipulation', () => {

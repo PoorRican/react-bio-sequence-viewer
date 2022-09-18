@@ -69,21 +69,19 @@ export class AnnotatedSequence extends Object {
     this.setHierarchy(updated);
   }
 
-  insert = (value, index) => {
-    const updated   = Sequence.from(this.sequence);
-    updated.insert(value, index);
-    this.setSequence(updated);
-
-    this.resize(value.length, index);
-  }
-
+  /**
+   * TODO: get rid of this and call `resize` in `SegmentMenu`
+   * Deletes specified count at specified index.
+   * @param magnitude {number} - Count to delete
+   * @param index {number} - Loci to perform deletion
+   */
   delete = (magnitude, index) => {
     const updated   = Sequence.from(this.sequence);
     const accessor  = this.hierarchy.deepest(index, index, false)
     const feature   = this.hierarchy.retrieve(accessor);
 
     const loc = feature.global_location || feature.location;
-    updated.delete([loc[1], loc[1] + magnitude]);
+    updated.delete([loc[0], loc[0] - magnitude]);
     this.setSequence(updated);
 
     this.resize(-magnitude, index);

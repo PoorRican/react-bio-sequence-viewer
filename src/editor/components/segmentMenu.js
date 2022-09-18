@@ -72,6 +72,9 @@ export class SegmentMenu extends React.Component {
     this.props.editSequence();
   }
 
+  /**
+   * Delete sequences at cursor
+   */
   delete = () => {
     let range = this.context.cursor;
 
@@ -80,8 +83,12 @@ export class SegmentMenu extends React.Component {
     else if (typeof this.context.cursor === 'number')
       range = [this.context.cursor, this.context.cursor]
 
-    // TODO: `AnnotatedFeature` call to update feature lengths
-    this.context.setSequence(this.context.sequence.delete(range));
+    const magnitude = range[1] - range[0] + 1;
+
+    this.context.setSequence(this.context.sequence.delete(range))
+
+    this.context.mediator().resize(-magnitude, range[0]);
+
     this.context.setCursor(null);
   }
 
