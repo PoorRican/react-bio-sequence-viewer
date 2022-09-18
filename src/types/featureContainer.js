@@ -208,7 +208,7 @@ export class FeatureContainer extends Array {
    * @param end {number} - End of range
    * @param features {Feature[]} - Used for recursion
    *
-   * @returns {Feature[]} - A copy of `Feature` objects whose `location` intersects with range
+   * @returns {Feature[]} - A copy of `Feature` objects whose `location` are truncated to intersect with range endpoints
    */
   within(start, end, features=this) {
     let contained = [];
@@ -248,21 +248,25 @@ export class FeatureContainer extends Array {
    *
    * @param start {number}
    * @param end {number}
+   * @param strict=true {boolean} - Ignore partially intersecting features
    *
    * @returns {string|null} - Accessor key of the deepest feature; `null` if there is no feature in given range.
    */
-  deepest(start, end) {
+  deepest(start, end, strict=true) {
     const features = this.within(start, end);
     let accessor = null;
 
     if (features !== []) {
       let deepest = -1;
       features.forEach((feature) => {
+        const loc = feature.global_location || feature.location;
+        const [starts_before, ends_after] = [loc[0] <= start, loc[1] >= end];
         /**
-         * `Feature` is outside of given range
+         * `Feature` is fully outside or intersects with given range
          * @type {boolean}
          */
-        const outside = feature.global_location[0] <= start && feature.global_location[1] >= end;
+        const outside = strict ? starts_before && ends_after : starts_before || ends_after
+
         if (feature.depth > deepest && outside) {
           deepest = feature.depth;
           accessor = feature.accessor;

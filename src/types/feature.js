@@ -78,6 +78,16 @@ export class Feature extends Object {
     this.accessor = data.accessor
   }
 
+  get length() {
+    const loc = this.global_location ? this.global_location : this.location;
+    return loc[1] - loc[0];
+  }
+
+  set length(value) {
+    const loc = this.global_location || this.location;
+    loc[1] = loc[0] + Number(value);
+  }
+
   get accessor() {
     return ((this.parent && this.parent.length) ? this.parent + '::' : '') + this.id;
   }
@@ -124,6 +134,17 @@ export class Feature extends Object {
     this.features.forEach((feature) => {
       feature.parent = this.accessor;
     })
+  }
+
+  shift(magnitude) {
+    this.location[0] = this.location[0] + magnitude;
+    this.location[1] = this.location[1] + magnitude;
+
+    if (this.features) this.features.forEach((feature) => feature.shift(magnitude))
+  }
+
+  resize(magnitude) {
+    this.length = this.length + magnitude;
   }
 
   /**
