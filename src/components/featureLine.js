@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from "prop-types";
 
-import {Feature} from "../types/feature";
+import {RenderFeature} from "../types/renderFeature";
 import {colorize} from "../editor/helpers";
 
 import './featureLine.css'
@@ -9,7 +9,7 @@ import './featureLine.css'
 /**
  * Represents a single feature in `FeatureBar`
  *
- * @param props.feature {Feature} - Feature object to represent
+ * @param props.feature {RenderFeature} - Feature object to represent
  * @param props.highlighted {boolean} - Toggles 100% opacity when highlighted
  * @param props.onMouseEnter {function} - Event callback for mouse hovering
  * @param props.onMouseLeave {function} - Event callback for when mouse leaves
@@ -40,7 +40,7 @@ export function FeatureLine(props) {
 
 
 FeatureLine.propTypes = {
-  feature: PropTypes.instanceOf(Feature),
+  feature: PropTypes.instanceOf(RenderFeature),
   highlighted: PropTypes.bool,
   onMouseEnter: PropTypes.func.isRequired,
   onMouseLeave: PropTypes.func.isRequired,

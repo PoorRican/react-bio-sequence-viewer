@@ -49,7 +49,7 @@ export class AnnotatedSequence extends Object {
      * Parent features through which to propagate changes.
      *
      * Due to current structure restrictions, index must pass through contiguous chain of features
-     * @type {Feature[]}
+     * @type {RenderFeature[]}
      */
     const intersecting = [];
     while (feature && feature.depth >= 0) {

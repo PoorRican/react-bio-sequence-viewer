@@ -1,4 +1,4 @@
-import {Feature} from "./feature";
+import {RenderFeature} from "./renderFeature";
 
 /**
  * Array-like container for storing and interacting with `Feature` objects.
@@ -11,7 +11,7 @@ export class FeatureContainer extends Array {
   /**
    * Factory function
    *
-   * @param hierarchy {Feature[]} - Initial tree of `Feature` objects
+   * @param hierarchy {RenderFeature[]} - Initial tree of `Feature` objects
    *
    * @returns {FeatureContainer}
    */
@@ -34,7 +34,7 @@ export class FeatureContainer extends Array {
    *
    * TODO: prevent overlap of `location` using `validateFeature`
    *
-   * @param feature {Feature}
+   * @param feature {RenderFeature}
    * @param parent=undefined {string} - parent accessor string
    * @param encapsulate=true {boolean} - Option flag to encapsulate enclosed features.
    * Needed when called from `encapsulate` so `accessor` does not point back to original `parent`
@@ -94,10 +94,10 @@ export class FeatureContainer extends Array {
     if (preserve && nested) {
       /**
        * Modify nested features
-       * @type {Feature[]}
+       * @type {RenderFeature[]}
        */
       let features = nested.map((feature) => {
-        const _feature = new Feature(feature);
+        const _feature = new RenderFeature(feature);
         _feature.parent = parent.accessor;
         return _feature;
       });
@@ -140,7 +140,7 @@ export class FeatureContainer extends Array {
    * @param id {string} - `id` of top-level feature
    * @param index=false {boolean} - Optional flag to return index instead of `Feature`
    *
-   * @returns {Feature|any}
+   * @returns {RenderFeature|any}
    */
   fetch(id, index=false) {
     if (index) {
@@ -164,9 +164,9 @@ export class FeatureContainer extends Array {
    * @param accessor {string} - Accessor string delimited by `::`
    * @param index=false {boolean} - Flag to return a string of indexes
    *
-   * @returns {Feature|number[]|false}
+   * @returns {RenderFeature|number[]|false}
    *
-   * @see Feature.fetch
+   * @see RenderFeature.fetch
    */
   retrieve(accessor, index=false) {
     try {
@@ -206,9 +206,9 @@ export class FeatureContainer extends Array {
    *
    * @param start {number} - Start of range
    * @param end {number} - End of range
-   * @param features {Feature[]} - Used for recursion
+   * @param features {RenderFeature[]} - Used for recursion
    *
-   * @returns {Feature[]} - A copy of `Feature` objects whose `location` are truncated to intersect with range endpoints
+   * @returns {RenderFeature[]} - A copy of `Feature` objects whose `location` are truncated to intersect with range endpoints
    */
   within(start, end, features=this) {
     let contained = [];
@@ -223,7 +223,7 @@ export class FeatureContainer extends Array {
         const trunc_end = loc[1] >= end ? width : (loc[1] % width);
 
         contained.push(
-          new Feature({
+          new RenderFeature({
             accessor: feature.accessor,
             id: feature.id,
             location: [trunc_start, trunc_end],
@@ -305,7 +305,7 @@ export class FeatureContainer extends Array {
    *
    * Rearrangement occurs after `Feature` is created *and* added to parent `Feature`.
    *
-   * @param feature {Feature} - future parent feature
+   * @param feature {RenderFeature} - future parent feature
    *
    * @example
    * `Parent {
@@ -335,7 +335,7 @@ export class FeatureContainer extends Array {
      * Make copies of constrained features before adding, so they are not deleted.
      */
     constrained.forEach((child) => {
-      const copy = new Feature(child)
+      const copy = new RenderFeature(child)
       copy.parent = feature.accessor;
       updated = updated.add(copy, feature.accessor, false)
     });
@@ -358,20 +358,20 @@ export class FeatureContainer extends Array {
  *
  * This is used during testing purposes.
  *
- * @returns {Feature[]}
+ * @returns {RenderFeature[]}
  */
 export function generateFeatureStructure() {
   return [
-    new Feature({
+    new RenderFeature({
       id: 'testFeature1',
       location: [0, 500],
       features: [
-        new Feature({
+        new RenderFeature({
           id: 'testFeature1_sub1',
           parent: 'testFeature1',
           location: [23, 70],
           features: [
-            new Feature({
+            new RenderFeature({
               id: 'deeply_nested',
               parent: 'testFeature1::testFeature1_sub1',
               location: [50, 55],
@@ -380,11 +380,11 @@ export function generateFeatureStructure() {
         })
       ]
     }),
-    new Feature({
+    new RenderFeature({
       id: 'endBox',
       location: [900, 1000]
     }),
-    new Feature({
+    new RenderFeature({
       id: 'markedIndex',
       location: [800, 800]
     })

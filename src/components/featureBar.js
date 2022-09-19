@@ -15,7 +15,7 @@ import './featureBar.css'
  *
  * Hierarchy is passed via `props.children`.
  *
- * @param props.hierarchy {Feature[]|{}[]} - Hierarchy to display
+ * @param props.hierarchy {RenderFeature[]|{}[]} - Hierarchy to display
  * @param props.scroll {boolean} - Toggles scrollbar functionality
  * @param props.length {number} - The number of indices to be represented.
  */

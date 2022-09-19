@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import {FeatureForm} from "../../components/featureForm";
 import {FeatureDialog} from "../../components/featureDialog";
-import {Feature} from "../../types/feature"
+import {RenderFeature} from "../../types/renderFeature"
 import {EditorContext} from "../data";
 
 
@@ -37,7 +37,7 @@ export class CreateFeatureDialog extends React.Component {
     }
     const parent = this.context.hierarchy.deepest(this.context.cursor[0], this.context.cursor[1]);
 
-    const updated = this.context.hierarchy.add(new Feature(data), parent);
+    const updated = this.context.hierarchy.add(new RenderFeature(data), parent);
     this.context.setHierarchy(updated);
 
     this.cancel();

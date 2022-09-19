@@ -1,23 +1,23 @@
-import {Feature} from "../feature";
+import {RenderFeature} from "../renderFeature";
 import {FeatureContainer, generateFeatureStructure} from "../featureContainer";
 
 describe('Manipulation Functions', () => {
   test('add top-level feature', () => {
     let fs = FeatureContainer.from(generateFeatureStructure());
-    const feature = new Feature({id: 'new', location: [69, 71]});
+    const feature = new RenderFeature({id: 'new', location: [69, 71]});
 
     let expected = FeatureContainer.from(generateFeatureStructure());
-    expected.push(new Feature({...feature, accessor: "new"}));
+    expected.push(new RenderFeature({...feature, accessor: "new"}));
 
     expect(fs.add(feature)).toStrictEqual(expected);
   })
 
   test('add nested feature', () => {
     let fs = FeatureContainer.from(generateFeatureStructure());
-    const feature = new Feature({id: 'new', location: [69, 71]})
+    const feature = new RenderFeature({id: 'new', location: [69, 71]})
 
     let expected = FeatureContainer.from(generateFeatureStructure());
-    expected[1].features = [new Feature({...feature, accessor: 'endBox::new'})];
+    expected[1].features = [new RenderFeature({...feature, accessor: 'endBox::new'})];
 
     expect(fs.add(feature, 'endBox')).toStrictEqual(expected);
   })
@@ -67,7 +67,7 @@ describe('Manipulation Functions', () => {
     let fs = FeatureContainer.from(generateFeatureStructure());
 
     let expected = FeatureContainer.from(generateFeatureStructure());
-    expected[2] = new Feature({...expected[2], location: [888,888]})
+    expected[2] = new RenderFeature({...expected[2], location: [888,888]})
 
     expect(fs.edit('markedIndex', {location: [888, 888]})).toStrictEqual(expected);
   })
@@ -85,37 +85,37 @@ describe('Miscellaneous Functions', () => {
   });
 
   test('Correctly encapsulate overlapping features', () => {
-    const feature = new Feature({id: 'future_parent', location: [5, 25], accessor: 'parent::future_parent'});
+    const feature = new RenderFeature({id: 'future_parent', location: [5, 25], accessor: 'parent::future_parent'});
 
     /**
      * Feature tree with future parent already added
      */
     const fs = FeatureContainer.from([
-      new Feature({
+      new RenderFeature({
         id: 'parent',
         location: [0, 50],
         features: [
-          new Feature({id: 'a', location: [10, 12], parent: 'parent'}),
-          new Feature({id: 'b', location: [20, 22], parent: 'parent'}),
-          new Feature({id: 'c', location: [30, 32], parent: 'parent'}),
+          new RenderFeature({id: 'a', location: [10, 12], parent: 'parent'}),
+          new RenderFeature({id: 'b', location: [20, 22], parent: 'parent'}),
+          new RenderFeature({id: 'c', location: [30, 32], parent: 'parent'}),
 
-          new Feature({id: 'future_parent', location: [5, 25], parent: 'parent'})
+          new RenderFeature({id: 'future_parent', location: [5, 25], parent: 'parent'})
         ]
       })
     ]);
 
     const expected = FeatureContainer.from([
-      new Feature({
+      new RenderFeature({
         id: 'parent',
         accessor: 'parent',
         location: [0, 50],
         features: [
-          new Feature({id: 'c', location: [30, 32], parent: 'c'}),
+          new RenderFeature({id: 'c', location: [30, 32], parent: 'c'}),
 
-          new Feature({id: 'future_parent', location: [5, 25], parent: 'parent',
+          new RenderFeature({id: 'future_parent', location: [5, 25], parent: 'parent',
             features: [
-              new Feature({id: 'a', location: [10, 12], parent: 'parent::future_parent'}),
-              new Feature({id: 'b', location: [20, 22], parent: 'parent::future_parent'}),
+              new RenderFeature({id: 'a', location: [10, 12], parent: 'parent::future_parent'}),
+              new RenderFeature({id: 'b', location: [20, 22], parent: 'parent::future_parent'}),
             ]
           })
         ]

@@ -135,7 +135,7 @@ export class SegmentMenu extends React.Component {
       /**
        * Features where both endpoints aren't fully inside or fully outside range.
        *
-       * @type {Feature[]}
+       * @type {RenderFeature[]}
        */
       const partially = features.filter((feature) => {
         const inside = feature.global_location[0] >= loc[0] && feature.global_location[1] <= loc[1]

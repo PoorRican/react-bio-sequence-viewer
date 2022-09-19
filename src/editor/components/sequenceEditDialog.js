@@ -11,7 +11,7 @@ import {EditorContext} from "../data";
 
 /**
  * Parse cursor location
- * @param location {number|[number, number]|Feature}
+ * @param location {number|[number, number]|RenderFeature}
  * @returns {number|*}
  */
 function extractCursorLocation(location) {

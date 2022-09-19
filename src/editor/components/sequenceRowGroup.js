@@ -11,7 +11,7 @@ import {FeatureBar} from "../../components/featureBar";
  * @param props.highlighted {boolean} - Toggles highlighted styling for entire `SequenceRowGroup`
  * @param props.start {number} - First index of row
  * @param props.sequence {string[]} - Pre-processed sequence of monomers
- * @param props.features {Feature[]|{}[]} - Pre-processed `Feature` objects to include
+ * @param props.features {RenderFeature[]|{}[]} - Pre-processed `Feature` objects to include
  *
  * @returns {JSX.Element}
  * @constructor

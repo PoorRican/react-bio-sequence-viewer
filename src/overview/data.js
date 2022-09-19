@@ -4,13 +4,13 @@
 import React, {createContext} from 'react'
 
 import {getItem, isLinked} from "./helpers";
-import {generateMultipleFeatures} from "../types/feature";
+import {generateMultipleFeatures} from "../types/renderFeature";
 import {MODES} from "./components/modeMenu";
 
 /**
  * Hard coded features to use for development
  *
- * @type [Feature,]
+ * @type [RenderFeature,]
  */
 export const features = generateMultipleFeatures(30);
 /**

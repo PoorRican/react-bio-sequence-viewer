@@ -13,7 +13,7 @@ import {FeatureContent} from "./featureContent";
  *
  * @param isOpen {boolean} - Controls display of dialog
  * @param onClose {function} - Callback function to close dialog
- * @param data {Feature} - `Feature` to display
+ * @param data {RenderFeature} - `Feature` to display
  * @param children=FeatureContent {JSX.Element} - Dialog content to render.
  * If not passed, renders `FeatureContent` to remain functional for `overview` module.
  *
