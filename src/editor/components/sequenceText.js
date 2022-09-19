@@ -77,7 +77,7 @@ export default class SequenceText extends React.Component {
         <SequenceRowGroup key={start} start={start}
                           highlighted={this.isHighlighted(start, end)}
                           sequence={Array(...this.context.sequence).slice(start, end)}
-                          features={this.context.hierarchy.within(start, end)}
+                          features={this.context.hierarchy.within(start, end, true)}
         />
       )
 

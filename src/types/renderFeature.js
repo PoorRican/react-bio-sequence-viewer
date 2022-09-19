@@ -36,12 +36,12 @@ export class RenderFeature extends Feature {
   }
 
   get length() {
-    const loc = this.global_location ? this.global_location : this.location;
+    const loc = this.location;
     return loc[1] - loc[0];
   }
 
   set length(value) {
-    const loc = this.global_location || this.location;
+    const loc = this.location;
     loc[1] = loc[0] + Number(value);
   }
 

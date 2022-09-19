@@ -89,7 +89,7 @@ export class SequenceEditDialog extends React.Component {
     const accessor = this.context.hierarchy.deepest(range[0], range[1], false);
     const feature = this.context.hierarchy.retrieve(accessor);
 
-    const loc = feature.global_location || feature.location;
+    const loc = feature.location;
     return loc[1] === range[1];
   }
 

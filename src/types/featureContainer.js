@@ -1,4 +1,5 @@
 import {RenderFeature} from "./renderFeature";
+import {TruncatedFeature} from "./truncatedFeature";
 
 /**
  * Array-like container for storing and interacting with `Feature` objects.
@@ -206,11 +207,13 @@ export class FeatureContainer extends Array {
    *
    * @param start {number} - Start of range
    * @param end {number} - End of range
+   * @param truncate {boolean} - Flag that returns a copy with `truncated_location`
    * @param features {RenderFeature[]} - Used for recursion
    *
-   * @returns {RenderFeature[]} - A copy of `Feature` objects whose `location` are truncated to intersect with range endpoints
+   * @returns {RenderFeature[]|TruncatedFeature[]} - `RenderFeature` objects that fall within range.
+   * If `truncate`, then `TruncatedFeature` is returned
    */
-  within(start, end, features=this) {
+  within(start, end, truncate=false, features=this) {
     let contained = [];
 
     const width = Math.abs(end - start)
@@ -218,21 +221,18 @@ export class FeatureContainer extends Array {
       const loc = feature.location;
       if (loc[0] <= end && loc[1] >= start) {
 
-        // truncate start & end
-        const trunc_start = loc[0] <= start ? 0 : (loc[0] % width);
-        const trunc_end = loc[1] >= end ? width : (loc[1] % width);
+        if (truncate) {
+          // truncate start & end
+          const trunc_start = loc[0] <= start ? 0 : (loc[0] % width);
+          const trunc_end = loc[1] >= end ? width : (loc[1] % width);
 
-        contained.push(
-          new RenderFeature({
-            accessor: feature.accessor,
-            id: feature.id,
-            location: [trunc_start, trunc_end],
-            global_location: feature.location,
-            depth: feature.depth
-          })
-        );
+          contained.push(TruncatedFeature.from(feature, [trunc_start, trunc_end]));
+        } else {
+          contained.push(feature);
+        }
 
-        if (feature.features) contained.push(...this.within(start, end, feature.features))
+        if (feature.features)
+          contained.push(...this.within(start, end, truncate, feature.features))
 
       }
     }
@@ -259,7 +259,7 @@ export class FeatureContainer extends Array {
     if (features !== []) {
       let deepest = -1;
       features.forEach((feature) => {
-        const loc = feature.global_location || feature.location;
+        const loc = feature.location;
         const [starts_before, ends_after] = [loc[0] <= start, loc[1] >= end];
         /**
          * `Feature` is fully outside or intersects with given range

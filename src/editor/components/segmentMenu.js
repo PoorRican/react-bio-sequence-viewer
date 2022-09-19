@@ -138,8 +138,8 @@ export class SegmentMenu extends React.Component {
        * @type {RenderFeature[]}
        */
       const partially = features.filter((feature) => {
-        const inside = feature.global_location[0] >= loc[0] && feature.global_location[1] <= loc[1]
-        const outside = feature.global_location[0] <= loc[0] && feature.global_location[1] >= loc[1]
+        const inside  = feature.location[0] >= loc[0] && feature.location[1] <= loc[1]
+        const outside = feature.location[0] <= loc[0] && feature.location[1] >= loc[1]
         return !(inside || outside)
       })
 

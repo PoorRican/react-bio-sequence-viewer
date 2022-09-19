@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from "prop-types";
 
-import {RenderFeature} from "../types/renderFeature";
+import {TruncatedFeature} from "../types/truncatedFeature";
 import {colorize} from "../editor/helpers";
 
 import './featureLine.css'
@@ -9,7 +9,7 @@ import './featureLine.css'
 /**
  * Represents a single feature in `FeatureBar`
  *
- * @param props.feature {RenderFeature} - Feature object to represent
+ * @param props.feature {TruncatedFeature} - Feature object to represent
  * @param props.highlighted {boolean} - Toggles 100% opacity when highlighted
  * @param props.onMouseEnter {function} - Event callback for mouse hovering
  * @param props.onMouseLeave {function} - Event callback for when mouse leaves
@@ -27,7 +27,7 @@ export function FeatureLine(props) {
         ].join(' ')}
         style={{
           gridRow: props.feature.depth + 1,
-          gridColumn: [props.feature.location[0] + 1, props.feature.location[1] + 2].join('/'),
+          gridColumn: [props.feature.truncated_location[0] + 1, props.feature.truncated_location[1] + 2].join('/'),
         }}
         onMouseEnter={props.onMouseEnter}
         onMouseLeave={props.onMouseLeave}
@@ -40,7 +40,7 @@ export function FeatureLine(props) {
 
 
 FeatureLine.propTypes = {
-  feature: PropTypes.instanceOf(RenderFeature),
+  feature: PropTypes.instanceOf(TruncatedFeature),
   highlighted: PropTypes.bool,
   onMouseEnter: PropTypes.func.isRequired,
   onMouseLeave: PropTypes.func.isRequired,

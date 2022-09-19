@@ -80,7 +80,7 @@ export class AnnotatedSequence extends Object {
     const accessor  = this.hierarchy.deepest(index, index, false)
     const feature   = this.hierarchy.retrieve(accessor);
 
-    const loc = feature.global_location || feature.location;
+    const loc = feature.location;
     updated.delete([loc[0], loc[0] - magnitude]);
     this.setSequence(updated);
 

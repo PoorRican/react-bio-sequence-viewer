@@ -62,7 +62,7 @@ export class SequenceRow extends React.PureComponent {
 
       for (const feature of this.props.topLevel) {
 
-        const value = this.handleRangeStyling(index, feature.global_location);
+        const value = this.handleRangeStyling(index, feature.location);
         if (value) return value;
 
       }
