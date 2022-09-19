@@ -20,16 +20,20 @@ export class AnnotatedSequence extends Object {
    * Shift features and propagate changes down
    * @param magnitude {number}
    * @param index {number}
+   * @param update=true {boolean} - Option flag to update hierarchy
+   * @param source=false {FeatureContainer|false} - Flag to use working copy of `FeatureContainer`. Usually paired with `update=false`
    */
-  shift = (magnitude, index) => {
-    const updated = this.hierarchy.from(this.hierarchy);
+  shift = (magnitude, index, update=true, source=false) => {
+    const updated = source || this.hierarchy.from(this.hierarchy);
 
     const constrained = updated.filter((feature) => feature.location[0] >= index);
     constrained.forEach((feature) => {
       feature.shift(magnitude);
     });
 
-    this.setHierarchy(updated);
+    if (update) {
+      this.setHierarchy(updated);
+    }
   }
 
   /**
@@ -41,9 +45,8 @@ export class AnnotatedSequence extends Object {
   resize = (magnitude, index) => {
     const updated   = this.hierarchy.from(this.hierarchy);
 
-    const accessor  = this.hierarchy.deepest(index, index, false);
-    if (accessor === null) return;
-    let feature     = this.hierarchy.retrieve(accessor);
+    let feature  = this.hierarchy.deepestAt(index);
+    if (feature === false) return;
 
     /**
      * Parent features through which to propagate changes.
@@ -64,7 +67,7 @@ export class AnnotatedSequence extends Object {
       _feature.resize(magnitude);
     });
 
-    this.shift(magnitude, index);
+    this.shift(magnitude, index, false, updated);
 
     this.setHierarchy(updated);
   }
@@ -77,8 +80,7 @@ export class AnnotatedSequence extends Object {
    */
   delete = (magnitude, index) => {
     const updated   = Sequence.from(this.sequence);
-    const accessor  = this.hierarchy.deepest(index, index, false)
-    const feature   = this.hierarchy.retrieve(accessor);
+    const feature  = this.hierarchy.deepestAt(index)
 
     const loc = feature.location;
     updated.delete([loc[0], loc[0] - magnitude]);

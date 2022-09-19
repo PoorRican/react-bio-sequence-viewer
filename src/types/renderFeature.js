@@ -71,7 +71,7 @@ export class RenderFeature extends Feature {
   }
 
   get 0() {
-    return this.location[1]
+    return this.location[0]
   }
 
   get 1() {

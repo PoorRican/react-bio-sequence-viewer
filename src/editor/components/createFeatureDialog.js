@@ -27,17 +27,20 @@ export class CreateFeatureDialog extends React.Component {
   }
 
   /**
-   * Incorporate `context.cursor` and `this.state` to add `Feature` to `context.hierarchy`
-   * TODO: this is where a mediator will be implemented.
+   * Incorporate `context.cursor` and `this.state` to add `RenderFeature` to `context.hierarchy`
    */
   addFeature = () => {
     const data = {
       id: this.state.id,
       location: this.context.cursor, // is this copied?
     }
-    const parent = this.context.hierarchy.deepest(this.context.cursor[0], this.context.cursor[1]);
-
-    const updated = this.context.hierarchy.add(new RenderFeature(data), parent);
+    /**
+     * Only use first index, since `addFeature` should only be called when fully enclosed by a `RenderFeature`
+     *
+     * @type {RenderFeature|false}
+     */
+    const parent = this.context.hierarchy.deepestAt(this.context.cursor[0]);
+    const updated = this.context.hierarchy.add(new RenderFeature(data), parent.accessor);
     this.context.setHierarchy(updated);
 
     this.cancel();

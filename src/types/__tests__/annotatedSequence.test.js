@@ -38,9 +38,9 @@ describe('Sequence Manipulation', () => {
     })
 
     const mediator = makeMediator(container);
-  mediator.shift(5, 501)
+    mediator.shift(5, 501)
 
-    expect(container.hierarchy).toStrictEqual(expected);
+    expect(container.hierarchy).toMatchObject(expected);
   });
   test('features shifted upon deletion', () => {
     const container = makeContainer();
@@ -54,7 +54,7 @@ describe('Sequence Manipulation', () => {
 
     const mediator = makeMediator(container);
     mediator.shift(-5, 501)
-    expect(container.hierarchy).toStrictEqual(expected);
+    expect(container.hierarchy).toMatchObject(expected);
   });
 
   test('features shortened upon deletion', () => {
@@ -72,7 +72,7 @@ describe('Sequence Manipulation', () => {
 
     const mediator = makeMediator(container);
     mediator.resize(-5, 400)
-    expect(container.hierarchy).toStrictEqual(expected);
+    expect(container.hierarchy).toMatchObject(expected);
   });
   test('features expanded upon insertion', () => {
     const container = makeContainer();
@@ -89,7 +89,7 @@ describe('Sequence Manipulation', () => {
 
     const mediator = makeMediator(container);
     mediator.resize(5, 400)
-    expect(container.hierarchy).toStrictEqual(expected);
+    expect(container.hierarchy).toMatchObject(expected);
   });
 
 });

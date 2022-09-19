@@ -1,5 +1,7 @@
 import {RenderFeature} from "./renderFeature";
 import {TruncatedFeature} from "./truncatedFeature";
+import {withinBounds} from "../editor/helpers";
+
 
 /**
  * Array-like container for storing and interacting with `Feature` objects.
@@ -26,6 +28,68 @@ export class FeatureContainer extends Array {
 
   get accessor() {
     return false;
+  }
+
+  /**
+   * Flattened array of nested features that can be passed a check function.
+   *
+   * When check function is given, only `RenderFeature` objects which pass check are returned.
+   * Check functions must only accept a `RenderFeature` as argument and must return a `Boolean`
+   *
+   * @param check=undefined {function} - Check function. Gets passed `feature` and must return `Boolean`
+   * @param force=false {boolean} - Iterate through `features` if `check` was not passed
+   * @param nested {FeatureContainer|RenderFeature[]}
+   *
+   * @returns {Generator<RenderFeature>}
+   */
+  *iterateNested(check=undefined, force=false, nested=this) {
+    for (let i = 0; i < nested.length; i++) {
+      const feature = nested[i];
+      if (check) {
+        const passed = check(feature);
+        if (passed) {
+          yield feature;
+
+          if ((force || passed) && feature.features)
+            yield* this.iterateNested(check, force, feature.features);
+        }
+      } else {
+        yield feature;
+        if (feature.features) yield* this.iterateNested(check, force, feature.features);
+      }
+    }
+  }
+
+  /**
+   * Get `RenderFeature` by index.
+   *
+   * Matches index to the deepest feature at location.
+   *
+   * @param index {number}
+   *
+   * @returns {RenderFeature|false}} - The deepest feature or `false` if no feature at index
+   */
+  deepestAt(index) {
+
+    /**
+     * Wrapper for `withinBounds` to be passed to `this.iterateNested`
+     * @param feature
+     * @returns {boolean}
+     */
+    function checkWithinBounds(feature) {
+      return withinBounds(index, feature.location);
+    }
+
+    let deepest = {depth: -1};
+
+    const features = this.iterateNested(checkWithinBounds, false);
+    for (const feature of features) {
+      if (feature.depth > deepest.depth) {
+        deepest = feature
+      }
+    }
+    deepest = (deepest.depth === -1) ? false : deepest;
+    return deepest;
   }
 
   // Manipulation Functions
@@ -240,43 +304,6 @@ export class FeatureContainer extends Array {
     return contained;
   }
 
-
-  /**
-   * Find the deepest feature within a given range.
-   *
-   * This is used for finding a parent when creating a new feature.
-   *
-   * @param start {number}
-   * @param end {number}
-   * @param strict=true {boolean} - Ignore partially intersecting features
-   *
-   * @returns {string|null} - Accessor key of the deepest feature; `null` if there is no feature in given range.
-   */
-  deepest(start, end, strict=true) {
-    const features = this.within(start, end);
-    let accessor = null;
-
-    if (features !== []) {
-      let deepest = -1;
-      features.forEach((feature) => {
-        const loc = feature.location;
-        const [starts_before, ends_after] = [loc[0] <= start, loc[1] >= end];
-        /**
-         * `Feature` is fully outside or intersects with given range
-         * @type {boolean}
-         */
-        const outside = strict ? starts_before && ends_after : starts_before || ends_after
-
-        if (feature.depth > deepest && outside) {
-          deepest = feature.depth;
-          accessor = feature.accessor;
-        }
-      })
-    }
-
-    return accessor;
-  }
-
   /**
    * Find overlapping features in `parent.features` container.
    *
@@ -289,7 +316,7 @@ export class FeatureContainer extends Array {
    *    {id: c, location: [30, 32]}
    * ]`
    */
-   constrained(feature) {
+  constrained(feature) {
     const parent = feature.parent ? this.retrieve(feature.parent) : this;
     // iterate through siblings
     return (parent.features || parent).filter((child) => {

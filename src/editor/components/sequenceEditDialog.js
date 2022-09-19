@@ -81,16 +81,16 @@ export class SequenceEditDialog extends React.Component {
 
   /**
    * Determines if single selected monomer intersects last feature endpoint.
+   *
    * @returns {boolean} - `true` if last endpoint matches; otherwise `false`
    */
   #isLastEndPoint() {
     const range = (typeof this.context.cursor === 'number') ? [this.context.cursor, this.context.cursor] :
       (this.context.cursor.hasOwnProperty('features') ? this.context.cursor.location : this.context.cursor)
-    const accessor = this.context.hierarchy.deepest(range[0], range[1], false);
-    const feature = this.context.hierarchy.retrieve(accessor);
 
-    const loc = feature.location;
-    return loc[1] === range[1];
+    const feature = this.context.hierarchy.deepestAt(range[0]);
+
+    return feature ? feature.location[1] === range[1] : false;
   }
 
   /**
