@@ -3,10 +3,27 @@ import {
   Dialog,
   Classes,
   Button,
+  Checkbox,
 } from "@blueprintjs/core";
 import PropTypes from "prop-types";
 
 import {EditorContext} from "../data";
+
+/**
+ * Parse cursor location
+ * @param location {number|[number, number]|Feature}
+ * @returns {number|*}
+ */
+function extractCursorLocation(location) {
+ if (typeof location === 'number') {
+   return location;
+ }
+ else if (location.hasOwnProperty('features')) {
+   return location.location;
+ } else {
+   return location
+ }
+}
 
 /**
  * Handle user input for the creation of a feature based on selected sequence
@@ -19,6 +36,8 @@ export class SequenceEditDialog extends React.Component {
 
     this.state = {
       sequence: '',
+
+      append: false,
     }
   }
 
@@ -42,6 +61,11 @@ export class SequenceEditDialog extends React.Component {
     this.#inInsertMode() ? this.setState({sequence: ''}) : this.setState({sequence: this.#getSegment()})
   }
 
+  setupDialog = () => {
+    this.setSequence();
+    this.setState({append: this.#isLastEndPoint()});
+  }
+
   #inInsertMode() {
     return this.context.mode === 'insert'
   }
@@ -56,15 +80,30 @@ export class SequenceEditDialog extends React.Component {
   }
 
   /**
+   * Determines if single selected monomer intersects last feature endpoint.
+   * @returns {boolean} - `true` if last endpoint matches; otherwise `false`
+   */
+  #isLastEndPoint() {
+    const range = (typeof this.context.cursor === 'number') ? [this.context.cursor, this.context.cursor] :
+      (this.context.cursor.hasOwnProperty('features') ? this.context.cursor.location : this.context.cursor)
+    const accessor = this.context.hierarchy.deepest(range[0], range[1], false);
+    const feature = this.context.hierarchy.retrieve(accessor);
+
+    const loc = feature.global_location || feature.location;
+    return loc[1] === range[1];
+  }
+
+  /**
    * Update `this.context.sequence` based on user-input
    *
    * @see Sequence.insert
    */
   insertSequence = () => {
-    const index = (typeof this.context.cursor === 'number') ? this.context.cursor : this.context.cursor[0];
+    const range = extractCursorLocation(this.context.cursor);
+    const index = typeof range === 'number' ? range : this.state.append ? range[1] : range[0];
 
     if (this.#validateSequence()) {
-      const updated = this.context.sequence.insert(this.state.sequence, index);
+      const updated = this.context.sequence.insert(this.state.sequence, index, this.state.append);
       this.context.mediator().resize(this.state.sequence.length, index);
 
       this.context.setSequence(updated);
@@ -101,7 +140,14 @@ export class SequenceEditDialog extends React.Component {
   }
 
   update = (e) => {
-    this.setState({sequence: e.target.value})
+    let update = {};
+    update[e.currentTarget.dataset.attribute] = e.target.value;
+
+    this.setState(update)
+  }
+
+  toggleAppend = () => {
+    this.setState({append: !this.state.append});
   }
 
   render() {
@@ -109,11 +155,18 @@ export class SequenceEditDialog extends React.Component {
       <Dialog isOpen={this.props.isOpen}
               title={(this.#inInsertMode() ? "Insert" : "Replace") +" Sequence"}
               onClose={this.props.onClose}
-              onOpening={this.setSequence}
+              onOpening={this.setupDialog}
               icon={`add-to-artifact`} >
 
         <div className={Classes.DIALOG_BODY}>
-          <input value={this.state.sequence} onChange={this.update}/>
+
+          <input data-attribute={'sequence'}
+                 value={this.state.sequence}
+                 onChange={this.update} />
+
+          <Checkbox label={"Append Segment"}
+                    checked={this.state.append}
+                    onChange={this.toggleAppend} />
         </div>
 
         <div className={Classes.DIALOG_FOOTER}>

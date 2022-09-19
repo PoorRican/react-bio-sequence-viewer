@@ -24,6 +24,12 @@ describe('Manipulation functions', () => {
     expect(updated).toEqual(Sequence.from('ABXYZCDEFG'))
   });
 
+  test('append sequence', () => {
+    let seq = Sequence.from(content)
+    const updated = seq.insert('XYZ', 2, true);
+    expect(updated).toEqual(Sequence.from('ABCXYZDEFG'))
+  })
+
   test('delete range', () => {
     let seq = Sequence.from(content);
     const updated = seq.delete([2,4]);

@@ -20,14 +20,15 @@ export class Sequence extends Array {
   /**
    * Insert given string at `index`
    *
-   * @param value {string[]}
+   * @param value {string[]|string}
    * @param index {number}
+   * @param append {boolean} - flag to append string to index. Adding to the end of sequences.
    *
    * @returns {Sequence} - Mutated copy of `this`
    */
-  insert(value, index) {
+  insert(value, index, append=false) {
     let updated = Sequence.from(this);
-    updated.splice(index, 0, ...value);
+    updated.splice(index + (append ? 1 : 0), 0, ...value);
     return updated;
   }
 

@@ -106,6 +106,14 @@ export class Feature extends Object {
     }
   }
 
+  get 0() {
+    return this.location[1]
+  }
+
+  get 1() {
+    return this.location[1]
+  }
+
   get parent() {
     return this._parent;
   }
