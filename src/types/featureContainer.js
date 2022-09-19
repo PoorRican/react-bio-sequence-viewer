@@ -47,38 +47,44 @@ export class FeatureContainer extends Array {
       const feature = nested[i];
       if (check) {
         const passed = check(feature);
-        if (passed) {
-          yield feature;
 
-          if ((force || passed) && feature.features)
-            yield* this.iterateNested(check, force, feature.features);
-        }
+        if (passed)
+          yield feature;
+        if ((force || passed) && feature.features)
+          yield* this.iterateNested(check, force, feature.features);
+
       } else {
+
         yield feature;
         if (feature.features) yield* this.iterateNested(check, force, feature.features);
+
       }
     }
   }
 
   /**
-   * Get `RenderFeature` by index.
+   * Get `RenderFeature` by index or range.
    *
    * Matches index to the deepest feature at location.
    *
-   * @param index {number}
+   * If range is given, range must be fully enclosed by `feature.location` to be returned
+   *
+   * @param value {number|[number, number]}
    *
    * @returns {RenderFeature|false}} - The deepest feature or `false` if no feature at index
    */
-  deepestAt(index) {
+  deepestAt(value) {
 
     /**
      * Wrapper for `withinBounds` to be passed to `this.iterateNested`
      * @param feature
      * @returns {boolean}
      */
-    function checkWithinBounds(feature) {
-      return withinBounds(index, feature.location);
-    }
+    const checkWithinBounds = (typeof value === 'number') ?
+      function (feature) {return withinBounds(value, feature.location)} :
+      function (feature) {
+        return withinBounds(value[0], feature.location) && withinBounds(value[1], feature.location);
+      }
 
     let deepest = {depth: -1};
 
